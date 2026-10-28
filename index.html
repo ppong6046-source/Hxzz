@@ -3,506 +3,259 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>XO Hxzz</title>
+<title>XO Premium</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
 <style>
-:root{
-  --bg1:#0f0c29; --bg2:#302b63; --bg3:#24243e;
-  --x1:#00c6ff; --x2:#0072ff;
-  --o1:#ff0080; --o2:#ff8c00;
-  --gold1:#ffd700; --gold2:#ff8c00;
-  --glass:rgba(255,255,255,0.06);
-  --glass-border:rgba(255,255,255,0.15);
-  --text:#f1f1f8;
-  --muted:#a3a3c2;
-}
-*{box-sizing:border-box; margin:0; padding:0;}
-body{
-  font-family:'Hind Siliguri','Poppins',sans-serif;
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-  background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-  background-size:400% 400%;
-  animation: bgShift 18s ease infinite;
-  position:relative;
-}
-@keyframes bgShift{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-.blob{
-  position:fixed; border-radius:50%; filter:blur(80px); opacity:0.35; z-index:0;
-  animation: floaty 12s ease-in-out infinite;
-}
-.blob1{width:300px;height:300px; background:var(--x2); top:-80px; left:-80px;}
-.blob2{width:350px;height:350px; background:var(--o1); bottom:-100px; right:-100px; animation-delay:2s;}
-.blob3{width:250px;height:250px; background:var(--gold1); top:50%; left:50%; animation-delay:4s;}
-@keyframes floaty{
-  0%,100%{transform:translate(0,0) scale(1);}
-  50%{transform:translate(30px,-30px) scale(1.1);}
-}
-
-#app{position:relative; z-index:1; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;}
-
-.screen{display:none; width:100%; max-width:480px; animation: fadeIn 0.4s ease;}
-.screen.active{display:flex; flex-direction:column; align-items:center; gap:18px;}
-@keyframes fadeIn{from{opacity:0; transform:translateY(15px);} to{opacity:1; transform:translateY(0);}}
-
-.glass-card{
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-radius:26px;
-  padding:32px 26px;
-  width:100%;
-  box-shadow:0 10px 40px rgba(0,0,0,0.35);
-  display:flex; flex-direction:column; gap:16px; align-items:center;
-  position:relative;
-}
-
-.logo{
-  font-family:'Poppins',sans-serif;
-  font-weight:800;
-  font-size:2.2rem;
-  background:linear-gradient(90deg,var(--x1),var(--o1),var(--gold1));
-  background-size:200% auto;
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  animation:shine 4s linear infinite;
-  text-align:center;
-}
-@keyframes shine{to{background-position:200% center;}}
-
-input[type="text"]{
-  width:100%;
-  padding:14px 16px;
-  border-radius:14px;
-  border:1px solid var(--glass-border);
-  background:rgba(255,255,255,0.08);
-  color:var(--text);
-  font-size:1rem;
-  font-family:inherit;
-  outline:none;
-  text-align:center;
-  letter-spacing:1px;
-  transition:0.3s;
-}
-input[type="text"]:focus{border-color:var(--x1); box-shadow:0 0 0 3px rgba(0,198,255,0.2);}
-
-.btn{
-  width:100%;
-  padding:15px 18px;
-  border:none;
-  border-radius:16px;
-  font-family:inherit;
-  font-size:1rem;
-  font-weight:600;
-  cursor:pointer;
-  color:#fff;
-  background:linear-gradient(135deg,var(--x1),var(--x2));
-  box-shadow:0 6px 20px rgba(0,114,255,0.35);
-  transition:transform 0.2s, box-shadow 0.2s;
-  display:flex; align-items:center; justify-content:center; gap:10px;
-}
-.btn:hover{transform:translateY(-3px) scale(1.02); box-shadow:0 10px 25px rgba(0,114,255,0.5);}
-.btn:active{transform:translateY(0) scale(0.98);}
-.btn.pink{background:linear-gradient(135deg,var(--o1),var(--o2)); box-shadow:0 6px 20px rgba(255,0,128,0.35);}
-.btn.pink:hover{box-shadow:0 10px 25px rgba(255,0,128,0.5);}
-.btn.gold{background:linear-gradient(135deg,var(--gold1),var(--gold2)); color:#1a1a2e; box-shadow:0 6px 20px rgba(255,215,0,0.35);}
-.btn.gold:hover{box-shadow:0 10px 25px rgba(255,215,0,0.5);}
-.btn.ghost{background:rgba(255,255,255,0.08); box-shadow:none; border:1px solid var(--glass-border);}
-.btn.small{padding:10px 14px; font-size:0.85rem; width:auto;}
-
-.back-btn{
-  align-self:flex-start;
-  background:none; border:none; color:var(--muted);
-  font-size:0.95rem; cursor:pointer; font-family:inherit;
-  display:flex; align-items:center; gap:6px;
-  transition:color 0.2s;
-}
-.back-btn:hover{color:var(--text);}
-
-.divider{color:var(--muted); font-size:0.85rem; position:relative; width:100%; text-align:center; margin:4px 0;}
-.divider::before,.divider::after{content:''; position:absolute; top:50%; width:35%; height:1px; background:var(--glass-border);}
-.divider::before{left:0;} .divider::after{right:0;}
-
-.topbar{display:flex; justify-content:space-between; align-items:center; width:100%;}
-.profile-badge{
-  display:flex; align-items:center; gap:10px; cursor:pointer;
-  background:var(--glass); border:1px solid var(--glass-border);
-  padding:8px 14px 8px 8px; border-radius:50px; transition:0.2s;
-}
-.profile-badge:hover{transform:scale(1.05);}
-.avatar{
-  width:36px; height:36px; border-radius:50%;
-  background:linear-gradient(135deg,var(--x1),var(--o1));
-  display:flex; align-items:center; justify-content:center; font-size:1.1rem;
-}
-.avatar.large{width:80px; height:80px; font-size:2.2rem; margin-bottom:4px;}
-.sound-toggle{
-  background:var(--glass); border:1px solid var(--glass-border);
-  width:42px; height:42px; border-radius:50%; cursor:pointer;
-  font-size:1.2rem; color:var(--text); display:flex; align-items:center; justify-content:center;
-}
-
-.menu-buttons{display:flex; flex-direction:column; gap:14px; width:100%;}
-.diff-row{display:flex; flex-direction:column; gap:12px; width:100%;}
-
-.room-code-box{
-  font-size:3rem; font-weight:800; letter-spacing:12px;
-  background:linear-gradient(90deg,var(--x1),var(--o1));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  font-family:'Poppins',sans-serif;
-  padding:10px 0;
-}
-.waiting-text{display:flex; align-items:center; gap:8px; color:var(--muted); font-size:0.95rem;}
-.spinner{
-  width:18px; height:18px; border:3px solid var(--glass-border); border-top-color:var(--x1);
-  border-radius:50%; animation:spin 0.8s linear infinite;
-}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overflow-x:hidden;color:#fff;background:#0f0c29;background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1a1a3e);background-size:400% 400%;animation:gradientBG 15s ease infinite;position:relative;}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.35;z-index:0;animation:floatBlob 12s ease-in-out infinite;}
+.blob1{width:300px;height:300px;background:#ff5e7a;top:-80px;left:-80px;}
+.blob2{width:350px;height:350px;background:#4fd1ff;bottom:-100px;right:-100px;animation-delay:2s;}
+.blob3{width:250px;height:250px;background:#9b5cff;top:40%;left:60%;animation-delay:4s;}
+@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-30px) scale(1.1);}}
+.screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;position:relative;z-index:1;}
+.screen.active{display:flex;}
+.card{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:30px 24px;width:100%;max-width:400px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:cardIn .4s ease;}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
+.logo{font-size:28px;font-weight:800;margin-bottom:6px;background:linear-gradient(90deg,#ffd700,#ff5e7a,#4fd1ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.greeting{opacity:.85;margin-bottom:18px;font-size:14px;}
+.card h2{margin-bottom:16px;font-size:20px;}
+.card p{opacity:.8;font-size:14px;margin-bottom:14px;}
+.btn{display:block;width:100%;padding:14px;margin:10px 0;border:none;border-radius:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:.2s;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,#ff5e7a,#ff8a5e);color:#fff;box-shadow:0 4px 15px rgba(255,94,122,.4);}
+.btn-secondary{background:linear-gradient(135deg,#4fd1ff,#4f8dff);color:#fff;box-shadow:0 4px 15px rgba(79,141,255,.4);}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}
+.code-input{width:100%;padding:14px;margin:10px 0;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-size:16px;text-align:center;font-family:inherit;letter-spacing:2px;}
+.code-input::placeholder{color:rgba(255,255,255,.5);letter-spacing:0;}
+.divider{opacity:.5;margin:14px 0;font-size:13px;}
+.room-code-box{display:flex;align-items:center;justify-content:center;gap:12px;background:rgba(255,255,255,.1);border-radius:16px;padding:18px;margin:16px 0;}
+.room-code-box span{font-size:32px;font-weight:800;letter-spacing:8px;color:#ffd700;}
+.room-code-box button{padding:8px 12px;border:none;border-radius:10px;background:rgba(255,255,255,.15);color:#fff;font-size:12px;cursor:pointer;}
+.loader{width:36px;height:36px;border:4px solid rgba(255,255,255,.2);border-top-color:#4fd1ff;border-radius:50%;margin:10px auto 18px;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.stat-box{background:rgba(255,255,255,.08);border-radius:14px;padding:14px;}
+.stat-box span{display:block;font-size:24px;font-weight:800;color:#ffd700;}
+.stat-box label{font-size:12px;opacity:.75;}
 
-.game-wrap{display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;}
-.game-header{display:flex; justify-content:space-between; align-items:center; width:100%;}
-.header-right{display:flex; align-items:center; gap:10px;}
-.vs-badge{
-  display:flex; align-items:center; gap:10px; background:var(--glass);
-  border:1px solid var(--glass-border); border-radius:50px; padding:8px 18px;
-  font-size:0.9rem;
-}
-.score-pill{display:flex; gap:12px; font-size:0.85rem; color:var(--muted);}
-.score-pill b{color:var(--text); font-size:1rem;}
-
-.turn-indicator{
-  display:flex; align-items:center; gap:10px; font-weight:600; font-size:1.05rem;
-  padding:10px 24px; border-radius:50px; background:var(--glass); border:1px solid var(--glass-border);
-  transition:0.3s;
-}
-.turn-dot{width:14px; height:14px; border-radius:4px;}
-.turn-dot.x{background:linear-gradient(135deg,var(--x1),var(--x2)); box-shadow:0 0 12px var(--x1);}
-.turn-dot.o{background:linear-gradient(135deg,var(--o1),var(--o2)); box-shadow:0 0 12px var(--o1);}
-
-.board{
-  position:relative;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  width:min(90vw,380px);
-  height:min(90vw,380px);
-  padding:14px;
-  background:var(--glass);
-  border:1px solid var(--glass-border);
-  border-radius:24px;
-  backdrop-filter:blur(20px);
-}
-.cell{
-  background:rgba(255,255,255,0.06);
-  border-radius:16px;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer;
-  transition:background 0.2s, transform 0.15s;
-  position:relative;
-  overflow:hidden;
-}
-.cell:hover:not(.filled){background:rgba(255,255,255,0.14); transform:scale(1.03);}
-.cell.filled{cursor:default;}
-.mark-svg{width:62%; height:62%;}
-.x-line{stroke:url(#xGradient); stroke-width:11; stroke-linecap:round; fill:none; stroke-dasharray:100; stroke-dashoffset:100; animation:drawLine 0.35s ease forwards;}
-.line2{animation-delay:0.15s;}
-.o-circle{stroke:url(#oGradient); stroke-width:11; fill:none; stroke-dasharray:230; stroke-dashoffset:230; animation:drawCircle 0.45s ease forwards;}
+/* GAME SCREEN */
+#screen-game{flex-direction:column;padding:14px;}
+.game-wrap{width:100%;max-width:420px;margin:0 auto;}
+.game-header{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.08);border-radius:16px;padding:10px 14px;margin-bottom:10px;}
+.icon-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;position:relative;display:inline-flex;align-items:center;justify-content:center;}
+.vs-info{font-size:13px;font-weight:600;text-align:center;flex:1;padding:0 8px;}
+.header-actions{display:flex;align-items:center;gap:8px;}
+.score-pill{background:rgba(255,215,0,.15);color:#ffd700;padding:6px 10px;border-radius:12px;font-size:11px;font-weight:700;display:none;white-space:nowrap;}
+.badge{position:absolute;top:-4px;right:-4px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:700;border-radius:50%;min-width:16px;height:16px;display:none;align-items:center;justify-content:center;padding:1px;}
+.turn-indicator{text-align:center;font-size:15px;font-weight:600;margin-bottom:12px;padding:8px;background:rgba(255,255,255,.06);border-radius:12px;}
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(92vw,380px);aspect-ratio:1;position:relative;margin:0 auto;}
+.cell{background:rgba(255,255,255,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:.2s;}
+.cell:active{background:rgba(255,255,255,.18);}
+.cell.win-cell{background:rgba(255,215,0,.3) !important;box-shadow:0 0 20px rgba(255,215,0,.6) inset;}
+.mark{width:68%;height:68%;}
+.mark-x line{stroke:#ff5e7a;stroke-width:9;stroke-linecap:round;stroke-dasharray:90;stroke-dashoffset:90;animation:drawLine .35s ease forwards;filter:drop-shadow(0 0 6px #ff5e7a);}
+.mark-x line:nth-child(2){animation-delay:.15s;}
 @keyframes drawLine{to{stroke-dashoffset:0;}}
+.mark-o circle{fill:none;stroke:#4fd1ff;stroke-width:9;stroke-dasharray:230;stroke-dashoffset:230;animation:drawCircle .45s ease forwards;filter:drop-shadow(0 0 6px #4fd1ff);}
 @keyframes drawCircle{to{stroke-dashoffset:0;}}
+.win-line{position:absolute;height:6px;width:0;background:linear-gradient(90deg,#ffd700,#fff,#ffd700);border-radius:4px;box-shadow:0 0 15px #ffd700,0 0 30px #ffd700;animation:lineGrow .4s ease forwards;z-index:5;}
+@keyframes lineGrow{to{width:var(--line-width);}}
 
-.win-line{
-  position:absolute; background:linear-gradient(90deg,var(--gold1),var(--gold2));
-  border-radius:10px; box-shadow:0 0 20px var(--gold1), 0 0 40px var(--gold1);
-  opacity:0; z-index:5; pointer-events:none;
-}
+/* RESULT OVERLAY */
+.result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.25s;}
+.result-overlay.show{opacity:1;pointer-events:auto;}
+.result-card{background:rgba(30,25,60,.95);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:34px 26px;text-align:center;width:88%;max-width:340px;animation:cardIn .3s ease;}
+.result-emoji{font-size:54px;margin-bottom:10px;}
+.result-text{font-size:20px;font-weight:700;margin-bottom:10px;}
+.next-starter-note{font-size:13px;opacity:.85;background:rgba(255,255,255,.08);padding:8px 10px;border-radius:10px;margin-bottom:16px;}
+.result-actions .btn{margin:8px 0;}
 
-.result-overlay{
-  position:fixed; inset:0; background:rgba(10,8,30,0.75); backdrop-filter:blur(6px);
-  display:none; align-items:center; justify-content:center; z-index:50; padding:20px;
-}
-.result-overlay.active{display:flex; animation:fadeIn 0.3s ease;}
-.result-card{
-  background:var(--glass); border:1px solid var(--glass-border); border-radius:28px;
-  padding:40px 30px; text-align:center; max-width:360px; width:100%;
-  box-shadow:0 20px 60px rgba(0,0,0,0.5);
-  animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes popIn{from{transform:scale(0.7); opacity:0;} to{transform:scale(1); opacity:1;}}
-.result-icon{font-size:3.5rem; margin-bottom:10px;}
-.result-title{font-size:1.5rem; font-weight:700; margin-bottom:6px; font-family:'Poppins',sans-serif;}
-.result-sub{color:var(--muted); margin-bottom:24px; font-size:0.95rem;}
-.result-buttons{display:flex; flex-direction:column; gap:12px;}
+/* CHAT */
+.chat-drawer{position:fixed;inset:0;z-index:200;pointer-events:none;}
+.chat-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:.25s;}
+.chat-panel{position:absolute;left:0;right:0;bottom:-100%;max-width:460px;margin:0 auto;background:rgba(25,20,50,.98);border-radius:22px 22px 0 0;height:70vh;display:flex;flex-direction:column;transition:bottom .3s ease;border:1px solid rgba(255,255,255,.15);}
+.chat-drawer.open{pointer-events:auto;}
+.chat-drawer.open .chat-overlay{opacity:1;}
+.chat-drawer.open .chat-panel{bottom:0;}
+.chat-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:700;}
+.chat-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
+.chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{max-width:75%;}
+.chat-msg.me{align-self:flex-end;text-align:right;}
+.chat-msg.other{align-self:flex-start;text-align:left;}
+.chat-name{font-size:10px;opacity:.6;display:block;margin-bottom:2px;}
+.chat-bubble{padding:9px 13px;border-radius:14px;font-size:14px;word-break:break-word;display:inline-block;}
+.chat-msg.me .chat-bubble{background:linear-gradient(135deg,#ff5e7a,#ff8a5e);border-bottom-right-radius:4px;}
+.chat-msg.other .chat-bubble{background:rgba(255,255,255,.12);border-bottom-left-radius:4px;}
+.chat-emojis{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;}
+.chat-emojis button{background:rgba(255,255,255,.08);border:none;border-radius:10px;font-size:18px;padding:6px 10px;cursor:pointer;flex-shrink:0;}
+.chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.1);}
+.chat-input-row input{flex:1;padding:11px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:14px;}
+.chat-input-row button{width:42px;height:42px;border-radius:50%;border:none;background:linear-gradient(135deg,#4fd1ff,#4f8dff);color:#fff;font-size:16px;cursor:pointer;}
 
-.stats-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; width:100%;}
-.stat-box{
-  background:rgba(255,255,255,0.08); border-radius:16px; padding:16px 8px; text-align:center;
-  border:1px solid var(--glass-border);
-}
-.stat-box span{display:block; font-size:1.8rem; font-weight:800; font-family:'Poppins',sans-serif;}
-.stat-box label{font-size:0.8rem; color:var(--muted);}
-.stat-box.win span{color:#4ade80;}
-.stat-box.loss span{color:#f87171;}
-.stat-box.draw span{color:#facc15;}
-.stat-box.total{grid-column:span 3; background:rgba(255,255,255,0.1);}
-.stat-box.total span{background:linear-gradient(90deg,var(--x1),var(--o1)); -webkit-background-clip:text; background-clip:text; color:transparent;}
+.chat-toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:rgba(20,15,40,.95);border:1px solid rgba(255,255,255,.2);padding:10px 16px;border-radius:14px;font-size:13px;max-width:80%;opacity:0;transition:.3s;z-index:300;}
+.chat-toast.show{opacity:1;transform:translate(-50%,0);}
 
-.toast{
-  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px);
-  background:rgba(20,18,45,0.95); border:1px solid var(--glass-border);
-  padding:14px 24px; border-radius:14px; z-index:999; opacity:0; transition:0.3s;
-  font-size:0.9rem; box-shadow:0 10px 30px rgba(0,0,0,0.4); max-width:90vw;
-}
-.toast.show{transform:translateX(-50%) translateY(0); opacity:1;}
+.confetti-piece{position:fixed;top:-10px;border-radius:2px;z-index:999;pointer-events:none;animation-name:confettiFall;animation-timing-function:ease-in;}
+@keyframes confettiFall{to{transform:translateY(110vh) rotate(360deg);opacity:.3;}}
 
-.confetti-piece{
-  position:fixed; top:-10px; width:10px; height:10px; z-index:999; border-radius:2px;
-  animation:confettiFall linear forwards;
-}
-@keyframes confettiFall{to{transform:translateY(105vh) rotate(720deg); opacity:0.4;}}
-
-/* ===== CHAT ===== */
-.chat-btn{
-  position:relative;
-  background:var(--glass); border:1px solid var(--glass-border);
-  width:42px;height:42px;border-radius:50%;
-  display:none; align-items:center; justify-content:center;
-  cursor:pointer;font-size:1.2rem; color:var(--text);
-}
-.chat-badge{
-  position:absolute; top:-4px; right:-4px; background:#ff0080; color:#fff;
-  font-size:0.65rem; min-width:18px; height:18px; padding:0 3px; border-radius:50%;
-  display:none; align-items:center; justify-content:center; font-weight:700;
-}
-.chat-drawer{
-  position:fixed; inset:0; background:rgba(10,8,30,0.6); backdrop-filter:blur(4px);
-  display:none; align-items:flex-end; justify-content:center; z-index:60;
-}
-.chat-drawer.active{display:flex;}
-.chat-panel{
-  background:linear-gradient(180deg, rgba(36,33,70,0.98), rgba(15,12,41,0.98));
-  width:100%; max-width:480px; border-radius:24px 24px 0 0;
-  display:flex; flex-direction:column; height:72vh;
-  border:1px solid var(--glass-border); border-bottom:none;
-  animation: slideUp 0.3s ease;
-}
-@keyframes slideUp{from{transform:translateY(100%);} to{transform:translateY(0);}}
-.chat-header{
-  display:flex; justify-content:space-between; align-items:center;
-  padding:16px 20px; border-bottom:1px solid var(--glass-border);
-  font-family:'Poppins',sans-serif; font-weight:700;
-}
-.chat-close-btn{
-  background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer; line-height:1;
-}
-.chat-messages{
-  flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:10px;
-}
-.chat-msg{
-  max-width:78%; padding:10px 14px; border-radius:16px; font-size:0.9rem; line-height:1.4; word-wrap:break-word;
-}
-.chat-msg.me{
-  align-self:flex-end; background:linear-gradient(135deg,var(--x1),var(--x2)); border-bottom-right-radius:4px;
-}
-.chat-msg.other{
-  align-self:flex-start; background:rgba(255,255,255,0.1); border-bottom-left-radius:4px;
-}
-.chat-msg .sender{font-size:0.7rem; opacity:0.75; margin-bottom:3px; display:block; font-weight:600;}
-.chat-empty{color:var(--muted); text-align:center; font-size:0.85rem; margin-top:30px;}
-.chat-quick{
-  display:flex; gap:8px; padding:0 20px 12px; overflow-x:auto;
-}
-.chat-quick button{
-  background:rgba(255,255,255,0.08); border:1px solid var(--glass-border); border-radius:50px;
-  padding:7px 14px; font-size:1.2rem; cursor:pointer; flex-shrink:0;
-}
-.chat-input-row{
-  display:flex; gap:10px; padding:16px 20px; border-top:1px solid var(--glass-border);
-}
-.chat-input-row input{
-  flex:1; padding:12px 16px; border-radius:50px; border:1px solid var(--glass-border);
-  background:rgba(255,255,255,0.08); color:var(--text); outline:none; font-family:inherit; font-size:0.95rem;
-}
-.chat-send-btn{
-  width:46px;height:46px;border-radius:50%; border:none; background:linear-gradient(135deg,var(--x1),var(--x2));
-  color:#fff; font-size:1.2rem; cursor:pointer; display:flex;align-items:center;justify-content:center; flex-shrink:0;
-}
-
-@media(max-width:420px){
-  .glass-card{padding:26px 18px;}
-  .logo{font-size:1.8rem;}
-  .room-code-box{font-size:2.3rem; letter-spacing:8px;}
-}
+@media(max-width:360px){.room-code-box span{font-size:26px;letter-spacing:5px;}}
 </style>
 </head>
 <body>
-
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 <div class="blob blob3"></div>
 
-<svg width="0" height="0">
-  <defs>
-    <linearGradient id="xGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00c6ff"/>
-      <stop offset="100%" stop-color="#0072ff"/>
-    </linearGradient>
-    <linearGradient id="oGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff0080"/>
-      <stop offset="100%" stop-color="#ff8c00"/>
-    </linearGradient>
-  </defs>
-</svg>
-
-<div id="app">
-
-  <div class="screen active" id="screen-name">
-    <div class="glass-card">
-      <h1 class="logo">✦ XO Hxzz ✦</h1>
-      <p style="color:var(--muted); text-align:center; font-size:0.9rem;">শুরু করার আগে তোমার নাম লিখো</p>
-      <input type="text" id="playerNameInput" placeholder="তোমার নাম..." maxlength="14">
-      <button class="btn" onclick="saveNameAndContinue()">🚀 শুরু করো</button>
-    </div>
+<!-- NAME SCREEN -->
+<div id="screen-name" class="screen active">
+  <div class="card">
+    <h1 class="logo">❌⭕ XO Premium</h1>
+    <p>শুরু করতে আপনার নাম লিখুন</p>
+    <input id="nameInput" type="text" class="code-input" placeholder="আপনার নাম" maxlength="20">
+    <button class="btn btn-primary" onclick="saveName()">▶️ শুরু করুন</button>
   </div>
-
-  <div class="screen" id="screen-menu">
-    <div class="topbar">
-      <div class="profile-badge" onclick="showScreen('screen-profile'); renderProfile();">
-        <div class="avatar">👤</div>
-        <span id="menuPlayerName">খেলোয়াড়</span>
-      </div>
-      <button class="sound-toggle" id="soundBtn" onclick="toggleSound()">🔊</button>
-    </div>
-    <h1 class="logo">XO Hxzz</h1>
-    <div class="menu-buttons">
-      <button class="btn" onclick="showScreen('screen-difficulty')">🤖 কম্পিউটারের সাথে খেলো</button>
-      <button class="btn pink" onclick="startLocalMultiplayer()">👥 বন্ধুর সাথে (একই ডিভাইস)</button>
-      <button class="btn gold" onclick="showScreen('screen-online')">🌐 অনলাইনে বন্ধুর সাথে</button>
-    </div>
-  </div>
-
-  <div class="screen" id="screen-difficulty">
-    <div class="glass-card">
-      <button class="back-btn" onclick="showScreen('screen-menu')">← ফিরে যাও</button>
-      <h1 class="logo" style="font-size:1.6rem;">লেভেল বাছাই করো</h1>
-      <div class="diff-row">
-        <button class="btn" onclick="startVsComputer('easy')">😊 সহজ</button>
-        <button class="btn pink" onclick="startVsComputer('medium')">🔥 মাধ্যম</button>
-        <button class="btn gold" onclick="startVsComputer('hard')">👑 কঠিন (অজেয়)</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="screen" id="screen-online">
-    <div class="glass-card">
-      <button class="back-btn" onclick="showScreen('screen-menu')">← ফিরে যাও</button>
-      <h1 class="logo" style="font-size:1.6rem;">অনলাইনে খেলো</h1>
-      <button class="btn" onclick="createRoom()">➕ নতুন রুম তৈরি করো</button>
-      <div class="divider">অথবা</div>
-      <input type="text" id="joinCodeInput" placeholder="৪ সংখ্যার কোড লিখো" maxlength="4" inputmode="numeric">
-      <button class="btn pink" onclick="joinRoom()">🔗 রুমে যোগ দাও</button>
-    </div>
-  </div>
-
-  <div class="screen" id="screen-waiting">
-    <div class="glass-card" style="align-items:center;">
-      <button class="back-btn" onclick="cancelRoom()">← বাতিল করো</button>
-      <h2 style="font-family:'Poppins';">তোমার রুম কোড</h2>
-      <div class="room-code-box" id="displayRoomCode">----</div>
-      <button class="btn small ghost" onclick="copyRoomCode()">📋 কোড কপি করো</button>
-      <div class="waiting-text"><div class="spinner"></div> বন্ধুর জন্য অপেক্ষা করা হচ্ছে...</div>
-      <p style="color:var(--muted); font-size:0.85rem; text-align:center;">এই কোডটি তোমার বন্ধুকে পাঠাও। সে "রুমে যোগ দাও" তে গিয়ে এই কোড বসালেই খেলা শুরু হবে।</p>
-    </div>
-  </div>
-
-  <div class="screen" id="screen-game">
-    <div class="game-wrap">
-      <div class="game-header">
-        <button class="back-btn" onclick="exitGame()">← মেনু</button>
-        <div class="header-right">
-          <div class="score-pill" id="scorePill"></div>
-          <button class="chat-btn" id="chatToggleBtn" onclick="toggleChat()">
-            💬<span class="chat-badge" id="chatBadge">0</span>
-          </button>
-        </div>
-      </div>
-      <div class="vs-badge" id="vsBadge"></div>
-      <div class="turn-indicator" id="turnIndicator"></div>
-      <div class="board" id="board"></div>
-    </div>
-  </div>
-
-  <div class="screen" id="screen-profile">
-    <div class="glass-card">
-      <button class="back-btn" onclick="showScreen('screen-menu')">← ফিরে যাও</button>
-      <div class="avatar large">👤</div>
-      <h2 id="profileName" style="font-family:'Poppins';"></h2>
-      <input type="text" id="editNameInput" placeholder="নতুন নাম লিখো" style="display:none;">
-      <button class="btn small ghost" id="editNameBtn" onclick="toggleEditName()">✏️ নাম পরিবর্তন করো</button>
-      <div class="stats-grid">
-        <div class="stat-box win"><span id="statWins">0</span><label>জয়</label></div>
-        <div class="stat-box loss"><span id="statLosses">0</span><label>হার</label></div>
-        <div class="stat-box draw"><span id="statDraws">0</span><label>ড্র</label></div>
-        <div class="stat-box total"><span id="statTotal">0</span><label>মোট খেলা</label></div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
-<div class="result-overlay" id="resultOverlay">
+<!-- MENU SCREEN -->
+<div id="screen-menu" class="screen">
+  <div class="card">
+    <h1 class="logo">❌⭕ XO Premium</h1>
+    <p id="menuGreeting" class="greeting"></p>
+    <button class="btn btn-primary" onclick="showScreen('screen-difficulty')">🤖 কম্পিউটারের সাথে খেলুন</button>
+    <button class="btn btn-primary" onclick="startLocalGame()">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
+    <button class="btn btn-primary" onclick="showScreen('screen-online')">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
+    <button class="btn btn-secondary" onclick="showScreen('screen-profile')">👤 প্রোফাইল</button>
+  </div>
+</div>
+
+<!-- DIFFICULTY SCREEN -->
+<div id="screen-difficulty" class="screen">
+  <div class="card">
+    <h2>🤖 কঠিনতার মাত্রা বেছে নিন</h2>
+    <button class="btn btn-primary" onclick="startComputerGame('easy')">😊 সহজ</button>
+    <button class="btn btn-primary" onclick="startComputerGame('medium')">😐 মধ্যম</button>
+    <button class="btn btn-primary" onclick="startComputerGame('hard')">🔥 কঠিন (Unbeatable)</button>
+    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+  </div>
+</div>
+
+<!-- ONLINE MENU -->
+<div id="screen-online" class="screen">
+  <div class="card">
+    <h2>🌐 অনলাইনে খেলুন</h2>
+    <button class="btn btn-primary" onclick="createRoom()">➕ নতুন রুম তৈরি করুন</button>
+    <div class="divider">— অথবা —</div>
+    <input id="joinCodeInput" type="text" class="code-input" maxlength="4" inputmode="numeric" placeholder="৪ সংখ্যার কোড লিখুন">
+    <button class="btn btn-secondary" onclick="joinRoom()">🔑 জয়েন করুন</button>
+    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+  </div>
+</div>
+
+<!-- WAITING SCREEN -->
+<div id="screen-waiting" class="screen">
+  <div class="card">
+    <h2>⏳ অপেক্ষা করা হচ্ছে...</h2>
+    <p>আপনার বন্ধুকে এই কোডটি পাঠান:</p>
+    <div class="room-code-box">
+      <span id="roomCodeDisplay">----</span>
+      <button id="copyBtn" onclick="copyRoomCode()">📋 কপি</button>
+    </div>
+    <div class="loader"></div>
+    <button class="btn btn-ghost" onclick="cancelRoom()">❌ বাতিল করুন</button>
+  </div>
+</div>
+
+<!-- PROFILE SCREEN -->
+<div id="screen-profile" class="screen">
+  <div class="card">
+    <h2>👤 প্রোফাইল</h2>
+    <input id="profileNameInput" type="text" class="code-input" placeholder="আপনার নাম">
+    <button class="btn btn-secondary" onclick="updateProfileName()">✏️ নাম আপডেট করুন</button>
+    <div class="stats-grid">
+      <div class="stat-box"><span id="statWins">0</span><label>জয়</label></div>
+      <div class="stat-box"><span id="statLosses">0</span><label>হার</label></div>
+      <div class="stat-box"><span id="statDraws">0</span><label>ড্র</label></div>
+      <div class="stat-box"><span id="statTotal">0</span><label>মোট</label></div>
+    </div>
+    <p>🏆 জয়ের হার: <span id="statWinrate">0%</span></p>
+    <button class="btn btn-ghost" onclick="resetStats()">🗑️ পরিসংখ্যান মুছুন</button>
+    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+  </div>
+</div>
+
+<!-- GAME SCREEN -->
+<div id="screen-game" class="screen">
+  <div class="game-wrap">
+    <div class="game-header">
+      <button class="icon-btn" onclick="exitGame()">←</button>
+      <div class="vs-info"><span id="leftName">X</span> &nbsp;VS&nbsp; <span id="rightName">O</span></div>
+      <div class="header-actions">
+        <span id="scorePill" class="score-pill"></span>
+        <button id="chatBtn" class="icon-btn" style="display:none;" onclick="toggleChat()">💬<span id="chatBadge" class="badge">0</span></button>
+        <button id="soundBtn" class="icon-btn" onclick="toggleSound()">🔊</button>
+      </div>
+    </div>
+    <div id="turnIndicator" class="turn-indicator">আপনার পালা</div>
+    <div class="board" id="board">
+      <div class="cell" onclick="handleCellClick(0)"></div>
+      <div class="cell" onclick="handleCellClick(1)"></div>
+      <div class="cell" onclick="handleCellClick(2)"></div>
+      <div class="cell" onclick="handleCellClick(3)"></div>
+      <div class="cell" onclick="handleCellClick(4)"></div>
+      <div class="cell" onclick="handleCellClick(5)"></div>
+      <div class="cell" onclick="handleCellClick(6)"></div>
+      <div class="cell" onclick="handleCellClick(7)"></div>
+      <div class="cell" onclick="handleCellClick(8)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div id="resultOverlay" class="result-overlay">
   <div class="result-card">
-    <div class="result-icon" id="resultIcon">🎉</div>
-    <div class="result-title" id="resultTitle">তুমি জিতেছো!</div>
-    <div class="result-sub" id="resultSub"></div>
-    <div class="result-buttons">
-      <button class="btn" onclick="playAgain()">🔄 আবার খেলো</button>
-      <button class="btn ghost" onclick="exitGame()">🏠 মেনুতে যাও</button>
+    <div id="resultEmoji" class="result-emoji">🎉</div>
+    <div id="resultText" class="result-text">আপনি জিতেছেন!</div>
+    <div id="nextStarterNote" class="next-starter-note"></div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="playAgain()">🔄 আবার খেলো</button>
+      <button class="btn btn-ghost" onclick="exitGame()">🏠 মেনু</button>
     </div>
   </div>
 </div>
 
-<!-- Chat Drawer -->
-<div class="chat-drawer" id="chatDrawer">
+<!-- CHAT DRAWER -->
+<div id="chatDrawer" class="chat-drawer">
+  <div class="chat-overlay" onclick="toggleChat()"></div>
   <div class="chat-panel">
     <div class="chat-header">
       <span>💬 চ্যাট</span>
-      <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+      <button onclick="toggleChat()">✕</button>
     </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="chat-empty" id="chatEmptyMsg">এখনো কোনো মেসেজ নেই। হাই বলে শুরু করো! 👋</div>
-    </div>
-    <div class="chat-quick">
-      <button onclick="sendQuickEmoji('👍')">👍</button>
-      <button onclick="sendQuickEmoji('😀')">😀</button>
-      <button onclick="sendQuickEmoji('😢')">😢</button>
-      <button onclick="sendQuickEmoji('🔥')">🔥</button>
-      <button onclick="sendQuickEmoji('🎉')">🎉</button>
-      <button onclick="sendQuickEmoji('😡')">😡</button>
-      <button onclick="sendQuickEmoji('❤️')">❤️</button>
+    <div id="chatMessages" class="chat-messages"></div>
+    <div class="chat-emojis">
+      <button onclick="sendChatMessage('👍')">👍</button>
+      <button onclick="sendChatMessage('😀')">😀</button>
+      <button onclick="sendChatMessage('😢')">😢</button>
+      <button onclick="sendChatMessage('🔥')">🔥</button>
+      <button onclick="sendChatMessage('🎉')">🎉</button>
+      <button onclick="sendChatMessage('😡')">😡</button>
+      <button onclick="sendChatMessage('❤️')">❤️</button>
     </div>
     <div class="chat-input-row">
-      <input type="text" id="chatInput" placeholder="মেসেজ লিখো..." maxlength="200">
-      <button class="chat-send-btn" onclick="sendChatMessage()">➤</button>
+      <input id="chatInput" type="text" placeholder="মেসেজ লিখুন..." onkeydown="if(event.key==='Enter'){sendChatMessage(this.value);}">
+      <button onclick="sendChatMessage(document.getElementById('chatInput').value)">➤</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-/* ================= FIREBASE CONFIG ================= */
+/* ===================== FIREBASE ===================== */
 const firebaseConfig = {
   apiKey: "AIzaSyBQkv_LcDn5h4AyWfeSv6SAROfi8vLV-A0",
   authDomain: "xoxo-9caa0.firebaseapp.com",
@@ -512,712 +265,656 @@ const firebaseConfig = {
   messagingSenderId: "214600063739",
   appId: "1:214600063739:web:70ab1a6556ef4e59c6ee5e"
 };
-
-let firebaseReady = false;
 let db = null;
-try{
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.database();
-  firebaseReady = true;
-  console.log("✅ Firebase connected!");
-}catch(e){
-  console.warn("Firebase init failed", e);
-}
 
-/* ================= STATE ================= */
-let profile = { name:'', wins:0, losses:0, draws:0 };
-let soundOn = true;
-
-let game = {
-  mode:null,
-  board: Array(9).fill(''),
-  turn:'X',
-  active:false,
-  difficulty:'hard',
-  mySymbol:'X',
-  roomCode:null,
-  opponentName:'',
-  localScores:{X:0,O:0,D:0}
+/* ===================== STATE ===================== */
+const WIN_COMBOS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+const LINE_DATA = {
+  '0,1,2':{top:16.6667,left:50,angle:0,width:100},
+  '3,4,5':{top:50,left:50,angle:0,width:100},
+  '6,7,8':{top:83.3333,left:50,angle:0,width:100},
+  '0,3,6':{top:50,left:16.6667,angle:90,width:100},
+  '1,4,7':{top:50,left:50,angle:90,width:100},
+  '2,5,8':{top:50,left:83.3333,angle:90,width:100},
+  '0,4,8':{top:50,left:50,angle:45,width:141},
+  '2,4,6':{top:50,left:50,angle:-45,width:141}
 };
 
-const winPatterns = [
-  [0,1,2],[3,4,5],[6,7,8],
-  [0,3,6],[1,4,7],[2,5,8],
-  [0,4,8],[2,4,6]
-];
+let profile = {name:'', wins:0, losses:0, draws:0};
+let soundOn = localStorage.getItem('xo_sound') !== '0';
+let currentScreenId = 'screen-name';
 
-/* ================= INIT ================= */
-window.addEventListener('DOMContentLoaded', ()=>{
-  const saved = localStorage.getItem('xo_profile');
-  if(saved){
-    profile = JSON.parse(saved);
-    document.getElementById('menuPlayerName').textContent = profile.name;
+let mode = null; // 'computer' | 'local' | 'online'
+let difficulty = 'medium';
+const playerSymbol='X', computerSymbol='O';
+
+let board = Array(9).fill('');
+let displayedBoard = Array(9).fill('');
+let currentPlayer = 'X';
+let starter = 'X';       // এই রাউন্ডে কে আগে শুরু করেছে
+let lastResult = null;   // local/computer মোডে শেষ রাউন্ডের ফলাফল
+let gameActive = false;
+let localScore = {X:0,O:0,draw:0};
+
+// Online
+let roomCode=null, mySymbol=null, isHost=false, oppName=null;
+let roomRef=null, chatRef=null, resultShown=false;
+let chatOpen=false, unreadCount=0;
+
+/* ===================== INIT ===================== */
+window.onload = function(){
+  try{
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+  }catch(e){ console.error('Firebase init error:', e); }
+
+  profile = loadProfile();
+  if(profile.name){
+    document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
     showScreen('screen-menu');
+  } else {
+    showScreen('screen-name');
   }
-  const soundSaved = localStorage.getItem('xo_sound');
-  if(soundSaved !== null) soundOn = soundSaved === '1';
-  updateSoundIcon();
+  renderProfileScreen();
+  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+};
 
-  document.getElementById('chatInput').addEventListener('keypress', function(e){
-    if(e.key === 'Enter'){ sendChatMessage(); }
-  });
-});
-
-/* ================= SCREEN NAV ================= */
+/* ===================== SCREEN NAV ===================== */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  currentScreenId = id;
 }
 
-function showToast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(window._toastTimer);
-  window._toastTimer = setTimeout(()=>t.classList.remove('show'), 2500);
+/* ===================== PROFILE ===================== */
+function loadProfile(){
+  const raw = localStorage.getItem('xo_profile');
+  if(raw){ try{ return JSON.parse(raw); }catch(e){} }
+  return {name:'', wins:0, losses:0, draws:0};
 }
-
-/* ================= PROFILE ================= */
-function saveNameAndContinue(){
-  const val = document.getElementById('playerNameInput').value.trim();
-  if(!val){ showToast('একটা নাম লিখো!'); return; }
-  profile.name = val;
-  profile.wins = 0; profile.losses = 0; profile.draws = 0;
-  localStorage.setItem('xo_profile', JSON.stringify(profile));
-  document.getElementById('menuPlayerName').textContent = profile.name;
+function saveProfile(){ localStorage.setItem('xo_profile', JSON.stringify(profile)); }
+function saveName(){
+  const val = document.getElementById('nameInput').value.trim();
+  if(!val){ alert('নাম লিখুন'); return; }
+  profile.name = val; saveProfile();
+  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+  renderProfileScreen();
   showScreen('screen-menu');
 }
-
-function renderProfile(){
-  document.getElementById('profileName').textContent = profile.name;
+function updateProfileName(){
+  const val = document.getElementById('profileNameInput').value.trim();
+  if(!val){ alert('নাম লিখুন'); return; }
+  profile.name = val; saveProfile();
+  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+  alert('নাম আপডেট হয়েছে!');
+}
+function renderProfileScreen(){
+  document.getElementById('profileNameInput').value = profile.name || '';
   document.getElementById('statWins').textContent = profile.wins;
   document.getElementById('statLosses').textContent = profile.losses;
   document.getElementById('statDraws').textContent = profile.draws;
-  document.getElementById('statTotal').textContent = profile.wins+profile.losses+profile.draws;
+  const total = profile.wins + profile.losses + profile.draws;
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statWinrate').textContent = total>0 ? Math.round(profile.wins/total*100)+'%' : '0%';
+}
+function resetStats(){
+  if(confirm('সব পরিসংখ্যান মুছে ফেলতে চান?')){
+    profile.wins=0; profile.losses=0; profile.draws=0; saveProfile(); renderProfileScreen();
+  }
+}
+function recordProfileResult(outcome){
+  if(outcome==='win') profile.wins++;
+  else if(outcome==='loss') profile.losses++;
+  else profile.draws++;
+  saveProfile(); renderProfileScreen();
 }
 
-function toggleEditName(){
-  const input = document.getElementById('editNameInput');
-  if(input.style.display === 'none'){
-    input.style.display = 'block';
-    input.value = profile.name;
-    document.getElementById('editNameBtn').textContent = '✅ সেভ করো';
-  } else {
-    const val = input.value.trim();
-    if(val){
-      profile.name = val;
-      localStorage.setItem('xo_profile', JSON.stringify(profile));
-      document.getElementById('menuPlayerName').textContent = profile.name;
-      renderProfile();
-    }
-    input.style.display = 'none';
-    document.getElementById('editNameBtn').textContent = '✏️ নাম পরিবর্তন করো';
+/* ===================== GAME SETUP ===================== */
+function setupGameScreenFor(type){
+  const chatBtn = document.getElementById('chatBtn');
+  const scorePill = document.getElementById('scorePill');
+  chatBtn.style.display = (type==='online') ? 'inline-flex' : 'none';
+  scorePill.style.display = (type==='local') ? 'inline-flex' : 'none';
+  if(type==='computer'){
+    document.getElementById('leftName').textContent = (profile.name||'আপনি')+' ❌';
+    document.getElementById('rightName').textContent = '🤖 কম্পিউটার';
+  } else if(type==='local'){
+    document.getElementById('leftName').textContent = 'Player 1 ❌';
+    document.getElementById('rightName').textContent = 'Player 2 ⭕';
+    scorePill.textContent = `X:0 O:0 ড্র:0`;
   }
 }
 
-function updateStats(result){
-  if(result==='win') profile.wins++;
-  else if(result==='loss') profile.losses++;
-  else profile.draws++;
-  localStorage.setItem('xo_profile', JSON.stringify(profile));
-}
-
-/* ================= SOUND ================= */
-function toggleSound(){
-  soundOn = !soundOn;
-  localStorage.setItem('xo_sound', soundOn ? '1':'0');
-  updateSoundIcon();
-}
-function updateSoundIcon(){
-  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
-}
-function playSound(type){
-  if(!soundOn) return;
-  try{
-    const ctx = new (window.AudioContext||window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    let freq = 440, dur = 0.12;
-    if(type==='move'){ freq=520; gain.gain.value=0.08; }
-    else if(type==='win'){ freq=880; gain.gain.value=0.12; dur=0.25; }
-    else if(type==='lose'){ freq=180; gain.gain.value=0.1; dur=0.3; }
-    else if(type==='draw'){ freq=330; gain.gain.value=0.1; dur=0.2; }
-    else if(type==='chat'){ freq=700; gain.gain.value=0.06; dur=0.1; }
-    osc.frequency.value = freq;
-    osc.start();
-    osc.stop(ctx.currentTime+dur);
-  }catch(e){}
-}
-
-/* ================= GAME CORE ================= */
-function checkWinner(bd, player){
-  return winPatterns.some(p => p.every(i => bd[i]===player));
-}
-function getWinPattern(bd, player){
-  return winPatterns.find(p => p.every(i => bd[i]===player));
-}
-function isBoardFull(bd){ return bd.every(c => c !== ''); }
-
-function resetBoardState(){
-  game.board = Array(9).fill('');
-  game.turn = 'X';
-  game.active = true;
-}
-
-function renderBoardUI(){
-  const boardEl = document.getElementById('board');
-  boardEl.innerHTML = '';
-  game.board.forEach((val, idx)=>{
-    const cell = document.createElement('div');
-    cell.className = 'cell' + (val ? ' filled' : '');
-    cell.dataset.index = idx;
-    if(val) cell.appendChild(createMarkSVG(val));
-    cell.addEventListener('click', ()=>onCellClick(idx));
-    boardEl.appendChild(cell);
-  });
-  const winLine = document.createElement('div');
-  winLine.className = 'win-line';
-  winLine.id = 'winLine';
-  boardEl.appendChild(winLine);
+function startComputerGame(level){
+  mode='computer'; difficulty=level;
+  starter='X'; lastResult=null;
+  board=Array(9).fill(''); currentPlayer='X'; gameActive=true;
+  showScreen('screen-game');
+  setupGameScreenFor('computer');
+  clearBoardUI(); hideResultOverlay();
   updateTurnIndicator();
 }
 
-function createMarkSVG(symbol){
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns,'svg');
-  svg.setAttribute('viewBox','0 0 100 100');
-  svg.classList.add('mark-svg');
-  if(symbol==='X'){
-    svg.innerHTML = `<line x1="22" y1="22" x2="78" y2="78" class="x-line line1"/><line x1="78" y1="22" x2="22" y2="78" class="x-line line2"/>`;
-  } else {
-    svg.innerHTML = `<circle cx="50" cy="50" r="33" class="o-circle"/>`;
+function startLocalGame(){
+  mode='local';
+  starter='X'; lastResult=null; localScore={X:0,O:0,draw:0};
+  board=Array(9).fill(''); currentPlayer='X'; gameActive=true;
+  showScreen('screen-game');
+  setupGameScreenFor('local');
+  clearBoardUI(); hideResultOverlay();
+  updateTurnIndicator();
+}
+
+/* ===================== BOARD / RENDER ===================== */
+function clearBoardUI(){
+  document.querySelectorAll('.cell').forEach(c=>{ c.innerHTML=''; c.classList.remove('win-cell'); });
+  document.querySelectorAll('.win-line').forEach(l=>l.remove());
+  displayedBoard = Array(9).fill('');
+}
+function renderBoard(){
+  const cells = document.querySelectorAll('.cell');
+  for(let i=0;i<9;i++){
+    if(displayedBoard[i] !== board[i]){
+      cells[i].innerHTML=''; cells[i].classList.remove('win-cell');
+      if(board[i]==='X'){ cells[i].appendChild(createXSVG()); if(mode==='online') playSound('move'); }
+      else if(board[i]==='O'){ cells[i].appendChild(createOSVG()); if(mode==='online') playSound('move'); }
+      displayedBoard[i] = board[i];
+    }
   }
-  return svg;
+}
+function createXSVG(){ return markupToNode(`<svg viewBox="0 0 100 100" class="mark mark-x"><line x1="20" y1="20" x2="80" y2="80"/><line x1="80" y1="20" x2="20" y2="80"/></svg>`); }
+function createOSVG(){ return markupToNode(`<svg viewBox="0 0 100 100" class="mark mark-o"><circle cx="50" cy="50" r="35"/></svg>`); }
+function markupToNode(svg){ const div=document.createElement('div'); div.innerHTML=svg; return div.firstElementChild; }
+
+function placeMark(i, symbol){
+  board[i]=symbol; displayedBoard[i]=symbol;
+  const cell = document.querySelectorAll('.cell')[i];
+  cell.innerHTML=''; cell.appendChild(symbol==='X'?createXSVG():createOSVG());
+  playSound('move');
+}
+
+function drawWinLine(combo){
+  const key = combo.join(',');
+  const d = LINE_DATA[key];
+  if(!d) return;
+  const line = document.createElement('div');
+  line.className='win-line';
+  line.style.top = d.top+'%';
+  line.style.left = d.left+'%';
+  line.style.transform = `translate(-50%,-50%) rotate(${d.angle}deg)`;
+  line.style.setProperty('--line-width', d.width+'%');
+  document.getElementById('board').appendChild(line);
+}
+function highlightWinCells(combo){
+  const cells = document.querySelectorAll('.cell');
+  combo.forEach(i=>cells[i].classList.add('win-cell'));
+}
+
+/* ===================== GAME LOGIC ===================== */
+function emptyIndices(b){ return b.reduce((a,v,i)=>{ if(v==='') a.push(i); return a; },[]); }
+function checkGameEndArr(b){
+  for(const combo of WIN_COMBOS){
+    const [a,c,d]=combo;
+    if(b[a] && b[a]===b[c] && b[a]===b[d]) return {winner:b[a], combo};
+  }
+  if(b.every(v=>v!=='')) return {winner:'draw', combo:null};
+  return null;
+}
+
+function handleCellClick(i){
+  if(!gameActive) return;
+  if(board[i]!=='') return;
+
+  if(mode==='online'){
+    if(currentPlayer!==mySymbol) return;
+    makeOnlineMove(i);
+    return;
+  }
+  if(mode==='computer' && currentPlayer!==playerSymbol) return;
+
+  placeMark(i, currentPlayer);
+  const result = checkGameEndArr(board);
+  if(result){ endRound(result); return; }
+
+  currentPlayer = currentPlayer==='X' ? 'O' : 'X';
+  updateTurnIndicator();
+
+  if(mode==='computer' && currentPlayer===computerSymbol && gameActive){
+    setTimeout(computerMove, 500+Math.random()*400);
+  }
 }
 
 function updateTurnIndicator(){
   const el = document.getElementById('turnIndicator');
-  if(!game.active){ el.innerHTML=''; return; }
-  let text = '';
-  if(game.mode==='online'){
-    text = (game.turn === game.mySymbol) ? 'তোমার পালা' : `${game.opponentName || 'প্রতিপক্ষ'} এর পালা`;
-  } else if(game.mode==='computer'){
-    text = (game.turn==='X') ? 'তোমার পালা' : 'কম্পিউটার ভাবছে...';
+  if(!gameActive){ el.textContent='খেলা শেষ হয়েছে'; return; }
+  if(mode==='online'){
+    el.textContent = currentPlayer===mySymbol ? '👉 আপনার পালা' : '⏳ প্রতিপক্ষের পালা';
+  } else if(mode==='computer'){
+    el.textContent = currentPlayer===playerSymbol ? '👉 আপনার পালা' : '🤖 কম্পিউটার ভাবছে...';
   } else {
-    text = (game.turn==='X') ? `${profile.name} (X) এর পালা` : `বন্ধু (O) এর পালা`;
-  }
-  el.innerHTML = `<span class="turn-dot ${game.turn==='X'?'x':'o'}"></span> ${text}`;
-}
-
-function onCellClick(idx){
-  if(!game.active) return;
-  if(game.board[idx] !== '') return;
-
-  if(game.mode === 'computer'){
-    if(game.turn !== 'X') return;
-    placeMark(idx, 'X');
-    const result = evaluateBoard();
-    if(result) return finishLocalGame(result);
-    game.turn = 'O';
-    updateTurnIndicator();
-    setTimeout(computerMove, 500);
-  }
-  else if(game.mode === 'local'){
-    placeMark(idx, game.turn);
-    const result = evaluateBoard();
-    if(result) return finishLocalGame(result);
-    game.turn = game.turn === 'X' ? 'O' : 'X';
-    updateTurnIndicator();
-  }
-  else if(game.mode === 'online'){
-    if(game.turn !== game.mySymbol) return;
-    makeOnlineMove(idx);
+    el.textContent = (currentPlayer==='X'?'❌':'⭕')+' '+currentPlayer+' এর পালা';
   }
 }
 
-function placeMark(idx, symbol){
-  game.board[idx] = symbol;
-  const cell = document.querySelector(`.cell[data-index="${idx}"]`);
-  cell.classList.add('filled');
-  cell.appendChild(createMarkSVG(symbol));
-  playSound('move');
+function endRound(result){
+  gameActive=false;
+  if(result.winner!=='draw'){ drawWinLine(result.combo); highlightWinCells(result.combo); }
+  lastResult = result.winner;
+
+  if(mode==='local'){
+    updateLocalScore(result.winner);
+    playSound(result.winner==='draw'?'draw':'win');
+  } else if(mode==='computer'){
+    const outcome = result.winner==='draw' ? 'draw' : (result.winner===playerSymbol ? 'win' : 'loss');
+    recordProfileResult(outcome);
+    playSound(outcome==='win'?'win':outcome==='loss'?'lose':'draw');
+  }
+  showResultOverlay(result.winner);
+}
+function updateLocalScore(winner){
+  if(winner==='draw') localScore.draw++; else localScore[winner]++;
+  document.getElementById('scorePill').textContent = `X:${localScore.X} O:${localScore.O} ড্র:${localScore.draw}`;
 }
 
-function evaluateBoard(){
-  if(checkWinner(game.board,'X')) return {winner:'X'};
-  if(checkWinner(game.board,'O')) return {winner:'O'};
-  if(isBoardFull(game.board)) return {winner:'draw'};
-  return null;
-}
-
-/* ===== WIN LINE ===== */
-const lineStyles = {
-  '0,1,2': {top:'16.67%', left:'0%', width:'100%', height:'8px', t:'translateY(-50%)'},
-  '3,4,5': {top:'50%', left:'0%', width:'100%', height:'8px', t:'translateY(-50%)'},
-  '6,7,8': {top:'83.33%', left:'0%', width:'100%', height:'8px', t:'translateY(-50%)'},
-  '0,3,6': {top:'0%', left:'16.67%', width:'8px', height:'100%', t:'translateX(-50%)'},
-  '1,4,7': {top:'0%', left:'50%', width:'8px', height:'100%', t:'translateX(-50%)'},
-  '2,5,8': {top:'0%', left:'83.33%', width:'8px', height:'100%', t:'translateX(-50%)'},
-  '0,4,8': {top:'50%', left:'50%', width:'138%', height:'8px', t:'translate(-50%,-50%) rotate(45deg)'},
-  '2,4,6': {top:'50%', left:'50%', width:'138%', height:'8px', t:'translate(-50%,-50%) rotate(-45deg)'}
-};
-function showWinLine(pattern){
-  const key = pattern.join(',');
-  const cfg = lineStyles[key];
-  const line = document.getElementById('winLine');
-  if(!line || !cfg) return;
-  line.style.top = cfg.top; line.style.left = cfg.left;
-  line.style.width = cfg.width; line.style.height = cfg.height;
-  line.style.transition = 'none';
-  line.style.transform = cfg.t + ' scale(0)';
-  line.style.opacity = '1';
-  void line.offsetWidth;
-  line.style.transition = 'transform 0.45s cubic-bezier(.34,1.56,.64,1)';
-  line.style.transform = cfg.t + ' scale(1)';
-}
-
-/* ================= COMPUTER MODE ================= */
-function startVsComputer(level){
-  game.mode = 'computer';
-  game.difficulty = level;
-  game.opponentName = 'কম্পিউটার';
-  resetBoardState();
-  document.getElementById('vsBadge').innerHTML = `👤 ${profile.name} (X)  🆚  🤖 কম্পিউটার (O)`;
-  document.getElementById('chatToggleBtn').style.display = 'none';
-  renderScorePill();
-  renderBoardUI();
-  showScreen('screen-game');
-}
-
-function computerMove(){
-  if(!game.active) return;
-  let idx;
-  const empty = game.board.map((v,i)=>v===''?i:null).filter(v=>v!==null);
-  if(game.difficulty === 'easy'){
-    idx = empty[Math.floor(Math.random()*empty.length)];
-  } else if(game.difficulty === 'medium'){
-    idx = Math.random() < 0.55 ? bestMove() : empty[Math.floor(Math.random()*empty.length)];
+/* ===================== COMPUTER AI ===================== */
+function minimax(b, depth, isMax, aiSym, humanSym){
+  const res = checkGameEndArr(b);
+  if(res){
+    if(res.winner===aiSym) return 10-depth;
+    if(res.winner===humanSym) return depth-10;
+    return 0;
+  }
+  const avail = emptyIndices(b);
+  if(isMax){
+    let best=-Infinity;
+    for(const i of avail){ b[i]=aiSym; best=Math.max(best, minimax(b,depth+1,false,aiSym,humanSym)); b[i]=''; }
+    return best;
   } else {
-    idx = bestMove();
+    let best=Infinity;
+    for(const i of avail){ b[i]=humanSym; best=Math.min(best, minimax(b,depth+1,true,aiSym,humanSym)); b[i]=''; }
+    return best;
   }
-  placeMark(idx, 'O');
-  const result = evaluateBoard();
-  if(result) return finishLocalGame(result);
-  game.turn = 'X';
-  updateTurnIndicator();
 }
-
-function bestMove(){
-  let bestScore = -Infinity, move;
-  for(let i=0;i<9;i++){
-    if(game.board[i]===''){
-      game.board[i]='O';
-      let score = minimax(game.board, 0, false);
-      game.board[i]='';
-      if(score > bestScore){ bestScore = score; move = i; }
-    }
+function bestMove(b, aiSym, humanSym){
+  let bestScore=-Infinity, move=null;
+  for(const i of emptyIndices(b)){
+    b[i]=aiSym;
+    const score = minimax(b,0,false,aiSym,humanSym);
+    b[i]='';
+    if(score>bestScore){ bestScore=score; move=i; }
   }
   return move;
 }
-function minimax(bd, depth, isMax){
-  if(checkWinner(bd,'O')) return 10 - depth;
-  if(checkWinner(bd,'X')) return depth - 10;
-  if(isBoardFull(bd)) return 0;
-
-  if(isMax){
-    let best = -Infinity;
-    for(let i=0;i<9;i++){
-      if(bd[i]===''){ bd[i]='O'; best = Math.max(best, minimax(bd, depth+1, false)); bd[i]=''; }
-    }
-    return best;
+function computerMove(){
+  if(!gameActive) return;
+  const avail = emptyIndices(board);
+  if(avail.length===0) return;
+  let idx;
+  if(difficulty==='easy'){
+    idx = avail[Math.floor(Math.random()*avail.length)];
+  } else if(difficulty==='medium'){
+    idx = Math.random()<0.6 ? bestMove(board.slice(), computerSymbol, playerSymbol) : avail[Math.floor(Math.random()*avail.length)];
   } else {
-    let best = Infinity;
-    for(let i=0;i<9;i++){
-      if(bd[i]===''){ bd[i]='X'; best = Math.min(best, minimax(bd, depth+1, true)); bd[i]=''; }
-    }
-    return best;
+    idx = bestMove(board.slice(), computerSymbol, playerSymbol);
   }
+  placeMark(idx, computerSymbol);
+  const result = checkGameEndArr(board);
+  if(result){ endRound(result); return; }
+  currentPlayer = playerSymbol;
+  updateTurnIndicator();
 }
 
-/* ================= LOCAL 2-PLAYER ================= */
-function startLocalMultiplayer(){
-  game.mode = 'local';
-  game.opponentName = 'বন্ধু';
-  resetBoardState();
-  document.getElementById('vsBadge').innerHTML = `👤 ${profile.name} (X)  🆚  👥 বন্ধু (O)`;
-  document.getElementById('chatToggleBtn').style.display = 'none';
-  renderScorePill();
-  renderBoardUI();
-  showScreen('screen-game');
-}
-
-function renderScorePill(){
-  const pill = document.getElementById('scorePill');
-  if(game.mode === 'local'){
-    pill.innerHTML = `<span>X: <b>${game.localScores.X}</b></span><span>O: <b>${game.localScores.O}</b></span><span>ড্র: <b>${game.localScores.D}</b></span>`;
-  } else {
-    pill.innerHTML = '';
-  }
-}
-
-function finishLocalGame(result){
-  game.active = false;
-  if(result.winner !== 'draw'){
-    showWinLine(getWinPattern(game.board, result.winner));
-  }
-  setTimeout(()=>{
-    if(result.winner === 'draw'){
-      playSound('draw');
-      if(game.mode==='local') game.localScores.D++;
-      updateStats('draw');
-      showResult('🤝','ড্র হয়েছে!', 'কেউ জেতেনি, আবার চেষ্টা করো!');
-    } else if(game.mode === 'computer'){
-      if(result.winner === 'X'){
-        playSound('win');
-        updateStats('win');
-        showResult('🎉','তুমি জিতেছো!','চমৎকার খেলেছো!');
-      } else {
-        playSound('lose');
-        updateStats('loss');
-        showResult('🤖','কম্পিউটার জিতেছে!','আরেকবার চেষ্টা করো!');
-      }
-    } else if(game.mode === 'local'){
-      playSound('win');
-      if(result.winner==='X') game.localScores.X++; else game.localScores.O++;
-      showResult(result.winner==='X'?'🥇':'🥈', `${result.winner==='X'?profile.name:'বন্ধু'} জিতেছে!`, `${result.winner} জিতে গেছে এই রাউন্ডে`);
-    }
-    renderScorePill();
-  }, 500);
-}
-
-/* ================= RESULT OVERLAY ================= */
-function showResult(icon, title, sub){
-  document.getElementById('resultIcon').textContent = icon;
-  document.getElementById('resultTitle').textContent = title;
-  document.getElementById('resultSub').textContent = sub;
-  document.getElementById('resultOverlay').classList.add('active');
-  if(icon==='🎉' || icon==='🥇' || icon==='🥈') launchConfetti();
-}
-function closeResult(){
-  document.getElementById('resultOverlay').classList.remove('active');
-}
-
+/* ===================== PLAY AGAIN (বিজয়ী আগে শুরু করবে) ===================== */
 function playAgain(){
-  closeResult();
-  if(game.mode === 'online'){
-    if(game.roomCode && db){
-      db.ref('rooms/'+game.roomCode).update({
-        board: Array(9).fill(''), turn:'X', winner:''
-      });
-    }
-  } else {
-    resetBoardState();
-    renderBoardUI();
+  if(mode==='online'){ onlinePlayAgain(); return; }
+
+  clearBoardUI();
+  hideResultOverlay();
+
+  let newStarter;
+  if(lastResult===null) newStarter='X';
+  else if(lastResult==='draw') newStarter = (starter==='X') ? 'O' : 'X';
+  else newStarter = lastResult; // বিজয়ী প্রতীকই পরের রাউন্ডে প্রথমে শুরু করবে
+
+  starter = newStarter;
+  board = Array(9).fill('');
+  currentPlayer = starter;
+  gameActive = true;
+  updateTurnIndicator();
+
+  if(mode==='computer' && currentPlayer===computerSymbol){
+    setTimeout(computerMove, 600);
   }
 }
 
-function exitGame(){
-  closeResult();
-  document.getElementById('chatDrawer').classList.remove('active');
-  if(game.mode === 'online' && game.roomCode && db){
-    db.ref('rooms/'+game.roomCode).off();
-    db.ref('rooms/'+game.roomCode+'/chat').off();
+/* ===================== RESULT OVERLAY ===================== */
+function showResultOverlay(winner){
+  const overlay = document.getElementById('resultOverlay');
+  const textEl = document.getElementById('resultText');
+  const emojiEl = document.getElementById('resultEmoji');
+  let msg='', emoji='🎉', celebrate=false;
+
+  if(winner==='draw'){
+    msg='🤝 খেলা ড্র হয়েছে!'; emoji='🤝';
+  } else if(mode==='local'){
+    msg = (winner==='X' ? '❌ Player 1' : '⭕ Player 2') + ' জিতেছে!'; emoji='🏆'; celebrate=true;
+  } else if(mode==='computer'){
+    if(winner===playerSymbol){ msg='🎉 আপনি জিতেছেন!'; emoji='🏆'; celebrate=true; }
+    else { msg='😢 আপনি হেরে গেছেন।'; emoji='😢'; }
+  } else if(mode==='online'){
+    if(winner===mySymbol){ msg='🎉 আপনি জিতেছেন!'; emoji='🏆'; celebrate=true; }
+    else { msg='😢 আপনি হেরে গেছেন।'; emoji='😢'; }
   }
-  game.mode = null;
-  game.roomCode = null;
+  textEl.textContent=msg; emojiEl.textContent=emoji;
+
+  const nextStarter = winner==='draw' ? (starter==='X'?'O':'X') : winner;
+  let starterLabel;
+  if(mode==='local') starterLabel = nextStarter==='X' ? 'Player 1 (❌)' : 'Player 2 (⭕)';
+  else if(mode==='computer') starterLabel = nextStarter===playerSymbol ? 'আপনি ❌' : '🤖 কম্পিউটার ⭕';
+  else starterLabel = (nextStarter===mySymbol ? 'আপনি' : 'প্রতিপক্ষ') + (nextStarter==='X' ? ' ❌' : ' ⭕');
+  document.getElementById('nextStarterNote').textContent = `➡️ পরের রাউন্ডে প্রথমে খেলবে: ${starterLabel}`;
+
+  overlay.classList.add('show');
+  if(celebrate) launchConfetti();
+}
+function hideResultOverlay(){ document.getElementById('resultOverlay').classList.remove('show'); }
+
+/* ===================== EXIT ===================== */
+function exitGame(){
+  if(mode==='online'){
+    if(roomRef) roomRef.off();
+    if(chatRef) chatRef.off();
+    if(roomCode){
+      if(isHost){ db.ref('rooms/'+roomCode).remove(); }
+      else{
+        db.ref('rooms/'+roomCode+'/players/O').set(null)
+          .then(()=> db.ref('rooms/'+roomCode+'/status').set('waiting'));
+      }
+    }
+    roomCode=null; mySymbol=null; isHost=false; resultShown=false; roomRef=null; chatRef=null;
+  }
+  mode=null; gameActive=false;
+  showScreen('screen-menu');
+}
+function hardExitOnline(){
+  if(roomRef) roomRef.off();
+  if(chatRef) chatRef.off();
+  mode=null; roomCode=null; mySymbol=null; isHost=false; resultShown=false; roomRef=null; chatRef=null;
   showScreen('screen-menu');
 }
 
-/* ================= CONFETTI ================= */
-function launchConfetti(){
-  const colors = ['#00c6ff','#0072ff','#ff0080','#ff8c00','#ffd700','#4ade80'];
-  for(let i=0;i<60;i++){
-    const conf = document.createElement('div');
-    conf.className = 'confetti-piece';
-    conf.style.left = Math.random()*100+'vw';
-    conf.style.background = colors[Math.floor(Math.random()*colors.length)];
-    conf.style.animationDuration = (Math.random()*2+2)+'s';
-    conf.style.animationDelay = (Math.random()*0.4)+'s';
-    document.body.appendChild(conf);
-    setTimeout(()=>conf.remove(), 4500);
-  }
-}
-
-/* ================= ONLINE MULTIPLAYER (Firebase) ================= */
-function checkFirebase(){
-  if(!firebaseReady){
-    showToast('⚠️ Firebase কনফিগার করা নেই');
-    return false;
-  }
-  return true;
-}
-
-function generateRoomCode(){
-  return Math.floor(1000 + Math.random()*9000).toString();
-}
+/* ===================== ONLINE: ROOM ===================== */
+function generateRoomCode(){ return String(Math.floor(1000+Math.random()*9000)); }
 
 function createRoom(){
-  if(!checkFirebase()) return;
-  const code = generateRoomCode();
-  const roomRef = db.ref('rooms/'+code);
-  roomRef.set({
-    board: Array(9).fill(''),
-    turn: 'X',
-    players: { X: profile.name, O: '' },
-    status: 'waiting',
-    winner: '',
+  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে।'); return; }
+  mode='online';
+  roomCode = generateRoomCode();
+  mySymbol='X'; isHost=true; resultShown=false;
+  const ref = db.ref('rooms/'+roomCode);
+  ref.set({
+    board:['','','','','','','','',''],
+    turn:'X',
+    starter:'X',
+    players:{X: profile.name||'হোস্ট', O: null},
+    status:'waiting',
+    winner:null,
+    winCombo:null,
+    chat:null,
     createdAt: Date.now()
   }).then(()=>{
-    game.roomCode = code;
-    game.mySymbol = 'X';
-    document.getElementById('displayRoomCode').textContent = code;
+    document.getElementById('roomCodeDisplay').textContent = roomCode;
     showScreen('screen-waiting');
-    listenToRoom(code, true);
-  });
-}
-
-function copyRoomCode(){
-  const code = document.getElementById('displayRoomCode').textContent;
-  navigator.clipboard.writeText(code).then(()=> showToast('কোড কপি হয়েছে! 📋'));
-}
-
-function cancelRoom(){
-  if(game.roomCode && db){
-    db.ref('rooms/'+game.roomCode).off();
-    db.ref('rooms/'+game.roomCode).remove();
-  }
-  game.roomCode = null;
-  showScreen('screen-online');
+    attachRoomListener();
+  }).catch(e=>alert('রুম তৈরি করা যায়নি: '+e.message));
 }
 
 function joinRoom(){
-  if(!checkFirebase()) return;
   const code = document.getElementById('joinCodeInput').value.trim();
-  if(code.length !== 4){ showToast('৪ সংখ্যার সঠিক কোড দাও'); return; }
-
-  const roomRef = db.ref('rooms/'+code);
-  roomRef.once('value').then(snapshot=>{
-    const data = snapshot.val();
-    if(!data){ showToast('এই কোডের রুম পাওয়া যায়নি'); return; }
-    if(data.status !== 'waiting'){ showToast('এই রুম এখন পূর্ণ'); return; }
-
-    roomRef.update({ 'players/O': profile.name, status:'playing' }).then(()=>{
-      game.roomCode = code;
-      game.mySymbol = 'O';
-      game.opponentName = data.players.X;
-      startOnlineGameUI();
-      listenToRoom(code, false);
+  if(code.length!==4 || isNaN(code)){ alert('৪ সংখ্যার সঠিক কোড দিন'); return; }
+  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে।'); return; }
+  const ref = db.ref('rooms/'+code);
+  ref.once('value').then(snap=>{
+    const data = snap.val();
+    if(!data){ alert('এই কোডে কোনো রুম পাওয়া যায়নি।'); return; }
+    if(data.status!=='waiting'){ alert('রুমটি এখন জয়েন করা যাবে না।'); return; }
+    mode='online';
+    roomCode=code; mySymbol='O'; isHost=false; resultShown=false;
+    ref.update({'players/O': profile.name||'খেলোয়াড় ২', status:'playing'}).then(()=>{
+      attachRoomListener();
     });
+  }).catch(e=>alert('ত্রুটি: '+e.message));
+}
+
+function cancelRoom(){
+  if(roomRef) roomRef.off();
+  if(roomCode) db.ref('rooms/'+roomCode).remove();
+  roomCode=null; mySymbol=null; isHost=false; roomRef=null;
+  showScreen('screen-online');
+}
+
+function copyRoomCode(){
+  navigator.clipboard.writeText(roomCode).then(()=>{
+    const btn=document.getElementById('copyBtn');
+    const old=btn.textContent; btn.textContent='✅ কপি হয়েছে';
+    setTimeout(()=>btn.textContent=old,1500);
   });
 }
 
-let onlineGameStarted = false;
-let onlineResultHandled = {};
-let chatUnreadCount = 0;
-let chatStarted = false;
-
-function listenToRoom(code, isHost){
-  onlineGameStarted = false;
-  const roomRef = db.ref('rooms/'+code);
-  roomRef.on('value', snapshot=>{
-    const data = snapshot.val();
-    if(!data) return;
-
-    const newBoard = data.board || Array(9).fill('');
-    const newTurn = data.turn || 'X';
-    const isReset = newBoard.every(c => c === '');
-
-    game.board = newBoard;
-    game.turn = newTurn;
-
-    if(isHost && data.players && data.players.O && !onlineGameStarted){
-      onlineGameStarted = true;
-      game.opponentName = data.players.O;
-      startOnlineGameUI();
+function attachRoomListener(){
+  roomRef = db.ref('rooms/'+roomCode);
+  roomRef.on('value', snap=>{
+    const data = snap.val();
+    if(!data){
+      alert('রুমটি বন্ধ হয়ে গেছে।');
+      hardExitOnline();
+      return;
     }
-    if(!isHost && !onlineGameStarted){
-      onlineGameStarted = true;
+    oppName = mySymbol==='X' ? (data.players?data.players.O:null) : (data.players?data.players.X:null);
+
+    if(data.status==='waiting'){
+      document.getElementById('roomCodeDisplay').textContent = roomCode;
+      if(currentScreenId!=='screen-waiting') showScreen('screen-waiting');
+      return;
     }
 
-    if(document.getElementById('screen-game').classList.contains('active')){
-      if(isReset){
-        game.active = true;
-        closeResult();
-        onlineResultHandled = {};
-        renderBoardUI();
-      } else {
-        renderBoardOnlyUpdate();
-      }
-      updateTurnIndicator();
+    if(currentScreenId!=='screen-game'){
+      enterOnlineGameScreen();
     }
 
-    if(data.winner){
+    const isEmptyBoard = data.board.every(c=>c==='');
+    if(isEmptyBoard && resultShown){
+      clearBoardUI();
+      hideResultOverlay();
+      resultShown=false;
+    }
+
+    board = data.board.slice();
+    currentPlayer = data.turn;
+    starter = data.starter || 'X';
+    gameActive = (data.status==='playing');
+    renderBoard();
+    updateOnlineHeaderNames();
+    updateTurnIndicator();
+
+    if(data.status==='finished' && !resultShown){
+      resultShown = true;
+      gameActive = false;
+      if(data.winCombo){ drawWinLine(data.winCombo); highlightWinCells(data.winCombo); }
       handleOnlineResult(data.winner);
     }
   });
 }
 
-function startOnlineGameUI(){
-  game.mode = 'online';
-  game.active = true;
-  const mySym = game.mySymbol;
-  document.getElementById('vsBadge').innerHTML = `👤 ${profile.name} (${mySym})  🆚  🌐 ${game.opponentName} (${mySym==='X'?'O':'X'})`;
-  document.getElementById('scorePill').innerHTML = '';
-  document.getElementById('chatToggleBtn').style.display = 'flex';
-  renderBoardUI();
+function enterOnlineGameScreen(){
   showScreen('screen-game');
-
-  if(!chatStarted){
-    chatStarted = true;
-    document.getElementById('chatMessages').innerHTML = '<div class="chat-empty" id="chatEmptyMsg">এখনো কোনো মেসেজ নেই। হাই বলে শুরু করো! 👋</div>';
-    chatUnreadCount = 0;
-    updateChatBadge();
-    listenToChat(game.roomCode);
-  }
+  setupGameScreenFor('online');
+  clearBoardUI();
+  hideResultOverlay();
+  listenChat();
+}
+function updateOnlineHeaderNames(){
+  const xName = mySymbol==='X' ? (profile.name||'আপনি') : (oppName||'হোস্ট');
+  const oName = mySymbol==='O' ? (profile.name||'আপনি') : (oppName||'প্রতিপক্ষ');
+  document.getElementById('leftName').textContent = xName+' ❌';
+  document.getElementById('rightName').textContent = oName+' ⭕';
 }
 
-function renderBoardOnlyUpdate(){
-  document.querySelectorAll('.cell').forEach((cell, idx)=>{
-    const val = game.board[idx];
-    if(val && !cell.classList.contains('filled')){
-      cell.classList.add('filled');
-      cell.appendChild(createMarkSVG(val));
-      playSound('move');
+function makeOnlineMove(i){
+  if(!roomRef) return;
+  roomRef.once('value').then(snap=>{
+    const data = snap.val();
+    if(!data || data.status!=='playing') return;
+    if(data.board[i]!=='') return;
+    if(data.turn!==mySymbol) return;
+    const newBoard = data.board.slice();
+    newBoard[i] = mySymbol;
+    const result = checkGameEndArr(newBoard);
+    const updates = {board:newBoard};
+    if(result){
+      updates.status='finished';
+      updates.winner=result.winner;
+      updates.winCombo=result.combo||null;
+    } else {
+      updates.turn = mySymbol==='X' ? 'O' : 'X';
     }
-  });
-}
-
-function makeOnlineMove(idx){
-  if(game.board[idx] !== '') return;
-  const newBoard = [...game.board];
-  newBoard[idx] = game.mySymbol;
-
-  let winner = '';
-  if(checkWinner(newBoard, game.mySymbol)) winner = game.mySymbol;
-  else if(isBoardFull(newBoard)) winner = 'draw';
-
-  db.ref('rooms/'+game.roomCode).update({
-    board: newBoard,
-    turn: game.mySymbol === 'X' ? 'O' : 'X',
-    winner: winner
+    roomRef.update(updates);
   });
 }
 
 function handleOnlineResult(winner){
-  const key = game.roomCode+'_'+JSON.stringify(game.board);
-  if(onlineResultHandled[key]) return;
-  onlineResultHandled[key] = true;
-  game.active = false;
+  const outcome = winner==='draw' ? 'draw' : (winner===mySymbol ? 'win' : 'loss');
+  recordProfileResult(outcome);
+  playSound(outcome==='win'?'win':outcome==='loss'?'lose':'draw');
+  showResultOverlay(winner);
+}
 
-  if(winner !== 'draw'){
-    const pattern = getWinPattern(game.board, winner);
-    if(pattern) showWinLine(pattern);
-  }
-
-  setTimeout(()=>{
-    if(winner === 'draw'){
-      playSound('draw');
-      updateStats('draw');
-      showResult('🤝','ড্র হয়েছে!','কেউ জেতেনি!');
-    } else if(winner === game.mySymbol){
-      playSound('win');
-      updateStats('win');
-      showResult('🎉','তুমি জিতেছো!','অসাধারণ খেলেছো!');
+function onlinePlayAgain(){
+  if(!roomRef) return;
+  db.ref('rooms/'+roomCode).once('value').then(snap=>{
+    const data = snap.val();
+    if(!data) return;
+    let newStarter;
+    if(!data.winner || data.winner==='draw'){
+      const prevStarter = data.starter || 'X';
+      newStarter = prevStarter==='X' ? 'O' : 'X';
     } else {
-      playSound('lose');
-      updateStats('loss');
-      showResult('😢',`${game.opponentName} জিতেছে!`,'আরেকবার চেষ্টা করো!');
+      newStarter = data.winner; // বিজয়ীই পরের রাউন্ডে প্রথমে খেলবে
     }
-  }, 500);
-}
-
-/* ================= CHAT SYSTEM ================= */
-function toggleChat(){
-  const drawer = document.getElementById('chatDrawer');
-  if(drawer.classList.contains('active')){
-    drawer.classList.remove('active');
-  } else {
-    drawer.classList.add('active');
-    chatUnreadCount = 0;
-    updateChatBadge();
-    scrollChatToBottom();
-  }
-}
-
-function updateChatBadge(){
-  const badge = document.getElementById('chatBadge');
-  if(chatUnreadCount > 0){
-    badge.style.display='flex';
-    badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
-  } else {
-    badge.style.display='none';
-  }
-}
-
-function listenToChat(code){
-  if(!db) return;
-  const chatRef = db.ref('rooms/'+code+'/chat');
-  chatRef.on('child_added', snapshot=>{
-    const msg = snapshot.val();
-    if(!msg) return;
-    renderChatMessage(msg);
-    const drawer = document.getElementById('chatDrawer');
-    if(!drawer.classList.contains('active') && msg.sender !== game.mySymbol){
-      chatUnreadCount++;
-      updateChatBadge();
-      playSound('chat');
-      showToast('💬 '+msg.name+': '+msg.text);
-    }
+    db.ref('rooms/'+roomCode).update({
+      board:['','','','','','','','',''],
+      turn:newStarter,
+      starter:newStarter,
+      winner:null,
+      winCombo:null,
+      status:'playing'
+    });
   });
 }
 
-function renderChatMessage(msg){
-  const emptyMsg = document.getElementById('chatEmptyMsg');
-  if(emptyMsg) emptyMsg.remove();
-
-  const container = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  const isMe = msg.sender === game.mySymbol;
-  div.className = 'chat-msg ' + (isMe ? 'me':'other');
-  const nameLabel = isMe ? 'তুমি' : (msg.name || 'প্রতিপক্ষ');
-  div.innerHTML = `<span class="sender">${nameLabel}</span>${escapeHtml(msg.text)}`;
-  container.appendChild(div);
-  scrollChatToBottom();
+/* ===================== CHAT ===================== */
+function toggleChat(){
+  chatOpen = !chatOpen;
+  document.getElementById('chatDrawer').classList.toggle('open', chatOpen);
+  if(chatOpen){ unreadCount=0; updateChatBadge(); }
 }
-
-function scrollChatToBottom(){
-  const container = document.getElementById('chatMessages');
-  container.scrollTop = container.scrollHeight;
+function updateChatBadge(){
+  const badge = document.getElementById('chatBadge');
+  if(unreadCount>0){ badge.style.display='flex'; badge.textContent = unreadCount>9?'9+':unreadCount; }
+  else badge.style.display='none';
 }
-
-function escapeHtml(text){
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function listenChat(){
+  document.getElementById('chatMessages').innerHTML='';
+  unreadCount=0; updateChatBadge();
+  if(chatRef) chatRef.off();
+  chatRef = db.ref('rooms/'+roomCode+'/chat');
+  chatRef.on('child_added', snap=>{
+    const msg = snap.val();
+    if(!msg) return;
+    appendChatBubble(msg);
+    if(msg.sender !== mySymbol){
+      playSound('chat');
+      if(!chatOpen){ unreadCount++; updateChatBadge(); showChatToast(msg); }
+    }
+  });
 }
-
-function sendChatMessage(){
-  const input = document.getElementById('chatInput');
-  const text = input.value.trim();
-  if(!text || !game.roomCode || !db) return;
-  db.ref('rooms/'+game.roomCode+'/chat').push({
-    sender: game.mySymbol,
-    name: profile.name,
+function sendChatMessage(text){
+  text = (text||'').trim();
+  if(!text || !roomCode) return;
+  db.ref('rooms/'+roomCode+'/chat').push({
+    sender: mySymbol,
+    name: profile.name||'খেলোয়াড়',
     text: text,
     time: Date.now()
   });
-  input.value = '';
+  document.getElementById('chatInput').value='';
+}
+function appendChatBubble(msg){
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (msg.sender===mySymbol ? 'me' : 'other');
+  div.innerHTML = `<span class="chat-name">${escapeHtml(msg.name||'')}</span><div class="chat-bubble">${escapeHtml(msg.text)}</div>`;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+function showChatToast(msg){
+  const toast = document.createElement('div');
+  toast.className='chat-toast';
+  toast.textContent = `${msg.name}: ${msg.text}`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.classList.add('show'),10);
+  setTimeout(()=>{ toast.classList.remove('show'); setTimeout(()=>toast.remove(),300); },3000);
+}
+function escapeHtml(str){
+  const div=document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
-function sendQuickEmoji(emoji){
-  if(!game.roomCode || !db) return;
-  db.ref('rooms/'+game.roomCode+'/chat').push({
-    sender: game.mySymbol,
-    name: profile.name,
-    text: emoji,
-    time: Date.now()
-  });
+/* ===================== SOUND ===================== */
+let audioCtx=null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+function beep(freq,dur,type='sine',delay=0,vol=0.2){
+  ensureAudio();
+  const t0 = audioCtx.currentTime+delay;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type=type; osc.frequency.value=freq;
+  gain.gain.setValueAtTime(vol,t0);
+  gain.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.start(t0); osc.stop(t0+dur);
+}
+function playSound(type){
+  if(!soundOn) return;
+  switch(type){
+    case 'move': beep(440,.08); break;
+    case 'win': beep(523,.15); beep(659,.15,'sine',.15); beep(784,.25,'sine',.3); break;
+    case 'lose': beep(300,.3,'sawtooth'); break;
+    case 'draw': beep(350,.2); beep(350,.2,'sine',.2); break;
+    case 'chat': beep(880,.08,'triangle'); break;
+  }
+}
+function toggleSound(){
+  soundOn = !soundOn;
+  localStorage.setItem('xo_sound', soundOn?'1':'0');
+  document.getElementById('soundBtn').textContent = soundOn?'🔊':'🔇';
+}
+
+/* ===================== CONFETTI ===================== */
+function launchConfetti(){
+  const colors=['#ffd700','#ff5e7a','#4fd1ff','#9b5cff','#4ade80'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2+Math.random()*2)+'s';
+    const size = (6+Math.random()*6)+'px';
+    c.style.width=size; c.style.height=size;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
 }
 </script>
 </body>

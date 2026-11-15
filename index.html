@@ -69,9 +69,11 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 /* RESULT OVERLAY */
 .result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.25s;}
 .result-overlay.show{opacity:1;pointer-events:auto;}
+.left-overlay{z-index:150;}
 .result-card{background:rgba(30,25,60,.95);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:34px 26px;text-align:center;width:88%;max-width:340px;animation:cardIn .3s ease;}
 .result-emoji{font-size:54px;margin-bottom:10px;}
 .result-text{font-size:20px;font-weight:700;margin-bottom:10px;}
+.result-sub{font-size:13px;opacity:.75;margin-bottom:14px;}
 .next-starter-note{font-size:13px;opacity:.85;background:rgba(255,255,255,.08);padding:8px 10px;border-radius:10px;margin-bottom:16px;}
 .result-actions .btn{margin:8px 0;}
 
@@ -92,6 +94,9 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 .chat-bubble{padding:9px 13px;border-radius:14px;font-size:14px;word-break:break-word;display:inline-block;}
 .chat-msg.me .chat-bubble{background:linear-gradient(135deg,#ff5e7a,#ff8a5e);border-bottom-right-radius:4px;}
 .chat-msg.other .chat-bubble{background:rgba(255,255,255,.12);border-bottom-left-radius:4px;}
+.chat-status{display:block;font-size:10px;opacity:.65;margin-top:3px;}
+.chat-status.seen{color:#4fd1ff;opacity:1;font-weight:600;}
+.chat-system{align-self:center;font-size:11px;opacity:.75;background:rgba(255,255,255,.06);padding:4px 12px;border-radius:10px;text-align:center;}
 .chat-emojis{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;}
 .chat-emojis button{background:rgba(255,255,255,.08);border:none;border-radius:10px;font-size:18px;padding:6px 10px;cursor:pointer;flex-shrink:0;}
 .chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.1);}
@@ -115,7 +120,7 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 <!-- NAME SCREEN -->
 <div id="screen-name" class="screen active">
   <div class="card">
-    <h1 class="logo">❌⭕ </h1>
+    <h1 class="logo">❌⭕</h1>
     <p>শুরু করতে আপনার নাম লিখুন</p>
     <input id="nameInput" type="text" class="code-input" placeholder="আপনার নাম" maxlength="20">
     <button class="btn btn-primary" onclick="saveName()">▶️ শুরু করুন</button>
@@ -125,7 +130,7 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 <!-- MENU SCREEN -->
 <div id="screen-menu" class="screen">
   <div class="card">
-    <h1 class="logo">❌⭕ </h1>
+    <h1 class="logo">❌⭕</h1>
     <p id="menuGreeting" class="greeting"></p>
     <button class="btn btn-primary" onclick="showScreen('screen-difficulty')">🤖 কম্পিউটারের সাথে খেলুন</button>
     <button class="btn btn-primary" onclick="startLocalGame()">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
@@ -229,6 +234,18 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
   </div>
 </div>
 
+<!-- OPPONENT LEFT OVERLAY -->
+<div id="leftOverlay" class="result-overlay left-overlay">
+  <div class="result-card">
+    <div class="result-emoji">🚪</div>
+    <div class="result-text">প্রতিপক্ষ গেম ছেড়ে চলে গেছে</div>
+    <p class="result-sub">খেলাটি আর চালানো যাবে না।</p>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="exitGame()">🏠 মেনুতে ফিরুন</button>
+    </div>
+  </div>
+</div>
+
 <!-- CHAT DRAWER -->
 <div id="chatDrawer" class="chat-drawer">
   <div class="chat-overlay" onclick="toggleChat()"></div>
@@ -291,15 +308,17 @@ const playerSymbol='X', computerSymbol='O';
 let board = Array(9).fill('');
 let displayedBoard = Array(9).fill('');
 let currentPlayer = 'X';
-let starter = 'X';       // এই রাউন্ডে কে আগে শুরু করেছে
-let lastResult = null;   // local/computer মোডে শেষ রাউন্ডের ফলাফল
+let starter = 'X';
+let lastResult = null;
 let gameActive = false;
 let localScore = {X:0,O:0,draw:0};
 
 // Online
 let roomCode=null, mySymbol=null, isHost=false, oppName=null;
-let roomRef=null, chatRef=null, resultShown=false;
+let roomRef=null, chatRef=null, readRef=null, resultShown=false;
 let chatOpen=false, unreadCount=0;
+let oppReadKey='', lastOtherKey=null, lastSentReadKey=null;
+let oppJoinedOnce=false, oppLeftShown=false;
 
 /* ===================== INIT ===================== */
 window.onload = function(){
@@ -486,6 +505,7 @@ function handleCellClick(i){
 
 function updateTurnIndicator(){
   const el = document.getElementById('turnIndicator');
+  if(mode==='online' && oppLeftShown){ el.textContent='⚠️ প্রতিপক্ষ চলে গেছে'; return; }
   if(!gameActive){ el.textContent='খেলা শেষ হয়েছে'; return; }
   if(mode==='online'){
     el.textContent = currentPlayer===mySymbol ? '👉 আপনার পালা' : '⏳ প্রতিপক্ষের পালা';
@@ -564,7 +584,7 @@ function computerMove(){
   updateTurnIndicator();
 }
 
-/* ===================== PLAY AGAIN (বিজয়ী আগে শুরু করবে) ===================== */
+/* ===================== PLAY AGAIN ===================== */
 function playAgain(){
   if(mode==='online'){ onlinePlayAgain(); return; }
 
@@ -574,7 +594,7 @@ function playAgain(){
   let newStarter;
   if(lastResult===null) newStarter='X';
   else if(lastResult==='draw') newStarter = (starter==='X') ? 'O' : 'X';
-  else newStarter = lastResult; // বিজয়ী প্রতীকই পরের রাউন্ডে প্রথমে শুরু করবে
+  else newStarter = lastResult;
 
   starter = newStarter;
   board = Array(9).fill('');
@@ -618,33 +638,54 @@ function showResultOverlay(winner){
   if(celebrate) launchConfetti();
 }
 function hideResultOverlay(){ document.getElementById('resultOverlay').classList.remove('show'); }
+function hideLeftOverlay(){ document.getElementById('leftOverlay').classList.remove('show'); }
 
 /* ===================== EXIT ===================== */
 function exitGame(){
-  if(mode==='online'){
-    if(roomRef) roomRef.off();
-    if(chatRef) chatRef.off();
-    if(roomCode){
-      if(isHost){ db.ref('rooms/'+roomCode).remove(); }
-      else{
-        db.ref('rooms/'+roomCode+'/players/O').set(null)
-          .then(()=> db.ref('rooms/'+roomCode+'/status').set('waiting'));
-      }
-    }
-    roomCode=null; mySymbol=null; isHost=false; resultShown=false; roomRef=null; chatRef=null;
-  }
+  if(mode==='online') leaveOnlineRoom();
   mode=null; gameActive=false;
+  hideResultOverlay(); hideLeftOverlay();
   showScreen('screen-menu');
 }
+
+function detachOnlineListeners(){
+  if(roomRef){ roomRef.off(); roomRef=null; }
+  if(chatRef){ chatRef.off(); chatRef=null; }
+  if(readRef){ readRef.off(); readRef=null; }
+}
+function resetOnlineState(){
+  roomCode=null; mySymbol=null; isHost=false; oppName=null; resultShown=false;
+  oppJoinedOnce=false; oppLeftShown=false;
+  lastOtherKey=null; lastSentReadKey=null; oppReadKey='';
+  chatOpen=false;
+  document.getElementById('chatDrawer').classList.remove('open');
+  unreadCount=0; updateChatBadge();
+}
+function leaveOnlineRoom(){
+  const code = roomCode, sym = mySymbol;
+  detachOnlineListeners();
+  resetOnlineState();
+  if(!code || !sym || !db) return;
+  const presRef = db.ref('rooms/'+code+'/presence/'+sym);
+  presRef.onDisconnect().cancel();
+  presRef.set(false).then(()=>{
+    db.ref('rooms/'+code+'/presence').once('value').then(s=>{
+      const p = s.val() || {};
+      if(!p.X && !p.O) db.ref('rooms/'+code).remove();
+    });
+  });
+}
 function hardExitOnline(){
-  if(roomRef) roomRef.off();
-  if(chatRef) chatRef.off();
-  mode=null; roomCode=null; mySymbol=null; isHost=false; resultShown=false; roomRef=null; chatRef=null;
+  detachOnlineListeners();
+  resetOnlineState();
+  mode=null; gameActive=false;
+  hideResultOverlay(); hideLeftOverlay();
   showScreen('screen-menu');
 }
 
 /* ===================== ONLINE: ROOM ===================== */
 function generateRoomCode(){ return String(Math.floor(1000+Math.random()*9000)); }
+function oppSymbol(){ return mySymbol==='X' ? 'O' : 'X'; }
 
 function createRoom(){
   if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে।'); return; }
@@ -657,10 +698,10 @@ function createRoom(){
     turn:'X',
     starter:'X',
     players:{X: profile.name||'হোস্ট', O: null},
+    presence:{X:true, O:false},
     status:'waiting',
     winner:null,
     winCombo:null,
-    chat:null,
     createdAt: Date.now()
   }).then(()=>{
     document.getElementById('roomCodeDisplay').textContent = roomCode;
@@ -678,18 +719,28 @@ function joinRoom(){
     const data = snap.val();
     if(!data){ alert('এই কোডে কোনো রুম পাওয়া যায়নি।'); return; }
     if(data.status!=='waiting'){ alert('রুমটি এখন জয়েন করা যাবে না।'); return; }
+    if(data.presence && data.presence.X!==true){ alert('রুমের হোস্ট সংযোগ বিচ্ছিন্ন করেছেন।'); return; }
     mode='online';
     roomCode=code; mySymbol='O'; isHost=false; resultShown=false;
-    ref.update({'players/O': profile.name||'খেলোয়াড় ২', status:'playing'}).then(()=>{
+    ref.update({
+      'players/O': profile.name||'খেলোয়াড় ২',
+      'presence/O': true,
+      status:'playing'
+    }).then(()=>{
       attachRoomListener();
     });
   }).catch(e=>alert('ত্রুটি: '+e.message));
 }
 
 function cancelRoom(){
-  if(roomRef) roomRef.off();
-  if(roomCode) db.ref('rooms/'+roomCode).remove();
-  roomCode=null; mySymbol=null; isHost=false; roomRef=null;
+  const code = roomCode;
+  detachOnlineListeners();
+  if(code && db){
+    db.ref('rooms/'+code+'/presence/X').onDisconnect().cancel();
+    db.ref('rooms/'+code).remove();
+  }
+  resetOnlineState();
+  mode=null;
   showScreen('screen-online');
 }
 
@@ -703,6 +754,12 @@ function copyRoomCode(){
 
 function attachRoomListener(){
   roomRef = db.ref('rooms/'+roomCode);
+
+  // নিজের উপস্থিতি: ট্যাব বন্ধ/নেট কাটলে অটোমেটিক false হবে
+  const myPres = db.ref('rooms/'+roomCode+'/presence/'+mySymbol);
+  myPres.onDisconnect().set(false);
+  myPres.set(true);
+
   roomRef.on('value', snap=>{
     const data = snap.val();
     if(!data){
@@ -711,6 +768,15 @@ function attachRoomListener(){
       return;
     }
     oppName = mySymbol==='X' ? (data.players?data.players.O:null) : (data.players?data.players.X:null);
+
+    // প্রতিপক্ষ ছেড়ে গেছে কিনা
+    const pres = data.presence || {};
+    const oppSym = oppSymbol();
+    if(pres[oppSym]===true) oppJoinedOnce = true;
+    if(oppJoinedOnce && pres[oppSym]===false && !oppLeftShown && data.status!=='waiting'){
+      oppLeftShown = true;
+      onOpponentLeft();
+    }
 
     if(data.status==='waiting'){
       document.getElementById('roomCodeDisplay').textContent = roomCode;
@@ -732,7 +798,7 @@ function attachRoomListener(){
     board = data.board.slice();
     currentPlayer = data.turn;
     starter = data.starter || 'X';
-    gameActive = (data.status==='playing');
+    gameActive = (data.status==='playing') && !oppLeftShown;
     renderBoard();
     updateOnlineHeaderNames();
     updateTurnIndicator();
@@ -746,11 +812,19 @@ function attachRoomListener(){
   });
 }
 
+function onOpponentLeft(){
+  gameActive=false;
+  updateTurnIndicator();
+  appendSystemMessage('⚠️ প্রতিপক্ষ গেম ছেড়ে চলে গেছে');
+  playSound('draw');
+  document.getElementById('leftOverlay').classList.add('show');
+}
+
 function enterOnlineGameScreen(){
   showScreen('screen-game');
   setupGameScreenFor('online');
   clearBoardUI();
-  hideResultOverlay();
+  hideResultOverlay(); hideLeftOverlay();
   listenChat();
 }
 function updateOnlineHeaderNames(){
@@ -761,7 +835,7 @@ function updateOnlineHeaderNames(){
 }
 
 function makeOnlineMove(i){
-  if(!roomRef) return;
+  if(!roomRef || oppLeftShown) return;
   roomRef.once('value').then(snap=>{
     const data = snap.val();
     if(!data || data.status!=='playing') return;
@@ -790,7 +864,7 @@ function handleOnlineResult(winner){
 }
 
 function onlinePlayAgain(){
-  if(!roomRef) return;
+  if(!roomRef || oppLeftShown) return;
   db.ref('rooms/'+roomCode).once('value').then(snap=>{
     const data = snap.val();
     if(!data) return;
@@ -799,7 +873,7 @@ function onlinePlayAgain(){
       const prevStarter = data.starter || 'X';
       newStarter = prevStarter==='X' ? 'O' : 'X';
     } else {
-      newStarter = data.winner; // বিজয়ীই পরের রাউন্ডে প্রথমে খেলবে
+      newStarter = data.winner;
     }
     db.ref('rooms/'+roomCode).update({
       board:['','','','','','','','',''],
@@ -816,28 +890,63 @@ function onlinePlayAgain(){
 function toggleChat(){
   chatOpen = !chatOpen;
   document.getElementById('chatDrawer').classList.toggle('open', chatOpen);
-  if(chatOpen){ unreadCount=0; updateChatBadge(); }
+  if(chatOpen){
+    unreadCount=0; updateChatBadge();
+    markChatRead();
+    const box = document.getElementById('chatMessages');
+    box.scrollTop = box.scrollHeight;
+  }
 }
 function updateChatBadge(){
   const badge = document.getElementById('chatBadge');
   if(unreadCount>0){ badge.style.display='flex'; badge.textContent = unreadCount>9?'9+':unreadCount; }
   else badge.style.display='none';
 }
+function oppReadState(){ return oppReadKey; }
+
+// চ্যাট খোলা থাকলে প্রতিপক্ষের সর্বশেষ মেসেজ পড়া হয়েছে বলে জানানো
+function markChatRead(){
+  if(!roomCode || !lastOtherKey || !db) return;
+  if(lastSentReadKey===lastOtherKey) return;
+  lastSentReadKey = lastOtherKey;
+  db.ref('rooms/'+roomCode+'/read/'+mySymbol).set(lastOtherKey);
+}
+
+function applySeenState(el){
+  const key = el.dataset.key;
+  const seen = !!oppReadKey && key <= oppReadKey;
+  el.textContent = seen ? '✓✓ দেখা হয়েছে' : '✓ পাঠানো হয়েছে';
+  el.classList.toggle('seen', seen);
+}
+
 function listenChat(){
   document.getElementById('chatMessages').innerHTML='';
   unreadCount=0; updateChatBadge();
+  lastOtherKey=null; lastSentReadKey=null; oppReadKey='';
   if(chatRef) chatRef.off();
+  if(readRef) readRef.off();
+
   chatRef = db.ref('rooms/'+roomCode+'/chat');
   chatRef.on('child_added', snap=>{
     const msg = snap.val();
     if(!msg) return;
-    appendChatBubble(msg);
+    appendChatBubble(snap.key, msg);
     if(msg.sender !== mySymbol){
+      lastOtherKey = snap.key;
       playSound('chat');
-      if(!chatOpen){ unreadCount++; updateChatBadge(); showChatToast(msg); }
+      if(chatOpen){ markChatRead(); }
+      else { unreadCount++; updateChatBadge(); showChatToast(msg); }
     }
   });
+
+  readRef = db.ref('rooms/'+roomCode+'/read');
+  readRef.on('value', snap=>{
+    const r = snap.val() || {};
+    oppReadKey = r[oppSymbol()] || '';
+    document.querySelectorAll('.chat-status').forEach(applySeenState);
+  });
 }
+
 function sendChatMessage(text){
   text = (text||'').trim();
   if(!text || !roomCode) return;
@@ -849,14 +958,30 @@ function sendChatMessage(text){
   });
   document.getElementById('chatInput').value='';
 }
-function appendChatBubble(msg){
+
+function appendChatBubble(key, msg){
+  const box = document.getElementById('chatMessages');
+  const isMe = msg.sender===mySymbol;
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (isMe ? 'me' : 'other');
+  let statusHtml = '';
+  if(isMe) statusHtml = `<span class="chat-status" data-key="${key}"></span>`;
+  div.innerHTML = `<span class="chat-name">${escapeHtml(msg.name||'')}</span><div class="chat-bubble">${escapeHtml(msg.text)}</div>${statusHtml}`;
+  box.appendChild(div);
+  const st = div.querySelector('.chat-status');
+  if(st) applySeenState(st);
+  box.scrollTop = box.scrollHeight;
+}
+
+function appendSystemMessage(text){
   const box = document.getElementById('chatMessages');
   const div = document.createElement('div');
-  div.className = 'chat-msg ' + (msg.sender===mySymbol ? 'me' : 'other');
-  div.innerHTML = `<span class="chat-name">${escapeHtml(msg.name||'')}</span><div class="chat-bubble">${escapeHtml(msg.text)}</div>`;
+  div.className = 'chat-system';
+  div.textContent = text;
   box.appendChild(div);
   box.scrollTop = box.scrollHeight;
 }
+
 function showChatToast(msg){
   const toast = document.createElement('div');
   toast.className='chat-toast';

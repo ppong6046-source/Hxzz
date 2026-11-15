@@ -43,6 +43,9 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 .stat-box span{display:block;font-size:24px;font-weight:800;color:#ffd700;}
 .stat-box label{font-size:12px;opacity:.75;}
 
+/* ERROR BAR */
+#errBar{display:none;position:fixed;top:0;left:0;right:0;background:#b00020;color:#fff;font-size:12px;padding:8px 10px;z-index:999;text-align:center;word-break:break-word;}
+
 /* GAME SCREEN */
 #screen-game{flex-direction:column;padding:14px;}
 .game-wrap{width:100%;max-width:420px;margin:0 auto;}
@@ -113,6 +116,7 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 </style>
 </head>
 <body>
+<div id="errBar"></div>
 <div class="blob blob1"></div>
 <div class="blob blob2"></div>
 <div class="blob blob3"></div>
@@ -123,7 +127,7 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
     <h1 class="logo">❌⭕</h1>
     <p>শুরু করতে আপনার নাম লিখুন</p>
     <input id="nameInput" type="text" class="code-input" placeholder="আপনার নাম" maxlength="20">
-    <button class="btn btn-primary" onclick="saveName()">▶️ শুরু করুন</button>
+    <button class="btn btn-primary" data-action="saveName">▶️ শুরু করুন</button>
   </div>
 </div>
 
@@ -132,10 +136,10 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
   <div class="card">
     <h1 class="logo">❌⭕</h1>
     <p id="menuGreeting" class="greeting"></p>
-    <button class="btn btn-primary" onclick="showScreen('screen-difficulty')">🤖 কম্পিউটারের সাথে খেলুন</button>
-    <button class="btn btn-primary" onclick="startLocalGame()">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
-    <button class="btn btn-primary" onclick="showScreen('screen-online')">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
-    <button class="btn btn-secondary" onclick="showScreen('screen-profile')">👤 প্রোফাইল</button>
+    <button class="btn btn-primary" data-action="goDifficulty">🤖 কম্পিউটারের সাথে খেলুন</button>
+    <button class="btn btn-primary" data-action="startLocal">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
+    <button class="btn btn-primary" data-action="goOnline">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
+    <button class="btn btn-secondary" data-action="goProfile">👤 প্রোফাইল</button>
   </div>
 </div>
 
@@ -143,10 +147,10 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 <div id="screen-difficulty" class="screen">
   <div class="card">
     <h2>🤖 কঠিনতার মাত্রা বেছে নিন</h2>
-    <button class="btn btn-primary" onclick="startComputerGame('easy')">😊 সহজ</button>
-    <button class="btn btn-primary" onclick="startComputerGame('medium')">😐 মধ্যম</button>
-    <button class="btn btn-primary" onclick="startComputerGame('hard')">🔥 কঠিন (Unbeatable)</button>
-    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+    <button class="btn btn-primary" data-action="startComputer" data-level="easy">😊 সহজ</button>
+    <button class="btn btn-primary" data-action="startComputer" data-level="medium">😐 মধ্যম</button>
+    <button class="btn btn-primary" data-action="startComputer" data-level="hard">🔥 কঠিন (Unbeatable)</button>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
   </div>
 </div>
 
@@ -154,11 +158,11 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 <div id="screen-online" class="screen">
   <div class="card">
     <h2>🌐 অনলাইনে খেলুন</h2>
-    <button class="btn btn-primary" onclick="createRoom()">➕ নতুন রুম তৈরি করুন</button>
+    <button class="btn btn-primary" data-action="createRoom">➕ নতুন রুম তৈরি করুন</button>
     <div class="divider">— অথবা —</div>
     <input id="joinCodeInput" type="text" class="code-input" maxlength="4" inputmode="numeric" placeholder="৪ সংখ্যার কোড লিখুন">
-    <button class="btn btn-secondary" onclick="joinRoom()">🔑 জয়েন করুন</button>
-    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+    <button class="btn btn-secondary" data-action="joinRoom">🔑 জয়েন করুন</button>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
   </div>
 </div>
 
@@ -169,10 +173,10 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
     <p>আপনার বন্ধুকে এই কোডটি পাঠান:</p>
     <div class="room-code-box">
       <span id="roomCodeDisplay">----</span>
-      <button id="copyBtn" onclick="copyRoomCode()">📋 কপি</button>
+      <button id="copyBtn" data-action="copyRoomCode">📋 কপি</button>
     </div>
     <div class="loader"></div>
-    <button class="btn btn-ghost" onclick="cancelRoom()">❌ বাতিল করুন</button>
+    <button class="btn btn-ghost" data-action="cancelRoom">❌ বাতিল করুন</button>
   </div>
 </div>
 
@@ -181,7 +185,7 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
   <div class="card">
     <h2>👤 প্রোফাইল</h2>
     <input id="profileNameInput" type="text" class="code-input" placeholder="আপনার নাম">
-    <button class="btn btn-secondary" onclick="updateProfileName()">✏️ নাম আপডেট করুন</button>
+    <button class="btn btn-secondary" data-action="updateProfileName">✏️ নাম আপডেট করুন</button>
     <div class="stats-grid">
       <div class="stat-box"><span id="statWins">0</span><label>জয়</label></div>
       <div class="stat-box"><span id="statLosses">0</span><label>হার</label></div>
@@ -189,8 +193,8 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
       <div class="stat-box"><span id="statTotal">0</span><label>মোট</label></div>
     </div>
     <p>🏆 জয়ের হার: <span id="statWinrate">0%</span></p>
-    <button class="btn btn-ghost" onclick="resetStats()">🗑️ পরিসংখ্যান মুছুন</button>
-    <button class="btn btn-ghost" onclick="showScreen('screen-menu')">← ফিরে যান</button>
+    <button class="btn btn-ghost" data-action="resetStats">🗑️ পরিসংখ্যান মুছুন</button>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
   </div>
 </div>
 
@@ -198,25 +202,25 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
 <div id="screen-game" class="screen">
   <div class="game-wrap">
     <div class="game-header">
-      <button class="icon-btn" onclick="exitGame()">←</button>
+      <button class="icon-btn" data-action="exitGame">←</button>
       <div class="vs-info"><span id="leftName">X</span> &nbsp;VS&nbsp; <span id="rightName">O</span></div>
       <div class="header-actions">
         <span id="scorePill" class="score-pill"></span>
-        <button id="chatBtn" class="icon-btn" style="display:none;" onclick="toggleChat()">💬<span id="chatBadge" class="badge">0</span></button>
-        <button id="soundBtn" class="icon-btn" onclick="toggleSound()">🔊</button>
+        <button id="chatBtn" class="icon-btn" style="display:none;" data-action="toggleChat">💬<span id="chatBadge" class="badge">0</span></button>
+        <button id="soundBtn" class="icon-btn" data-action="toggleSound">🔊</button>
       </div>
     </div>
     <div id="turnIndicator" class="turn-indicator">আপনার পালা</div>
     <div class="board" id="board">
-      <div class="cell" onclick="handleCellClick(0)"></div>
-      <div class="cell" onclick="handleCellClick(1)"></div>
-      <div class="cell" onclick="handleCellClick(2)"></div>
-      <div class="cell" onclick="handleCellClick(3)"></div>
-      <div class="cell" onclick="handleCellClick(4)"></div>
-      <div class="cell" onclick="handleCellClick(5)"></div>
-      <div class="cell" onclick="handleCellClick(6)"></div>
-      <div class="cell" onclick="handleCellClick(7)"></div>
-      <div class="cell" onclick="handleCellClick(8)"></div>
+      <div class="cell" data-index="0"></div>
+      <div class="cell" data-index="1"></div>
+      <div class="cell" data-index="2"></div>
+      <div class="cell" data-index="3"></div>
+      <div class="cell" data-index="4"></div>
+      <div class="cell" data-index="5"></div>
+      <div class="cell" data-index="6"></div>
+      <div class="cell" data-index="7"></div>
+      <div class="cell" data-index="8"></div>
     </div>
   </div>
 </div>
@@ -228,8 +232,8 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
     <div id="resultText" class="result-text">আপনি জিতেছেন!</div>
     <div id="nextStarterNote" class="next-starter-note"></div>
     <div class="result-actions">
-      <button class="btn btn-primary" onclick="playAgain()">🔄 আবার খেলো</button>
-      <button class="btn btn-ghost" onclick="exitGame()">🏠 মেনু</button>
+      <button class="btn btn-primary" data-action="playAgain">🔄 আবার খেলো</button>
+      <button class="btn btn-ghost" data-action="exitGame">🏠 মেনু</button>
     </div>
   </div>
 </div>
@@ -241,38 +245,56 @@ body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overf
     <div class="result-text">প্রতিপক্ষ গেম ছেড়ে চলে গেছে</div>
     <p class="result-sub">খেলাটি আর চালানো যাবে না।</p>
     <div class="result-actions">
-      <button class="btn btn-primary" onclick="exitGame()">🏠 মেনুতে ফিরুন</button>
+      <button class="btn btn-primary" data-action="exitGame">🏠 মেনুতে ফিরুন</button>
     </div>
   </div>
 </div>
 
 <!-- CHAT DRAWER -->
 <div id="chatDrawer" class="chat-drawer">
-  <div class="chat-overlay" onclick="toggleChat()"></div>
+  <div class="chat-overlay" data-action="toggleChat"></div>
   <div class="chat-panel">
     <div class="chat-header">
       <span>💬 চ্যাট</span>
-      <button onclick="toggleChat()">✕</button>
+      <button data-action="toggleChat">✕</button>
     </div>
     <div id="chatMessages" class="chat-messages"></div>
     <div class="chat-emojis">
-      <button onclick="sendChatMessage('👍')">👍</button>
-      <button onclick="sendChatMessage('😀')">😀</button>
-      <button onclick="sendChatMessage('😢')">😢</button>
-      <button onclick="sendChatMessage('🔥')">🔥</button>
-      <button onclick="sendChatMessage('🎉')">🎉</button>
-      <button onclick="sendChatMessage('😡')">😡</button>
-      <button onclick="sendChatMessage('❤️')">❤️</button>
+      <button data-action="sendEmoji" data-emoji="👍">👍</button>
+      <button data-action="sendEmoji" data-emoji="😀">😀</button>
+      <button data-action="sendEmoji" data-emoji="😢">😢</button>
+      <button data-action="sendEmoji" data-emoji="🔥">🔥</button>
+      <button data-action="sendEmoji" data-emoji="🎉">🎉</button>
+      <button data-action="sendEmoji" data-emoji="😡">😡</button>
+      <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
     </div>
     <div class="chat-input-row">
-      <input id="chatInput" type="text" placeholder="মেসেজ লিখুন..." onkeydown="if(event.key==='Enter'){sendChatMessage(this.value);}">
-      <button onclick="sendChatMessage(document.getElementById('chatInput').value)">➤</button>
+      <input id="chatInput" type="text" placeholder="মেসেজ লিখুন...">
+      <button data-action="sendText">➤</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ===================== FIREBASE ===================== */
+// ত্রুটি দেখানোর জন্য লাল বার
+window.addEventListener('error', function(e){
+  const b = document.getElementById('errBar');
+  if(b){ b.style.display='block'; b.textContent = '⚠️ ত্রুটি: ' + e.message + ' (লাইন ' + e.lineno + ')'; }
+});
+window.addEventListener('unhandledrejection', function(e){
+  const b = document.getElementById('errBar');
+  if(b){ b.style.display='block'; b.textContent = '⚠️ ত্রুটি: ' + (e.reason && e.reason.message ? e.reason.message : e.reason); }
+});
+</script>
+
+<script>
+/* ===================== SAFE STORAGE ===================== */
+const store = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+
+/* ===================== FIREBASE CONFIG ===================== */
 const firebaseConfig = {
   apiKey: "AIzaSyBQkv_LcDn5h4AyWfeSv6SAROfi8vLV-A0",
   authDomain: "xoxo-9caa0.firebaseapp.com",
@@ -298,10 +320,10 @@ const LINE_DATA = {
 };
 
 let profile = {name:'', wins:0, losses:0, draws:0};
-let soundOn = localStorage.getItem('xo_sound') !== '0';
+let soundOn = store.get('xo_sound') !== '0';
 let currentScreenId = 'screen-name';
 
-let mode = null; // 'computer' | 'local' | 'online'
+let mode = null;
 let difficulty = 'medium';
 const playerSymbol='X', computerSymbol='O';
 
@@ -321,23 +343,76 @@ let chatOpen=false, unreadCount=0;
 let oppReadKey='', lastOtherKey=null, lastSentReadKey=null;
 let oppJoinedOnce=false, oppLeftShown=false;
 
+/* ===================== ACTIONS (বাটন → ফাংশন) ===================== */
+const ACTIONS = {
+  saveName: ()=>saveName(),
+  goMenu: ()=>showScreen('screen-menu'),
+  goDifficulty: ()=>showScreen('screen-difficulty'),
+  goOnline: ()=>showScreen('screen-online'),
+  goProfile: ()=>{ renderProfileScreen(); showScreen('screen-profile'); },
+  startComputer: el=>startComputerGame(el.dataset.level),
+  startLocal: ()=>startLocalGame(),
+  createRoom: ()=>createRoom(),
+  joinRoom: ()=>joinRoom(),
+  cancelRoom: ()=>cancelRoom(),
+  copyRoomCode: ()=>copyRoomCode(),
+  updateProfileName: ()=>updateProfileName(),
+  resetStats: ()=>resetStats(),
+  exitGame: ()=>exitGame(),
+  playAgain: ()=>playAgain(),
+  toggleChat: ()=>toggleChat(),
+  toggleSound: ()=>toggleSound(),
+  sendEmoji: el=>sendChatMessage(el.dataset.emoji),
+  sendText: ()=>sendChatMessage(document.getElementById('chatInput').value)
+};
+
+function onDocClick(e){
+  const cell = e.target.closest('.cell');
+  if(cell && cell.dataset.index !== undefined){
+    handleCellClick(Number(cell.dataset.index));
+    return;
+  }
+  const el = e.target.closest('[data-action]');
+  if(!el) return;
+  const act = ACTIONS[el.dataset.action];
+  if(act) act(el);
+}
+
 /* ===================== INIT ===================== */
-window.onload = function(){
+function init(){
   try{
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
+    if(typeof firebase !== 'undefined'){
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+    } else {
+      console.warn('Firebase লোড হয়নি, শুধু কম্পিউটার/লোকাল মোড চলবে');
+    }
   }catch(e){ console.error('Firebase init error:', e); }
+
+  document.addEventListener('click', onDocClick);
+  document.getElementById('nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') saveName(); });
+  document.getElementById('joinCodeInput').addEventListener('keydown', e=>{ if(e.key==='Enter') joinRoom(); });
+  document.getElementById('chatInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChatMessage(e.target.value); });
 
   profile = loadProfile();
   if(profile.name){
-    document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+    setGreeting();
     showScreen('screen-menu');
   } else {
     showScreen('screen-name');
   }
   renderProfileScreen();
   document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
-};
+}
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+function setGreeting(){
+  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+}
 
 /* ===================== SCREEN NAV ===================== */
 function showScreen(id){
@@ -348,24 +423,25 @@ function showScreen(id){
 
 /* ===================== PROFILE ===================== */
 function loadProfile(){
-  const raw = localStorage.getItem('xo_profile');
-  if(raw){ try{ return JSON.parse(raw); }catch(e){} }
+  const raw = store.get('xo_profile');
+  if(raw){ try{ return Object.assign({name:'', wins:0, losses:0, draws:0}, JSON.parse(raw)); }catch(e){} }
   return {name:'', wins:0, losses:0, draws:0};
 }
-function saveProfile(){ localStorage.setItem('xo_profile', JSON.stringify(profile)); }
+function saveProfile(){ store.set('xo_profile', JSON.stringify(profile)); }
 function saveName(){
-  const val = document.getElementById('nameInput').value.trim();
+  const val = (document.getElementById('nameInput').value || '').trim();
   if(!val){ alert('নাম লিখুন'); return; }
-  profile.name = val; saveProfile();
-  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+  profile.name = val;
+  saveProfile();
+  setGreeting();
   renderProfileScreen();
   showScreen('screen-menu');
 }
 function updateProfileName(){
-  const val = document.getElementById('profileNameInput').value.trim();
+  const val = (document.getElementById('profileNameInput').value || '').trim();
   if(!val){ alert('নাম লিখুন'); return; }
   profile.name = val; saveProfile();
-  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
+  setGreeting();
   alert('নাম আপডেট হয়েছে!');
 }
 function renderProfileScreen(){
@@ -379,7 +455,8 @@ function renderProfileScreen(){
 }
 function resetStats(){
   if(confirm('সব পরিসংখ্যান মুছে ফেলতে চান?')){
-    profile.wins=0; profile.losses=0; profile.draws=0; saveProfile(); renderProfileScreen();
+    profile.wins=0; profile.losses=0; profile.draws=0;
+    saveProfile(); renderProfileScreen();
   }
 }
 function recordProfileResult(outcome){
@@ -401,7 +478,7 @@ function setupGameScreenFor(type){
   } else if(type==='local'){
     document.getElementById('leftName').textContent = 'Player 1 ❌';
     document.getElementById('rightName').textContent = 'Player 2 ⭕';
-    scorePill.textContent = `X:0 O:0 ড্র:0`;
+    scorePill.textContent = `X:${localScore.X} O:${localScore.O} ড্র:${localScore.draw}`;
   }
 }
 
@@ -687,7 +764,6 @@ function hardExitOnline(){
 }
 
 /* ===================== ONLINE: PRESENCE ===================== */
-// প্রতিবার Firebase-এ সংযোগ হলে (প্রথমবার ও নেট/ব্রাউজার ফিরে এলে) নিজের presence আবার true করা হয়
 function setupPresence(){
   if(!db || !roomCode || !mySymbol) return;
   const presRef = db.ref('rooms/'+roomCode+'/presence/'+mySymbol);
@@ -706,7 +782,7 @@ function generateRoomCode(){ return String(Math.floor(1000+Math.random()*9000));
 function oppSymbol(){ return mySymbol==='X' ? 'O' : 'X'; }
 
 function createRoom(){
-  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে।'); return; }
+  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করুন।'); return; }
   mode='online';
   roomCode = generateRoomCode();
   mySymbol='X'; isHost=true; resultShown=false;
@@ -731,7 +807,7 @@ function createRoom(){
 function joinRoom(){
   const code = document.getElementById('joinCodeInput').value.trim();
   if(code.length!==4 || isNaN(code)){ alert('৪ সংখ্যার সঠিক কোড দিন'); return; }
-  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে।'); return; }
+  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করুন।'); return; }
   const ref = db.ref('rooms/'+code);
   ref.once('value').then(snap=>{
     const data = snap.val();
@@ -763,17 +839,21 @@ function cancelRoom(){
 }
 
 function copyRoomCode(){
-  navigator.clipboard.writeText(roomCode).then(()=>{
-    const btn=document.getElementById('copyBtn');
-    const old=btn.textContent; btn.textContent='✅ কপি হয়েছে';
+  const btn = document.getElementById('copyBtn');
+  const flash = ()=>{
+    const old = btn.textContent; btn.textContent='✅ কপি হয়েছে';
     setTimeout(()=>btn.textContent=old,1500);
-  });
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(roomCode).then(flash).catch(()=>alert('কোড: '+roomCode));
+  } else {
+    alert('কোড: '+roomCode);
+  }
 }
 
 function attachRoomListener(){
   roomRef = db.ref('rooms/'+roomCode);
 
-  // নিজের উপস্থিতি: সংযোগ যতবার ফিরবে ততবার নিশ্চিত করা হবে
   setupPresence();
 
   roomRef.on('value', snap=>{
@@ -785,7 +865,6 @@ function attachRoomListener(){
     }
     oppName = mySymbol==='X' ? (data.players?data.players.O:null) : (data.players?data.players.X:null);
 
-    // প্রতিপক্ষ ছেড়ে গেছে কিনা
     const pres = data.presence || {};
     const oppSym = oppSymbol();
     if(pres[oppSym]===true) oppJoinedOnce = true;
@@ -919,7 +998,6 @@ function updateChatBadge(){
   else badge.style.display='none';
 }
 
-// চ্যাট খোলা থাকলে প্রতিপক্ষের সর্বশেষ মেসেজ পড়া হয়েছে বলে জানানো
 function markChatRead(){
   if(!roomCode || !lastOtherKey || !db) return;
   if(lastSentReadKey===lastOtherKey) return;
@@ -937,4 +1015,127 @@ function applySeenState(el){
 function listenChat(){
   document.getElementById('chatMessages').innerHTML='';
   unreadCount=0; updateChatBadge();
-  lastOtherKey=null; lastSentReadKey=null; 
+  lastOtherKey=null; lastSentReadKey=null; oppReadKey='';
+  if(chatRef) chatRef.off();
+  if(readRef) readRef.off();
+
+  chatRef = db.ref('rooms/'+roomCode+'/chat');
+  chatRef.on('child_added', snap=>{
+    const msg = snap.val();
+    if(!msg) return;
+    appendChatBubble(snap.key, msg);
+    if(msg.sender !== mySymbol){
+      lastOtherKey = snap.key;
+      playSound('chat');
+      if(chatOpen){ markChatRead(); }
+      else { unreadCount++; updateChatBadge(); showChatToast(msg); }
+    }
+  });
+
+  readRef = db.ref('rooms/'+roomCode+'/read');
+  readRef.on('value', snap=>{
+    const r = snap.val() || {};
+    oppReadKey = r[oppSymbol()] || '';
+    document.querySelectorAll('.chat-status').forEach(applySeenState);
+  });
+}
+
+function sendChatMessage(text){
+  text = (text||'').trim();
+  if(!text || !roomCode || !db) return;
+  db.ref('rooms/'+roomCode+'/chat').push({
+    sender: mySymbol,
+    name: profile.name||'খেলোয়াড়',
+    text: text,
+    time: Date.now()
+  });
+  document.getElementById('chatInput').value='';
+}
+
+function appendChatBubble(key, msg){
+  const box = document.getElementById('chatMessages');
+  const isMe = msg.sender===mySymbol;
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (isMe ? 'me' : 'other');
+  let statusHtml = '';
+  if(isMe) statusHtml = `<span class="chat-status" data-key="${escapeHtml(key)}"></span>`;
+  div.innerHTML = `<span class="chat-name">${escapeHtml(msg.name||'')}</span><div class="chat-bubble">${escapeHtml(msg.text)}</div>${statusHtml}`;
+  box.appendChild(div);
+  const st = div.querySelector('.chat-status');
+  if(st) applySeenState(st);
+  box.scrollTop = box.scrollHeight;
+}
+
+function appendSystemMessage(text){
+  const box = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-system';
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showChatToast(msg){
+  const toast = document.createElement('div');
+  toast.className='chat-toast';
+  toast.textContent = `${msg.name}: ${msg.text}`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.classList.add('show'),10);
+  setTimeout(()=>{ toast.classList.remove('show'); setTimeout(()=>toast.remove(),300); },3000);
+}
+function escapeHtml(str){
+  const div=document.createElement('div');
+  div.textContent = String(str==null?'':str);
+  return div.innerHTML;
+}
+
+/* ===================== SOUND ===================== */
+let audioCtx=null;
+function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
+function beep(freq,dur,type='sine',delay=0,vol=0.2){
+  try{
+    ensureAudio();
+    const t0 = audioCtx.currentTime+delay;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type=type; osc.frequency.value=freq;
+    gain.gain.setValueAtTime(vol,t0);
+    gain.gain.exponentialRampToValueAtTime(0.001,t0+dur);
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.start(t0); osc.stop(t0+dur);
+  }catch(e){}
+}
+function playSound(type){
+  if(!soundOn) return;
+  switch(type){
+    case 'move': beep(440,.08); break;
+    case 'win': beep(523,.15); beep(659,.15,'sine',.15); beep(784,.25,'sine',.3); break;
+    case 'lose': beep(300,.3,'sawtooth'); break;
+    case 'draw': beep(350,.2); beep(350,.2,'sine',.2); break;
+    case 'chat': beep(880,.08,'triangle'); break;
+  }
+}
+function toggleSound(){
+  soundOn = !soundOn;
+  store.set('xo_sound', soundOn?'1':'0');
+  document.getElementById('soundBtn').textContent = soundOn?'🔊':'🔇';
+}
+
+/* ===================== CONFETTI ===================== */
+function launchConfetti(){
+  const colors=['#ffd700','#ff5e7a','#4fd1ff','#9b5cff','#4ade80'];
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    c.style.left = Math.random()*100+'vw';
+    c.style.background = colors[Math.floor(Math.random()*colors.length)];
+    c.style.animationDuration = (2+Math.random()*2)+'s';
+    const size = (6+Math.random()*6)+'px';
+    c.style.width=size; c.style.height=size;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+</script>
+</body>
+</html>

@@ -2,299 +2,342 @@
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>❌⭕️</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Poppins','Noto Sans Bengali',sans-serif;min-height:100vh;overflow-x:hidden;color:#fff;background:#0f0c29;background:linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1a1a3e);background-size:400% 400%;animation:gradientBG 15s ease infinite;position:relative;}
-@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-.blob{position:fixed;border-radius:50%;filter:blur(80px);opacity:.35;z-index:0;animation:floatBlob 12s ease-in-out infinite;}
-.blob1{width:300px;height:300px;background:#ff5e7a;top:-80px;left:-80px;}
-.blob2{width:350px;height:350px;background:#4fd1ff;bottom:-100px;right:-100px;animation-delay:2s;}
-.blob3{width:250px;height:250px;background:#9b5cff;top:40%;left:60%;animation-delay:4s;}
-@keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(30px,-30px) scale(1.1);}}
-.screen{display:none;min-height:100vh;align-items:center;justify-content:center;padding:20px;position:relative;z-index:1;}
-.screen.active{display:flex;}
-.card{background:rgba(255,255,255,.08);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:30px 24px;width:100%;max-width:400px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3);animation:cardIn .4s ease;}
-@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.97);}to{opacity:1;transform:translateY(0) scale(1);}}
-.logo{font-size:28px;font-weight:800;margin-bottom:6px;background:linear-gradient(90deg,#ffd700,#ff5e7a,#4fd1ff);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
-.greeting{opacity:.85;margin-bottom:18px;font-size:14px;}
-.card h2{margin-bottom:16px;font-size:20px;}
-.card p{opacity:.8;font-size:14px;margin-bottom:14px;}
-.btn{display:block;width:100%;padding:14px;margin:10px 0;border:none;border-radius:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:.2s;}
-.btn:active{transform:scale(.97);}
-.btn-primary{background:linear-gradient(135deg,#ff5e7a,#ff8a5e);color:#fff;box-shadow:0 4px 15px rgba(255,94,122,.4);}
-.btn-secondary{background:linear-gradient(135deg,#4fd1ff,#4f8dff);color:#fff;box-shadow:0 4px 15px rgba(79,141,255,.4);}
-.btn-ghost{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);}
-.code-input{width:100%;padding:14px;margin:10px 0;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-size:16px;text-align:center;font-family:inherit;letter-spacing:2px;}
-.code-input::placeholder{color:rgba(255,255,255,.5);letter-spacing:0;}
-.divider{opacity:.5;margin:14px 0;font-size:13px;}
-.room-code-box{display:flex;align-items:center;justify-content:center;gap:12px;background:rgba(255,255,255,.1);border-radius:16px;padding:18px;margin:16px 0;}
-.room-code-box span{font-size:32px;font-weight:800;letter-spacing:8px;color:#ffd700;}
-.room-code-box button{padding:8px 12px;border:none;border-radius:10px;background:rgba(255,255,255,.15);color:#fff;font-size:12px;cursor:pointer;}
-.loader{width:36px;height:36px;border:4px solid rgba(255,255,255,.2);border-top-color:#4fd1ff;border-radius:50%;margin:10px auto 18px;animation:spin 1s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
-.stat-box{background:rgba(255,255,255,.08);border-radius:14px;padding:14px;}
-.stat-box span{display:block;font-size:24px;font-weight:800;color:#ffd700;}
-.stat-box label{font-size:12px;opacity:.75;}
-
-/* ERROR BAR */
-#errBar{display:none;position:fixed;top:0;left:0;right:0;background:#b00020;color:#fff;font-size:12px;padding:8px 10px;z-index:999;text-align:center;word-break:break-word;}
-
-/* GAME SCREEN */
-#screen-game{flex-direction:column;padding:14px;}
-.game-wrap{width:100%;max-width:420px;margin:0 auto;}
-.game-header{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.08);border-radius:16px;padding:10px 14px;margin-bottom:10px;}
-.icon-btn{background:rgba(255,255,255,.1);border:none;color:#fff;width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer;position:relative;display:inline-flex;align-items:center;justify-content:center;}
-.vs-info{font-size:13px;font-weight:600;text-align:center;flex:1;padding:0 8px;}
-.header-actions{display:flex;align-items:center;gap:8px;}
-.score-pill{background:rgba(255,215,0,.15);color:#ffd700;padding:6px 10px;border-radius:12px;font-size:11px;font-weight:700;display:none;white-space:nowrap;}
-.badge{position:absolute;top:-4px;right:-4px;background:#ff3b5c;color:#fff;font-size:10px;font-weight:700;border-radius:50%;min-width:16px;height:16px;display:none;align-items:center;justify-content:center;padding:1px;}
-.turn-indicator{text-align:center;font-size:15px;font-weight:600;margin-bottom:12px;padding:8px;background:rgba(255,255,255,.06);border-radius:12px;}
-.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(92vw,380px);aspect-ratio:1;position:relative;margin:0 auto;}
-.cell{background:rgba(255,255,255,.08);border-radius:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:.2s;}
-.cell:active{background:rgba(255,255,255,.18);}
-.cell.win-cell{background:rgba(255,215,0,.3) !important;box-shadow:0 0 20px rgba(255,215,0,.6) inset;}
-.mark{width:68%;height:68%;}
-.mark-x line{stroke:#ff5e7a;stroke-width:9;stroke-linecap:round;stroke-dasharray:90;stroke-dashoffset:90;animation:drawLine .35s ease forwards;filter:drop-shadow(0 0 6px #ff5e7a);}
-.mark-x line:nth-child(2){animation-delay:.15s;}
-@keyframes drawLine{to{stroke-dashoffset:0;}}
-.mark-o circle{fill:none;stroke:#4fd1ff;stroke-width:9;stroke-dasharray:230;stroke-dashoffset:230;animation:drawCircle .45s ease forwards;filter:drop-shadow(0 0 6px #4fd1ff);}
-@keyframes drawCircle{to{stroke-dashoffset:0;}}
-.win-line{position:absolute;height:6px;width:0;background:linear-gradient(90deg,#ffd700,#fff,#ffd700);border-radius:4px;box-shadow:0 0 15px #ffd700,0 0 30px #ffd700;animation:lineGrow .4s ease forwards;z-index:5;}
-@keyframes lineGrow{to{width:var(--line-width);}}
-
-/* RESULT OVERLAY */
-.result-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:.25s;}
-.result-overlay.show{opacity:1;pointer-events:auto;}
-.left-overlay{z-index:150;}
-.result-card{background:rgba(30,25,60,.95);border:1px solid rgba(255,255,255,.2);border-radius:24px;padding:34px 26px;text-align:center;width:88%;max-width:340px;animation:cardIn .3s ease;}
-.result-emoji{font-size:54px;margin-bottom:10px;}
-.result-text{font-size:20px;font-weight:700;margin-bottom:10px;}
-.result-sub{font-size:13px;opacity:.75;margin-bottom:14px;}
-.next-starter-note{font-size:13px;opacity:.85;background:rgba(255,255,255,.08);padding:8px 10px;border-radius:10px;margin-bottom:16px;}
-.result-actions .btn{margin:8px 0;}
-
-/* CHAT */
-.chat-drawer{position:fixed;inset:0;z-index:200;pointer-events:none;}
-.chat-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);opacity:0;transition:.25s;}
-.chat-panel{position:absolute;left:0;right:0;bottom:-100%;max-width:460px;margin:0 auto;background:rgba(25,20,50,.98);border-radius:22px 22px 0 0;height:70vh;display:flex;flex-direction:column;transition:bottom .3s ease;border:1px solid rgba(255,255,255,.15);}
-.chat-drawer.open{pointer-events:auto;}
-.chat-drawer.open .chat-overlay{opacity:1;}
-.chat-drawer.open .chat-panel{bottom:0;}
-.chat-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,.1);font-weight:700;}
-.chat-header button{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;}
-.chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
-.chat-msg{max-width:75%;}
-.chat-msg.me{align-self:flex-end;text-align:right;}
-.chat-msg.other{align-self:flex-start;text-align:left;}
-.chat-name{font-size:10px;opacity:.6;display:block;margin-bottom:2px;}
-.chat-bubble{padding:9px 13px;border-radius:14px;font-size:14px;word-break:break-word;display:inline-block;}
-.chat-msg.me .chat-bubble{background:linear-gradient(135deg,#ff5e7a,#ff8a5e);border-bottom-right-radius:4px;}
-.chat-msg.other .chat-bubble{background:rgba(255,255,255,.12);border-bottom-left-radius:4px;}
-.chat-status{display:block;font-size:10px;opacity:.65;margin-top:3px;}
-.chat-status.seen{color:#4fd1ff;opacity:1;font-weight:600;}
-.chat-system{align-self:center;font-size:11px;opacity:.75;background:rgba(255,255,255,.06);padding:4px 12px;border-radius:10px;text-align:center;}
-.chat-emojis{display:flex;gap:6px;padding:8px 14px;overflow-x:auto;}
-.chat-emojis button{background:rgba(255,255,255,.08);border:none;border-radius:10px;font-size:18px;padding:6px 10px;cursor:pointer;flex-shrink:0;}
-.chat-input-row{display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(255,255,255,.1);}
-.chat-input-row input{flex:1;padding:11px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;font-family:inherit;font-size:14px;}
-.chat-input-row button{width:42px;height:42px;border-radius:50%;border:none;background:linear-gradient(135deg,#4fd1ff,#4f8dff);color:#fff;font-size:16px;cursor:pointer;}
-
-.chat-toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:rgba(20,15,40,.95);border:1px solid rgba(255,255,255,.2);padding:10px 16px;border-radius:14px;font-size:13px;max-width:80%;opacity:0;transition:.3s;z-index:300;}
-.chat-toast.show{opacity:1;transform:translate(-50%,0);}
-
-.confetti-piece{position:fixed;top:-10px;border-radius:2px;z-index:999;pointer-events:none;animation-name:confettiFall;animation-timing-function:ease-in;}
-@keyframes confettiFall{to{transform:translateY(110vh) rotate(360deg);opacity:.3;}}
-
-@media(max-width:360px){.room-code-box span{font-size:26px;letter-spacing:5px;}}
-</style>
-</head>
-<body>
-<div id="errBar"></div>
-<div class="blob blob1"></div>
-<div class="blob blob2"></div>
-<div class="blob blob3"></div>
-
-<!-- NAME SCREEN -->
-<div id="screen-name" class="screen active">
-  <div class="card">
-    <h1 class="logo">❌⭕</h1>
-    <p>শুরু করতে আপনার নাম লিখুন</p>
-    <input id="nameInput" type="text" class="code-input" placeholder="আপনার নাম" maxlength="20">
-    <button class="btn btn-primary" data-action="saveName">▶️ শুরু করুন</button>
-  </div>
-</div>
-
-<!-- MENU SCREEN -->
-<div id="screen-menu" class="screen">
-  <div class="card">
-    <h1 class="logo">❌⭕</h1>
-    <p id="menuGreeting" class="greeting"></p>
-    <button class="btn btn-primary" data-action="goDifficulty">🤖 কম্পিউটারের সাথে খেলুন</button>
-    <button class="btn btn-primary" data-action="startLocal">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
-    <button class="btn btn-primary" data-action="goOnline">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
-    <button class="btn btn-secondary" data-action="goProfile">👤 প্রোফাইল</button>
-  </div>
-</div>
-
-<!-- DIFFICULTY SCREEN -->
-<div id="screen-difficulty" class="screen">
-  <div class="card">
-    <h2>🤖 কঠিনতার মাত্রা বেছে নিন</h2>
-    <button class="btn btn-primary" data-action="startComputer" data-level="easy">😊 সহজ</button>
-    <button class="btn btn-primary" data-action="startComputer" data-level="medium">😐 মধ্যম</button>
-    <button class="btn btn-primary" data-action="startComputer" data-level="hard">🔥 কঠিন (Unbeatable)</button>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
-  </div>
-</div>
-
-<!-- ONLINE MENU -->
-<div id="screen-online" class="screen">
-  <div class="card">
-    <h2>🌐 অনলাইনে খেলুন</h2>
-    <button class="btn btn-primary" data-action="createRoom">➕ নতুন রুম তৈরি করুন</button>
-    <div class="divider">— অথবা —</div>
-    <input id="joinCodeInput" type="text" class="code-input" maxlength="4" inputmode="numeric" placeholder="৪ সংখ্যার কোড লিখুন">
-    <button class="btn btn-secondary" data-action="joinRoom">🔑 জয়েন করুন</button>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
-  </div>
-</div>
-
-<!-- WAITING SCREEN -->
-<div id="screen-waiting" class="screen">
-  <div class="card">
-    <h2>⏳ অপেক্ষা করা হচ্ছে...</h2>
-    <p>আপনার বন্ধুকে এই কোডটি পাঠান:</p>
-    <div class="room-code-box">
-      <span id="roomCodeDisplay">----</span>
-      <button id="copyBtn" data-action="copyRoomCode">📋 কপি</button>
-    </div>
-    <div class="loader"></div>
-    <button class="btn btn-ghost" data-action="cancelRoom">❌ বাতিল করুন</button>
-  </div>
-</div>
-
-<!-- PROFILE SCREEN -->
-<div id="screen-profile" class="screen">
-  <div class="card">
-    <h2>👤 প্রোফাইল</h2>
-    <input id="profileNameInput" type="text" class="code-input" placeholder="আপনার নাম">
-    <button class="btn btn-secondary" data-action="updateProfileName">✏️ নাম আপডেট করুন</button>
-    <div class="stats-grid">
-      <div class="stat-box"><span id="statWins">0</span><label>জয়</label></div>
-      <div class="stat-box"><span id="statLosses">0</span><label>হার</label></div>
-      <div class="stat-box"><span id="statDraws">0</span><label>ড্র</label></div>
-      <div class="stat-box"><span id="statTotal">0</span><label>মোট</label></div>
-    </div>
-    <p>🏆 জয়ের হার: <span id="statWinrate">0%</span></p>
-    <button class="btn btn-ghost" data-action="resetStats">🗑️ পরিসংখ্যান মুছুন</button>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
-  </div>
-</div>
-
-<!-- GAME SCREEN -->
-<div id="screen-game" class="screen">
-  <div class="game-wrap">
-    <div class="game-header">
-      <button class="icon-btn" data-action="exitGame">←</button>
-      <div class="vs-info"><span id="leftName">X</span> &nbsp;VS&nbsp; <span id="rightName">O</span></div>
-      <div class="header-actions">
-        <span id="scorePill" class="score-pill"></span>
-        <button id="chatBtn" class="icon-btn" style="display:none;" data-action="toggleChat">💬<span id="chatBadge" class="badge">0</span></button>
-        <button id="soundBtn" class="icon-btn" data-action="toggleSound">🔊</button>
-      </div>
-    </div>
-    <div id="turnIndicator" class="turn-indicator">আপনার পালা</div>
-    <div class="board" id="board">
-      <div class="cell" data-index="0"></div>
-      <div class="cell" data-index="1"></div>
-      <div class="cell" data-index="2"></div>
-      <div class="cell" data-index="3"></div>
-      <div class="cell" data-index="4"></div>
-      <div class="cell" data-index="5"></div>
-      <div class="cell" data-index="6"></div>
-      <div class="cell" data-index="7"></div>
-      <div class="cell" data-index="8"></div>
-    </div>
-  </div>
-</div>
-
-<!-- RESULT OVERLAY -->
-<div id="resultOverlay" class="result-overlay">
-  <div class="result-card">
-    <div id="resultEmoji" class="result-emoji">🎉</div>
-    <div id="resultText" class="result-text">আপনি জিতেছেন!</div>
-    <div id="nextStarterNote" class="next-starter-note"></div>
-    <div class="result-actions">
-      <button class="btn btn-primary" data-action="playAgain">🔄 আবার খেলো</button>
-      <button class="btn btn-ghost" data-action="exitGame">🏠 মেনু</button>
-    </div>
-  </div>
-</div>
-
-<!-- OPPONENT LEFT OVERLAY -->
-<div id="leftOverlay" class="result-overlay left-overlay">
-  <div class="result-card">
-    <div class="result-emoji">🚪</div>
-    <div class="result-text">প্রতিপক্ষ গেম ছেড়ে চলে গেছে</div>
-    <p class="result-sub">খেলাটি আর চালানো যাবে না।</p>
-    <div class="result-actions">
-      <button class="btn btn-primary" data-action="exitGame">🏠 মেনুতে ফিরুন</button>
-    </div>
-  </div>
-</div>
-
-<!-- CHAT DRAWER -->
-<div id="chatDrawer" class="chat-drawer">
-  <div class="chat-overlay" data-action="toggleChat"></div>
-  <div class="chat-panel">
-    <div class="chat-header">
-      <span>💬 চ্যাট</span>
-      <button data-action="toggleChat">✕</button>
-    </div>
-    <div id="chatMessages" class="chat-messages"></div>
-    <div class="chat-emojis">
-      <button data-action="sendEmoji" data-emoji="👍">👍</button>
-      <button data-action="sendEmoji" data-emoji="😀">😀</button>
-      <button data-action="sendEmoji" data-emoji="😢">😢</button>
-      <button data-action="sendEmoji" data-emoji="🔥">🔥</button>
-      <button data-action="sendEmoji" data-emoji="🎉">🎉</button>
-      <button data-action="sendEmoji" data-emoji="😡">😡</button>
-      <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
-    </div>
-    <div class="chat-input-row">
-      <input id="chatInput" type="text" placeholder="মেসেজ লিখুন...">
-      <button data-action="sendText">➤</button>
-    </div>
-  </div>
-</div>
 
 <script>
-// ত্রুটি দেখানোর জন্য লাল বার
+function showErr(msg){
+  var bar = document.getElementById('errBar');
+  var txt = document.getElementById('errText');
+  if(!bar || !txt) return;
+  txt.textContent = '⚠️ ত্রুটি: ' + msg;
+  bar.style.display = 'block';
+}
+function hideErr(){
+  var bar = document.getElementById('errBar');
+  if(bar) bar.style.display = 'none';
+}
 window.addEventListener('error', function(e){
-  const b = document.getElementById('errBar');
-  if(b){ b.style.display='block'; b.textContent = '⚠️ ত্রুটি: ' + e.message + ' (লাইন ' + e.lineno + ')'; }
+  var msg = (e && e.message) ? e.message : '';
+  if(!msg || msg === 'Script error.'){
+    console.warn('[XO] opaque script error ignored');
+    return;
+  }
+  showErr(msg + (e.lineno ? ' (লাইন ' + e.lineno + ')' : ''));
 });
 window.addEventListener('unhandledrejection', function(e){
-  const b = document.getElementById('errBar');
-  if(b){ b.style.display='block'; b.textContent = '⚠️ ত্রুটি: ' + (e.reason && e.reason.message ? e.reason.message : e.reason); }
+  var r = e.reason;
+  var m = (r && r.message) ? r.message : (r ? String(r) : '');
+  if(!m || m === 'Script error.'){
+    console.warn('[XO] opaque rejection ignored');
+    return;
+  }
+  showErr(m);
 });
 </script>
 
-<script>
-/* ===================== SAFE STORAGE ===================== */
-const store = {
-  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
-  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
-};
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+:root{--x:#ff5d7a;--o:#4fd1ff;--gold:#ffd166}
+html,body{height:100%}
+body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;background:#14102b;overflow:hidden;min-height:100vh;min-height:100dvh}
 
-/* ===================== FIREBASE CONFIG ===================== */
+/* error bar */
+#errBar{position:fixed;top:0;left:0;right:0;z-index:999;background:#b00020;color:#fff;font-size:13px;padding:9px 40px 9px 12px;display:none;text-align:center;line-height:1.4}
+#errBar button{position:absolute;right:6px;top:4px;background:none;border:none;color:#fff;font-size:16px;padding:4px 8px;cursor:pointer}
+
+/* background */
+.bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,#1b1040,#2d1b5e,#0f3b5c,#3a1c52);background-size:300% 300%;animation:bgShift 16s ease infinite;overflow:hidden}
+@keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.55;animation:float 14s ease-in-out infinite}
+.b1{width:320px;height:320px;background:#ff5d7a;top:-80px;left:-80px}
+.b2{width:360px;height:360px;background:#4fd1ff;bottom:-120px;right:-100px;animation-delay:-5s}
+.b3{width:240px;height:240px;background:#a06bff;top:40%;left:45%;animation-delay:-9s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.1)}}
+
+/* screens */
+.screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;padding:20px;overflow:hidden}
+.screen.active{display:flex}
+.card{width:min(92vw,400px);padding:28px 22px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px;text-align:center;animation:pop .5s ease}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
+.logo{width:130px;height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 12px rgba(255,93,122,.55))}
+.title{font-size:22px;font-weight:700}
+.sub{opacity:.85;font-size:15px}
+.hint{font-size:13px;color:#ffb3c1;min-height:18px}
+.divider{font-size:13px;opacity:.6}
+.btn{font-family:inherit;font-size:16px;font-weight:700;padding:15px 18px;border:none;border-radius:18px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .2s,opacity .2s;box-shadow:0 10px 25px rgba(0,0,0,.25);width:100%}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5}
+.btn-primary{background:linear-gradient(135deg,#ff5d7a,#ff8a5c)}
+.btn-secondary{background:linear-gradient(135deg,#7c5cff,#4fd1ff)}
+.btn-info{background:linear-gradient(135deg,#4fd1ff,#4a8bff)}
+.btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:none}
+.btn-row{display:flex;gap:10px}
+.btn-row .btn{flex:1}
+.input{width:100%;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#fff;font:inherit;font-size:16px;outline:none;text-align:center}
+.input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,209,102,.25)}
+.code-input{font-size:26px;letter-spacing:.5em;font-weight:700;text-indent:.5em}
+.room-code-box{font-size:44px;font-weight:800;letter-spacing:.3em;padding:18px;border-radius:20px;background:rgba(0,0,0,.25);border:1px dashed rgba(255,209,102,.6);color:var(--gold);text-indent:.3em}
+.link-preview{font-size:12px;color:#ffe9a8;background:rgba(0,0,0,.25);padding:10px;border-radius:14px;word-break:break-all;min-height:20px}
+.loader{width:34px;height:34px;margin:6px auto;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:var(--gold);animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat-box{background:rgba(0,0,0,.22);border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;gap:4px}
+.stat-box span{font-size:26px;font-weight:800}
+.stat-box small{opacity:.75;font-size:12px}
+
+/* game header */
+.game-wrap{width:min(94vw,440px);display:flex;flex-direction:column;align-items:center;gap:14px}
+.game-header{width:100%;display:flex;align-items:center;gap:8px}
+.players{flex:1;display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
+.player{flex:1;min-width:0;padding:8px 6px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid transparent;font-size:13px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transition:all .3s}
+.player.active{border-color:var(--gold);box-shadow:0 0 16px rgba(255,209,102,.35)}
+#rightPlayer{text-align:right}
+.score-pill{padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.3);font-weight:800;font-size:13px;white-space:nowrap}
+.header-actions{display:flex;gap:6px}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
+.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:#ff3b5c;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}
+.turn-indicator{font-size:15px;font-weight:600;min-height:22px;color:#ffe9a8}
+
+/* board */
+.board-wrap{width:100%;display:flex;justify-content:center}
+.board{position:relative;width:min(86vw,360px);aspect-ratio:1;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3%}
+.cell{position:relative;width:100%;height:100%;border-radius:20px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);cursor:pointer;display:grid;place-items:center;padding:0;font:inherit;color:inherit;transition:background .2s,transform .15s,border-color .3s,box-shadow .3s}
+.cell:hover{background:rgba(255,255,255,.14)}
+.cell:active{transform:scale(.96)}
+.cell.win-cell{background:rgba(255,209,102,.18);border-color:var(--gold);box-shadow:0 0 22px rgba(255,209,102,.45)}
+.mark-x,.mark-o{width:62%;height:62%;fill:none;stroke-width:10;stroke-linecap:round;overflow:visible}
+.mark-x{stroke:var(--x);color:var(--x)}
+.mark-o{stroke:var(--o);color:var(--o)}
+.mark-x,.mark-o{filter:drop-shadow(0 0 8px currentColor)}
+.mark-x line{stroke-dasharray:130;stroke-dashoffset:130;animation:drawIn .4s ease forwards}
+.mark-x line:last-child{animation-delay:.18s}
+.mark-o circle{stroke-dasharray:185;stroke-dashoffset:185;animation:drawIn .5s ease forwards}
+@keyframes drawIn{to{stroke-dashoffset:0}}
+.win-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:visible}
+.win-line{stroke:var(--gold);stroke-width:2.4;stroke-linecap:round;opacity:0;stroke-dasharray:160;stroke-dashoffset:160;filter:drop-shadow(0 0 6px var(--gold))}
+.win-line.show{opacity:1;animation:winDraw .6s ease forwards}
+@keyframes winDraw{to{stroke-dashoffset:0}}
+
+/* result overlays */
+.result-overlay{position:fixed;inset:0;z-index:120;background:rgba(8,5,24,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+.result-overlay.show{opacity:1;pointer-events:auto}
+.left-overlay{z-index:130}
+.result-card{width:min(88vw,360px);padding:26px 20px;border-radius:26px;background:rgba(30,22,60,.92);border:1px solid rgba(255,255,255,.2);text-align:center;display:flex;flex-direction:column;gap:12px;transform:scale(.9);transition:transform .35s}
+.result-overlay.show .result-card{transform:none}
+.result-card h2{font-size:21px}
+.result-emoji{font-size:54px}
+.next-starter-note{font-size:14px;color:#ffe9a8;background:rgba(0,0,0,.25);padding:10px;border-radius:14px}
+
+/* chat */
+.chat-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
+.chat-drawer.open{pointer-events:auto}
+.chat-overlay{position:absolute;inset:0;background:rgba(5,3,20,.55);opacity:0;transition:opacity .3s}
+.chat-drawer.open .chat-overlay{opacity:1}
+.chat-panel{position:absolute;left:0;right:0;bottom:0;height:72vh;max-width:560px;margin:0 auto;display:flex;flex-direction:column;background:rgba(22,16,48,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:26px 26px 0 0;border-top:1px solid rgba(255,255,255,.2);transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:14px 14px 18px}
+.chat-drawer.open .chat-panel{transform:none}
+.chat-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px;padding:0 4px 10px}
+.chat-messages{flex:1;overflow-y:auto;padding:6px 4px;display:flex;flex-direction:column}
+.chat-msg{max-width:78%;padding:9px 12px;border-radius:16px;margin:4px 0;font-size:14px;line-height:1.45;overflow-wrap:anywhere;background:rgba(255,255,255,.12)}
+.chat-msg.me{align-self:flex-end;background:linear-gradient(135deg,#ff5d7a,#ff8a5c)}
+.chat-msg .who{display:block;font-size:11px;opacity:.75;margin-bottom:2px}
+.chat-meta{display:block;font-size:10px;opacity:.85;margin-top:3px;text-align:right}
+.chat-status.seen{color:#7fd8ff;font-weight:700}
+.chat-system{align-self:center;font-size:12px;margin:8px 0;color:#ffd6dd;opacity:.85;text-align:center}
+.chat-emojis{display:flex;gap:4px;padding:8px 0}
+.chat-emojis button{flex:1;font-size:20px;padding:6px 0;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);cursor:pointer}
+.chat-input-row{display:flex;gap:8px;align-items:center}
+.chat-input-row .input{text-align:left;padding:12px 14px}
+.chat-send{width:auto;padding:12px 16px;border-radius:14px}
+.chat-toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-160%);z-index:150;background:rgba(22,16,48,.94);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:10px 16px;font-size:14px;max-width:90vw;transition:transform .35s;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-toast.show{transform:translate(-50%,0)}
+
+/* confetti */
+.confetti-piece{position:fixed;top:-20px;width:10px;height:14px;z-index:300;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9}}
+</style>
+</head>
+<body>
+
+<div id="errBar"><span id="errText"></span><button data-action="hideErr" aria-label="বন্ধ">✕</button></div>
+
+<div class="bg">
+  <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+</div>
+
+<!-- NAME -->
+<section id="screen-name" class="screen active">
+  <div class="card">
+    <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
+    <p class="sub">আপনার নাম লিখুন</p>
+    <input id="nameInput" class="input" maxlength="15" placeholder="যেমন: রাহুল" autocomplete="off">
+    <button class="btn btn-primary" data-action="saveName">শুরু করুন</button>
+    <p class="hint" id="nameMsg"></p>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="screen-menu" class="screen">
+  <div class="card">
+    <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
+    <p class="sub" id="menuGreeting"></p>
+    <button class="btn btn-primary" data-action="goDifficulty">🤖 কম্পিউটারের সাথে খেলুন</button>
+    <button class="btn btn-primary" data-action="startLocal">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
+    <button class="btn btn-primary" data-action="goOnline">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
+    <button class="btn btn-info" data-action="goProfile">👤 প্রোফাইল</button>
+  </div>
+</section>
+
+<!-- DIFFICULTY -->
+<section id="screen-difficulty" class="screen">
+  <div class="card">
+    <h2 class="title">লেভেল বেছে নিন</h2>
+    <button class="btn btn-primary" data-action="startComputer" data-level="easy">😊 সহজ</button>
+    <button class="btn btn-primary" data-action="startComputer" data-level="medium">🧠 মাঝারি</button>
+    <button class="btn btn-primary" data-action="startComputer" data-level="hard">🔥 কঠিন (অজয়)</button>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+  </div>
+</section>
+
+<!-- ONLINE -->
+<section id="screen-online" class="screen">
+  <div class="card">
+    <h2 class="title">অনলাইন খেলা</h2>
+    <button class="btn btn-primary" data-action="createRoom">➕ নতুন রুম তৈরি করুন</button>
+    <div class="divider">অথবা</div>
+    <input id="joinCodeInput" class="input code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
+    <button class="btn btn-secondary" data-action="joinRoom">🚪 রুমে যোগ দিন</button>
+    <p class="hint" id="onlineMsg"></p>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+  </div>
+</section>
+
+<!-- WAITING -->
+<section id="screen-waiting" class="screen">
+  <div class="card">
+    <h2 class="title">বন্ধুর জন্য অপেক্ষা</h2>
+    <p class="sub">কোড বা লিংকটি বন্ধুকে পাঠান</p>
+    <div class="room-code-box" id="roomCodeDisplay">----</div>
+    <button class="btn btn-secondary" id="copyBtn" data-action="copyRoomCode">📋 কোড কপি করুন</button>
+    <button class="btn btn-secondary" id="linkBtn" data-action="copyRoomLink">🔗 লিংক কপি করুন</button>
+    <button class="btn btn-info" id="shareBtn" data-action="shareRoomLink" hidden>📤 শেয়ার করুন</button>
+    <div class="link-preview" id="linkPreview"></div>
+    <div class="loader"></div>
+    <button class="btn btn-ghost" data-action="cancelRoom">বাতিল করুন</button>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section id="screen-profile" class="screen">
+  <div class="card">
+    <h2 class="title">প্রোফাইল</h2>
+    <input id="profileNameInput" class="input" maxlength="15" placeholder="আপনার নাম">
+    <button class="btn btn-secondary" data-action="updateProfileName">নাম পরিবর্তন করুন</button>
+    <p class="hint" id="profileMsg"></p>
+    <div class="stats-grid">
+      <div class="stat-box"><span id="statWins">0</span><small>জয়</small></div>
+      <div class="stat-box"><span id="statLosses">0</span><small>হার</small></div>
+      <div class="stat-box"><span id="statDraws">0</span><small>ড্র</small></div>
+    </div>
+    <p class="sub">মোট খেলা: <b id="statTotal">0</b> · জয়ের হার: <b id="statWinrate">0%</b></p>
+    <button class="btn btn-ghost" data-action="resetStats">🗑️ পরিসংখ্যান রিসেট</button>
+    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+  </div>
+</section>
+
+<!-- GAME -->
+<section id="screen-game" class="screen">
+  <div class="game-wrap">
+    <header class="game-header">
+      <button class="icon-btn" data-action="exitGame" aria-label="বের হন">←</button>
+      <div class="players">
+        <div class="player" id="leftPlayer"><span id="leftName">আপনি</span></div>
+        <div class="score-pill" id="scorePill">0 : 0</div>
+        <div class="player" id="rightPlayer"><span id="rightName">প্রতিপক্ষ</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" id="chatBtn" data-action="openChat" hidden>💬<span class="badge" id="chatBadge" hidden>0</span></button>
+        <button class="icon-btn" id="soundBtn" data-action="toggleSound">🔊</button>
+      </div>
+    </header>
+
+    <div class="turn-indicator" id="turnIndicator"></div>
+
+    <div class="board-wrap">
+      <div class="board" id="board">
+        <button class="cell" data-index="0"></button>
+        <button class="cell" data-index="1"></button>
+        <button class="cell" data-index="2"></button>
+        <button class="cell" data-index="3"></button>
+        <button class="cell" data-index="4"></button>
+        <button class="cell" data-index="5"></button>
+        <button class="cell" data-index="6"></button>
+        <button class="cell" data-index="7"></button>
+        <button class="cell" data-index="8"></button>
+        <svg class="win-svg" viewBox="0 0 100 100" aria-hidden="true"><line id="winLine" class="win-line" x1="0" y1="0" x2="0" y2="0"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- result -->
+  <div class="result-overlay" id="resultOverlay">
+    <div class="result-card">
+      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <h2 id="resultText"></h2>
+      <p class="next-starter-note" id="nextStarterNote"></p>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-action="playAgain">🔁 আবার খেলো</button>
+        <button class="btn btn-ghost" data-action="exitGame">🏠 মেনু</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- opponent left -->
+  <div class="result-overlay left-overlay" id="leftOverlay">
+    <div class="result-card">
+      <div class="result-emoji">🚪</div>
+      <h2>প্রতিপক্ষ গেম ছেড়ে চলে গেছে</h2>
+      <p class="next-starter-note">আর খেলা সম্ভব নয়।</p>
+      <button class="btn btn-primary" data-action="exitGame">🏠 মেনুতে ফিরুন</button>
+    </div>
+  </div>
+
+  <!-- chat -->
+  <div class="chat-drawer" id="chatDrawer">
+    <div class="chat-overlay" data-action="closeChat"></div>
+    <div class="chat-panel">
+      <div class="chat-head">
+        <span>💬 চ্যাট</span>
+        <button class="icon-btn" data-action="closeChat" aria-label="বন্ধ">✕</button>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <div class="chat-emojis">
+        <button data-action="sendEmoji" data-emoji="👍">👍</button>
+        <button data-action="sendEmoji" data-emoji="😀">😀</button>
+        <button data-action="sendEmoji" data-emoji="😢">😢</button>
+        <button data-action="sendEmoji" data-emoji="🔥">🔥</button>
+        <button data-action="sendEmoji" data-emoji="🎉">🎉</button>
+        <button data-action="sendEmoji" data-emoji="😡">😡</button>
+        <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
+      </div>
+      <div class="chat-input-row">
+        <input id="chatInput" class="input" placeholder="বার্তা লিখুন..." maxlength="300" autocomplete="off">
+        <button class="btn btn-primary chat-send" id="sendText" data-action="sendText">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-toast" id="chatToast" data-action="openChat"></div>
+</section>
+
+<script>
+/* ================= FIREBASE CONFIG ================= */
 const firebaseConfig = {
   apiKey: "AIzaSyBQkv_LcDn5h4AyWfeSv6SAROfi8vLV-A0",
   authDomain: "xoxo-9caa0.firebaseapp.com",
@@ -304,837 +347,977 @@ const firebaseConfig = {
   messagingSenderId: "214600063739",
   appId: "1:214600063739:web:70ab1a6556ef4e59c6ee5e"
 };
-let db = null;
 
-/* ===================== STATE ===================== */
+/* ================= CONSTANTS ================= */
 const WIN_COMBOS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const LINE_DATA = {
-  '0,1,2':{top:16.6667,left:50,angle:0,width:100},
-  '3,4,5':{top:50,left:50,angle:0,width:100},
-  '6,7,8':{top:83.3333,left:50,angle:0,width:100},
-  '0,3,6':{top:50,left:16.6667,angle:90,width:100},
-  '1,4,7':{top:50,left:50,angle:90,width:100},
-  '2,5,8':{top:50,left:83.3333,angle:90,width:100},
-  '0,4,8':{top:50,left:50,angle:45,width:141},
-  '2,4,6':{top:50,left:50,angle:-45,width:141}
+const LEVEL_LABEL = { easy:'সহজ', medium:'মাঝারি', hard:'কঠিন' };
+const SOUNDS = {
+  move:[620,0.12,'sine'], chat:[1000,0.14,'sine']
 };
+// সুর: [ফ্রিকোয়েন্সি, দৈর্ঘ্য]
+const MELODIES = {
+  win:[[523,0.12],[659,0.12],[784,0.12],[1047,0.35]],
+  lose:[[392,0.22],[330,0.22],[262,0.5]],
+  draw:[[440,0.18],[440,0.3]]
+};
+// পক্ষের জোড়া (কে কার বিপক্ষে)
+const PAIR = { HUMAN:'CPU', CPU:'HUMAN', P1:'P2', P2:'P1', HOST:'GUEST', GUEST:'HOST' };
 
-let profile = {name:'', wins:0, losses:0, draws:0};
-let soundOn = store.get('xo_sound') !== '0';
-let currentScreenId = 'screen-name';
+/* ================= STATE ================= */
+let db = null;
+const profile = { name:'', wins:0, losses:0, draws:0 };
+let soundOn = true;
+let audioCtx = null;
 
-let mode = null;
-let difficulty = 'medium';
-const playerSymbol='X', computerSymbol='O';
-
+let mode = null;               // 'computer' | 'local' | 'online'
+let level = 'medium';
 let board = Array(9).fill('');
-let displayedBoard = Array(9).fill('');
-let currentPlayer = 'X';
-let starter = 'X';
-let lastResult = null;
-let gameActive = false;
-let localScore = {X:0,O:0,draw:0};
+let cellEls = [];
+let currentTurn = 'X';         // বোর্ডের চিহ্ন: 'X' বা 'O'
+let xRole = 'HUMAN';           // এই রাউন্ডে কোন পক্ষ X নিয়ে খেলছে
+let nextXRole = 'HUMAN';       // পরের রাউন্ডে কে X পাবে (জয়ী / ড্র হলে বিপরীত)
+let humanSymbol = 'X';         // কম্পিউটার মোডে এই রাউন্ডে আপনার চিহ্ন
+let computerSymbol = 'O';      // কম্পিউটার মোডে এই রাউন্ডে কম্পিউটারের চিহ্ন
+let gameOver = false;
+let resultShown = false;
+let sessionScore = { HUMAN:0, CPU:0, P1:0, P2:0, D:0 };
+let computerTimer = null;
 
-// Online
-let roomCode=null, mySymbol=null, isHost=false, oppName=null;
-let roomRef=null, chatRef=null, readRef=null, resultShown=false;
-let presenceConnRef=null, presenceConnListener=null;
-let chatOpen=false, unreadCount=0;
-let oppReadKey='', lastOtherKey=null, lastSentReadKey=null;
-let oppJoinedOnce=false, oppLeftShown=false;
+// online
+let onlineCode = null;
+let myRole = 'HOST';           // এই ডিভাইসের পরিচয়: HOST বা GUEST (স্থির)
+let roomRef = null;
+let roomData = null;
+let inOnlineGame = false;
+let onlineLeft = false;
+let busy = false;
+let curRound = 0;
+let oppGraceTimer = null;
+let presRef = null, connRef = null, connFn = null;
+let chatRef = null, readRef = null;
+let chatInitDone = false;
+let lastChatKey = '';
+let oppReadKey = '';
+let unread = 0;
+let chatOpen = false;
+let toastTimer = null;
+const renderedKeys = new Set();
+let pendingRoomCode = null;    // লিংক থেকে আসা রুম কোড
 
-/* ===================== ACTIONS (বাটন → ফাংশন) ===================== */
-const ACTIONS = {
-  saveName: ()=>saveName(),
-  goMenu: ()=>showScreen('screen-menu'),
-  goDifficulty: ()=>showScreen('screen-difficulty'),
-  goOnline: ()=>showScreen('screen-online'),
-  goProfile: ()=>{ renderProfileScreen(); showScreen('screen-profile'); },
-  startComputer: el=>startComputerGame(el.dataset.level),
-  startLocal: ()=>startLocalGame(),
-  createRoom: ()=>createRoom(),
-  joinRoom: ()=>joinRoom(),
-  cancelRoom: ()=>cancelRoom(),
-  copyRoomCode: ()=>copyRoomCode(),
-  updateProfileName: ()=>updateProfileName(),
-  resetStats: ()=>resetStats(),
-  exitGame: ()=>exitGame(),
-  playAgain: ()=>playAgain(),
-  toggleChat: ()=>toggleChat(),
-  toggleSound: ()=>toggleSound(),
-  sendEmoji: el=>sendChatMessage(el.dataset.emoji),
-  sendText: ()=>sendChatMessage(document.getElementById('chatInput').value)
+/* ================= HELPERS ================= */
+const $ = id => document.getElementById(id);
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
 };
+function other(s){ return s === 'X' ? 'O' : 'X'; }
+function otherRole(r){ return PAIR[r]; }
+function symOf(role){ return role === xRole ? 'X' : 'O'; }
+function roleOfSym(sym){ return sym === 'X' ? xRole : otherRole(xRole); }
+function mySymbol(){ return symOf(myRole); }
+function resetSession(){ sessionScore = { HUMAN:0, CPU:0, P1:0, P2:0, D:0 }; }
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function normalizeBoard(raw){
+  const out = [];
+  for(let i=0;i<9;i++) out.push((raw && raw[i]) || '');
+  return out;
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+}
+function setOnlineMsg(msg){ $('onlineMsg').textContent = msg || ''; }
+function scrollChat(){ const b = $('chatMessages'); b.scrollTop = b.scrollHeight; }
 
+/* ================= PROFILE ================= */
+function loadProfile(){
+  try{
+    const p = JSON.parse(store.get('xo_profile') || 'null');
+    if(p && typeof p === 'object'){
+      profile.name = String(p.name || '');
+      profile.wins = Number(p.wins) || 0;
+      profile.losses = Number(p.losses) || 0;
+      profile.draws = Number(p.draws) || 0;
+    }
+  }catch(e){}
+}
+function saveProfile(){ store.set('xo_profile', JSON.stringify(profile)); }
+function renderMenu(){ $('menuGreeting').textContent = profile.name ? `স্বাগতম, ${profile.name}!` : 'স্বাগতম!'; }
+function renderStats(){
+  const total = profile.wins + profile.losses + profile.draws;
+  const rate = total ? Math.round(profile.wins / total * 100) : 0;
+  $('statWins').textContent = profile.wins;
+  $('statLosses').textContent = profile.losses;
+  $('statDraws').textContent = profile.draws;
+  $('statTotal').textContent = total;
+  $('statWinrate').textContent = rate + '%';
+}
+
+/* ================= SOUND ================= */
+function beep(freq, dur, type){
+  if(!soundOn) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur + 0.02);
+  }catch(e){}
+}
+function playSound(type){
+  const s = SOUNDS[type];
+  if(s) beep(s[0], s[1], s[2]);
+}
+function playMelody(name){
+  const notes = MELODIES[name];
+  if(!notes || !soundOn) return;
+  let t = 0;
+  notes.forEach(([f, d]) => {
+    setTimeout(() => beep(f, d + 0.05, 'triangle'), t * 1000);
+    t += d;
+  });
+}
+function updateSoundBtn(){ $('soundBtn').textContent = soundOn ? '🔊' : '🔇'; }
+function toggleSound(){
+  soundOn = !soundOn;
+  store.set('xo_sound', soundOn ? '1' : '0');
+  updateSoundBtn();
+}
+
+/* ================= BOARD RENDER ================= */
+function markSVG(v){
+  if(v === 'X') return '<svg class="mark-x" viewBox="0 0 100 100"><line x1="22" y1="22" x2="78" y2="78"/><line x1="78" y1="22" x2="22" y2="78"/></svg>';
+  return '<svg class="mark-o" viewBox="0 0 100 100"><circle cx="50" cy="50" r="28"/></svg>';
+}
+function paintBoard(){
+  cellEls.forEach((c, i) => {
+    const v = board[i] || '';
+    if(c.dataset.v !== v){
+      c.dataset.v = v;
+      c.innerHTML = v ? markSVG(v) : '';
+    }
+  });
+}
+function highlightWin(combo){
+  const pos = i => [15.67 + 34.33 * (i % 3), 15.67 + 34.33 * Math.floor(i / 3)];
+  const a = pos(combo[0]), c = pos(combo[2]);
+  const line = $('winLine');
+  line.setAttribute('x1', a[0]); line.setAttribute('y1', a[1]);
+  line.setAttribute('x2', c[0]); line.setAttribute('y2', c[1]);
+  line.classList.remove('show');
+  void line.getBoundingClientRect();
+  line.classList.add('show');
+  combo.forEach(i => cellEls[i].classList.add('win-cell'));
+}
+function clearWinVisuals(){
+  $('winLine').classList.remove('show');
+  cellEls.forEach(c => c.classList.remove('win-cell'));
+}
+function hideResultOverlay(){ $('resultOverlay').classList.remove('show'); }
+function resetBoardUI(){
+  clearTimeout(computerTimer); computerTimer = null;
+  board = Array(9).fill('');
+  gameOver = false;
+  resultShown = false;
+  clearWinVisuals();
+  paintBoard();
+  hideResultOverlay();
+}
+
+/* ================= GAME LOGIC ================= */
+function checkWinner(b){
+  for(const combo of WIN_COMBOS){
+    const [x,y,z] = combo;
+    if(b[x] && b[x] === b[y] && b[x] === b[z]) return { winner: b[x], combo };
+  }
+  if(b.every(Boolean)) return { winner:'draw', combo:null };
+  return null;
+}
+function minimax(b, computerTurn, depth){
+  const r = checkWinner(b);
+  if(r){
+    if(r.winner === 'draw') return 0;
+    return r.winner === computerSymbol ? 10 - depth : depth - 10;
+  }
+  let best = computerTurn ? -Infinity : Infinity;
+  for(let i=0;i<9;i++){
+    if(b[i]) continue;
+    b[i] = computerTurn ? computerSymbol : humanSymbol;
+    const s = minimax(b, !computerTurn, depth + 1);
+    b[i] = '';
+    best = computerTurn ? Math.max(best, s) : Math.min(best, s);
+  }
+  return best;
+}
+function bestMove(b){
+  let best = -Infinity, move = -1;
+  for(let i=0;i<9;i++){
+    if(b[i]) continue;
+    b[i] = computerSymbol;
+    const s = minimax(b, false, 1);
+    b[i] = '';
+    if(s > best){ best = s; move = i; }
+  }
+  return move;
+}
+function randomMove(b){
+  const empty = [];
+  b.forEach((v,i) => { if(!v) empty.push(i); });
+  return empty[Math.floor(Math.random() * empty.length)];
+}
+function pickComputerMove(){
+  const b = board.slice();
+  if(level === 'easy') return randomMove(b);
+  if(level === 'medium' && Math.random() < 0.4) return randomMove(b);
+  return bestMove(b);
+}
+function scheduleComputer(){
+  clearTimeout(computerTimer);
+  computerTimer = setTimeout(() => {
+    computerTimer = null;
+    if(mode !== 'computer' || gameOver || resultShown || currentTurn !== computerSymbol) return;
+    const m = pickComputerMove();
+    if(m === undefined || m < 0) return;
+    playMove(m, computerSymbol);
+  }, 450);
+}
+function nameOf(role){
+  if(role === 'HUMAN') return profile.name || 'আপনি';
+  if(role === 'CPU') return `কম্পিউটার (${LEVEL_LABEL[level]})`;
+  if(role === 'P1') return 'খেলোয়াড় ১';
+  if(role === 'P2') return 'খেলোয়াড় ২';
+  if(role === 'HOST' || role === 'GUEST'){
+    const p = roomData && roomData.players;
+    if(p && p[role]) return p[role];
+    return role === myRole ? (profile.name || 'আপনি') : 'প্রতিপক্ষ';
+  }
+  return '';
+}
+function leftRoleNow(){
+  if(mode === 'online') return myRole;
+  if(mode === 'computer') return 'HUMAN';
+  return 'P1';
+}
+function refreshSymbols(){
+  if(mode === 'computer'){
+    humanSymbol = symOf('HUMAN');
+    computerSymbol = symOf('CPU');
+  }
+}
+function updateTurn(){
+  if(!mode) return;
+  const left = leftRoleNow();
+  const right = otherRole(left);
+  const live = !gameOver && !resultShown;
+  let text = '';
+  if(mode === 'online'){
+    if(onlineLeft) text = '⚠️ প্রতিপক্ষ চলে গেছে';
+    else if(live) text = currentTurn === mySymbol() ? 'আপনার পালা' : 'প্রতিপক্ষের পালা';
+  } else if(mode === 'computer'){
+    if(live) text = currentTurn === humanSymbol ? 'আপনার পালা' : 'কম্পিউটার ভাবছে…';
+  } else if(live){
+    text = `${nameOf(roleOfSym(currentTurn))} (${currentTurn}) এর পালা`;
+  }
+  $('turnIndicator').textContent = text;
+  $('leftPlayer').classList.toggle('active', live && currentTurn === symOf(left));
+  $('rightPlayer').classList.toggle('active', live && currentTurn === symOf(right));
+  $('leftName').textContent = `${nameOf(left)} · ${symOf(left)}`;
+  $('rightName').textContent = `${nameOf(right)} · ${symOf(right)}`;
+  if(mode === 'online'){
+    $('scorePill').textContent = '#' + (onlineCode || '----');
+  } else {
+    $('scorePill').textContent = `${sessionScore[left]} : ${sessionScore[right]}` + (sessionScore.D ? ` · ড্র ${sessionScore.D}` : '');
+  }
+}
+function showResultOverlay(emoji, text, nextName){
+  resultShown = true;
+  $('resultEmoji').textContent = emoji;
+  $('resultText').textContent = text;
+  $('nextStarterNote').textContent = `➡️ পরের রাউন্ডে প্রথমে খেলবে: ${nextName}`;
+  $('resultOverlay').classList.add('show');
+}
+function launchConfetti(){
+  const colors = ['#ff5d7a','#ffd166','#4fd1ff','#a06bff','#6ee7a8'];
+  for(let i=0;i<60;i++){
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.background = colors[i % colors.length];
+    p.style.animationDuration = (2.2 + Math.random() * 2) + 's';
+    p.style.animationDelay = (Math.random() * 0.6) + 's';
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 4500);
+  }
+}
+function playMove(i, sym){
+  board[i] = sym;
+  paintBoard();
+  playSound('move');
+  const r = checkWinner(board);
+  if(r){ endRound(r); return; }
+  currentTurn = other(sym);
+  updateTurn();
+  if(mode === 'computer' && currentTurn === computerSymbol) scheduleComputer();
+}
+function endRound(r){
+  gameOver = true;
+  const w = r.winner;
+  if(r.combo) highlightWin(r.combo);
+
+  let winRole = null;
+  if(w === 'draw'){
+    nextXRole = otherRole(xRole);   // ড্র হলে X বদলায়
+    sessionScore.D++;
+  } else {
+    winRole = roleOfSym(w);
+    nextXRole = winRole;            // জয়ী পরের রাউন্ডে X নিয়ে প্রথমে খেলবে
+    sessionScore[winRole]++;
+  }
+
+  if(mode === 'computer'){
+    if(w === 'draw') profile.draws++;
+    else if(winRole === 'HUMAN') profile.wins++;
+    else profile.losses++;
+    saveProfile();
+  }
+
+  let emoji, text;
+  if(w === 'draw'){
+    emoji = '🤝'; text = 'ড্র হয়েছে!'; playMelody('draw');
+  } else if(mode === 'computer'){
+    if(winRole === 'HUMAN'){ emoji = '🎉'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
+    else { emoji = '😢'; text = 'কম্পিউটার জিতেছে'; playMelody('lose'); }
+  } else {
+    emoji = '🏆'; text = `${nameOf(winRole)} জিতেছে!`; playMelody('win'); launchConfetti();
+  }
+  showResultOverlay(emoji, text, `${nameOf(nextXRole)} (X)`);
+  updateTurn();
+}
+function beginRound(){
+  $('chatBtn').hidden = mode !== 'online';
+  closeChat();
+  resetBoardUI();
+  currentTurn = 'X';          // প্রতি রাউন্ডে X-ওয়ালা প্রথমে খেলে
+  refreshSymbols();
+  updateTurn();
+}
+function startComputer(el){
+  mode = 'computer';
+  level = (el && el.dataset.level) || 'medium';
+  resetSession();
+  xRole = 'HUMAN';
+  nextXRole = 'HUMAN';
+  beginRound();
+  showScreen('screen-game');
+  if(currentTurn === computerSymbol) scheduleComputer();
+}
+function startLocal(){
+  mode = 'local';
+  resetSession();
+  xRole = 'P1';
+  nextXRole = 'P1';
+  beginRound();
+  showScreen('screen-game');
+}
+function handleCellClick(i){
+  if(!mode || gameOver || resultShown || board[i]) return;
+  if(mode === 'computer'){
+    if(currentTurn !== humanSymbol) return;
+    playMove(i, humanSymbol);
+  } else if(mode === 'local'){
+    playMove(i, currentTurn);
+  } else if(mode === 'online'){
+    makeOnlineMove(i);
+  }
+}
+function playAgain(){
+  if(mode === 'online'){ onlinePlayAgain(); return; }
+  if(!mode) return;
+  xRole = nextXRole;
+  beginRound();
+  if(mode === 'computer' && currentTurn === computerSymbol) scheduleComputer();
+}
+function exitGame(){
+  if(mode === 'online'){
+    leaveOnlineRoom();
+    resetOnlineState();
+  }
+  clearTimeout(computerTimer); computerTimer = null;
+  closeChat();
+  resetBoardUI();
+  $('leftOverlay').classList.remove('show');
+  mode = null;
+  renderMenu();
+  showScreen('screen-menu');
+}
+
+/* ================= NAVIGATION / PROFILE ACTIONS ================= */
+function saveName(){
+  const n = $('nameInput').value.trim();
+  if(!n){ $('nameMsg').textContent = 'একটি নাম লিখুন'; return; }
+  profile.name = n;
+  saveProfile();
+  renderMenu();
+  if(!applyPendingRoom()) showScreen('screen-menu');
+}
+function goMenu(){ renderMenu(); showScreen('screen-menu'); }
+function goDifficulty(){ showScreen('screen-difficulty'); }
+function goOnline(){ setOnlineMsg(''); showScreen('screen-online'); }
+function goProfile(){
+  $('profileNameInput').value = profile.name;
+  $('profileMsg').textContent = '';
+  renderStats();
+  showScreen('screen-profile');
+}
+function updateProfileName(){
+  const n = $('profileNameInput').value.trim();
+  if(!n){ $('profileMsg').textContent = 'নাম খালি রাখা যাবে না'; return; }
+  profile.name = n;
+  saveProfile();
+  renderMenu();
+  $('profileMsg').textContent = '✅ নাম আপডেট হয়েছে';
+}
+function resetStats(){
+  if(!confirm('পরিসংখ্যান মুছে ফেলতে চান?')) return;
+  profile.wins = 0; profile.losses = 0; profile.draws = 0;
+  saveProfile();
+  renderStats();
+}
+
+/* ================= COPY / SHARE / LINK ================= */
+function copyText(text, cb){
+  const fallback = () => {
+    try{
+      const t = document.createElement('textarea');
+      t.value = text; t.style.position = 'fixed'; t.style.opacity = '0';
+      document.body.appendChild(t); t.select();
+      const okc = document.execCommand('copy');
+      t.remove();
+      cb(!!okc);
+    }catch(e){ cb(false); }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(() => cb(true), fallback);
+  } else fallback();
+}
+function flashBtn(btn, okText, ok, origText){
+  btn.textContent = ok ? okText : '❌ কপি হয়নি';
+  setTimeout(() => { btn.textContent = origText; }, 1600);
+}
+function buildRoomLink(code){
+  const base = location.href.split('#')[0].split('?')[0];
+  return `${base}?room=${code}`;
+}
+function copyRoomCode(){
+  if(!onlineCode) return;
+  const btn = $('copyBtn');
+  copyText(onlineCode, ok => flashBtn(btn, '✅ কপি হয়েছে', ok, '📋 কোড কপি করুন'));
+}
+function copyRoomLink(){
+  if(!onlineCode) return;
+  const btn = $('linkBtn');
+  const link = buildRoomLink(onlineCode);
+  $('linkPreview').textContent = link;
+  copyText(link, ok => flashBtn(btn, '✅ লিংক কপি হয়েছে', ok, '🔗 লিংক কপি করুন'));
+}
+function shareRoomLink(){
+  if(!onlineCode) return;
+  const link = buildRoomLink(onlineCode);
+  if(navigator.share){
+    navigator.share({
+      title: 'XO খেলা',
+      text: `আমার সাথে XO খেলুন! রুম কোড: ${onlineCode}`,
+      url: link
+    }).catch(() => {});
+  } else {
+    copyRoomLink();
+  }
+}
+function readRoomParam(){
+  try{
+    const p = new URLSearchParams(location.search).get('room');
+    if(p && /^\d{4}$/.test(p)) pendingRoomCode = p;
+    if(p && window.history && history.replaceState) history.replaceState(null, '', location.pathname);
+  }catch(e){}
+}
+function applyPendingRoom(){
+  if(!pendingRoomCode) return false;
+  $('joinCodeInput').value = pendingRoomCode;
+  pendingRoomCode = null;
+  setOnlineMsg('লিংক থেকে রুম কোড এসেছে। "রুমে যোগ দিন" চাপুন।');
+  showScreen('screen-online');
+  return true;
+}
+
+/* ================= ONLINE ================= */
+function requireDb(){
+  if(!db){ setOnlineMsg('অনলাইন সার্ভিস চালু হয়নি। ইন্টারনেট চেক করুন।'); return false; }
+  return true;
+}
+async function createRoom(){
+  if(!requireDb()) return;
+  setOnlineMsg('');
+  try{
+    let code = null;
+    for(let t=0; t<10 && !code; t++){
+      const c = String(1000 + Math.floor(Math.random() * 9000));
+      const s = await db.ref('rooms/' + c).once('value');
+      if(!s.exists()) code = c;
+    }
+    if(!code){ setOnlineMsg('রুম তৈরি করা যাচ্ছে না, আবার চেষ্টা করুন'); return; }
+    await db.ref('rooms/' + code).set({
+      board: ['','','','','','','','',''],
+      turn: 'X',
+      xRole: 'HOST',
+      nextXRole: 'HOST',
+      round: 1,
+      players: { HOST: profile.name || 'হোস্ট' },
+      presence: { HOST: true, GUEST: false },
+      status: 'waiting',
+      createdAt: Date.now()
+    });
+    onlineCode = code;
+    myRole = 'HOST';
+    xRole = 'HOST';
+    $('roomCodeDisplay').textContent = code;
+    $('linkPreview').textContent = buildRoomLink(code);
+    $('shareBtn').hidden = !navigator.share;
+    showScreen('screen-waiting');
+    attachRoomListener(code);
+    setupPresence();
+  }catch(e){
+    setOnlineMsg('ত্রুটি: ' + (e.message || e));
+  }
+}
+async function joinRoom(){
+  if(!requireDb()) return;
+  const code = $('joinCodeInput').value.trim();
+  if(!/^\d{4}$/.test(code)){ setOnlineMsg('৪ সংখ্যার সঠিক কোড লিখুন'); return; }
+  setOnlineMsg('যোগ দেওয়া হচ্ছে...');
+  try{
+    const ref = db.ref('rooms/' + code);
+    const snap = await ref.once('value');
+    const room = snap.val();
+    if(!room){ setOnlineMsg('এই কোডে কোনো রুম নেই'); return; }
+    if(room.status !== 'waiting' || (room.players && room.players.GUEST)){
+      setOnlineMsg('রুমটি ভর্তি বা বন্ধ হয়ে গেছে'); return;
+    }
+    if(room.presence && room.presence.HOST === false){
+      setOnlineMsg('রুমের হোস্ট এখন অফলাইনে আছেন। একটু পরে আবার চেষ্টা করুন।'); return;
+    }
+    onlineCode = code;
+    myRole = 'GUEST';
+    await ref.update({
+      'players/GUEST': profile.name || 'খেলোয়াড়',
+      'presence/GUEST': true,
+      status: 'playing'
+    });
+    attachRoomListener(code);
+    setupPresence();
+    setOnlineMsg('');
+  }catch(e){
+    setOnlineMsg('ত্রুটি: ' + (e.message || e));
+    onlineCode = null;
+  }
+}
+function attachRoomListener(code){
+  roomRef = db.ref('rooms/' + code);
+  roomRef.on('value', snap => onRoomUpdate(snap.val()), err => showErr(err.message));
+}
+function setupPresence(){
+  if(!onlineCode) return;
+  presRef = db.ref(`rooms/${onlineCode}/presence/${myRole}`);
+  connRef = db.ref('.info/connected');
+  connFn = snap => {
+    if(snap.val() !== true) return;
+    presRef.onDisconnect().set(false);
+    presRef.set(true);
+  };
+  connRef.on('value', connFn);
+}
+function detachOnlineListeners(){
+  if(roomRef){ roomRef.off(); roomRef = null; }
+  if(chatRef){ chatRef.off(); chatRef = null; }
+  if(readRef){ readRef.off(); readRef = null; }
+  if(connRef && connFn) connRef.off('value', connFn);
+  if(presRef){ presRef.onDisconnect().cancel(); presRef = null; }
+  connRef = null; connFn = null;
+  clearTimeout(oppGraceTimer); oppGraceTimer = null;
+}
+function leaveOnlineRoom(){
+  if(!onlineCode || !db) return;
+  const code = onlineCode;
+  const role = myRole;
+  detachOnlineListeners();
+  const ref = db.ref('rooms/' + code);
+  if(role === 'HOST'){
+    ref.remove().catch(() => {});
+  } else {
+    ref.once('value').then(s => {
+      if(s.exists()){
+        ref.update({ status:'closed', leftBy: role, ['presence/' + role]: false }).catch(() => {});
+      }
+    }).catch(() => {});
+  }
+}
+function resetOnlineState(){
+  onlineCode = null;
+  roomData = null;
+  inOnlineGame = false;
+  onlineLeft = false;
+  busy = false;
+  curRound = 0;
+  myRole = 'HOST';
+  chatInitDone = false;
+  lastChatKey = '';
+  oppReadKey = '';
+  unread = 0;
+  chatOpen = false;
+  renderedKeys.clear();
+  $('chatMessages').innerHTML = '';
+  $('chatBadge').hidden = true;
+  $('chatDrawer').classList.remove('open');
+  $('chatToast').classList.remove('show');
+  $('chatBtn').hidden = true;
+  $('leftOverlay').classList.remove('show');
+  $('linkPreview').textContent = '';
+}
+function cancelRoom(){
+  leaveOnlineRoom();
+  resetOnlineState();
+  renderMenu();
+  showScreen('screen-menu');
+}
+function onRoomUpdate(room){
+  if(!onlineCode) return;
+  if(!room){
+    if(inOnlineGame) onOpponentLeft();
+    return;
+  }
+  roomData = room;
+  busy = false;
+  xRole = room.xRole || 'HOST';
+
+  if(!inOnlineGame){
+    if(room.status === 'playing') enterOnlineGameScreen();
+    return;
+  }
+
+  if(room.status === 'closed' && room.leftBy && room.leftBy !== myRole){
+    onOpponentLeft();
+    return;
+  }
+  checkOpponentPresence(room);
+
+  const rd = room.round || 1;
+  const b = normalizeBoard(room.board);
+  if(rd !== curRound){
+    curRound = rd;
+    resetBoardUI();
+  } else if(resultShown && b.every(v => !v)){
+    resetBoardUI();
+  }
+
+  board = b;
+  paintBoard();
+
+  if(room.status === 'finished' && room.winner){
+    if(!resultShown) showOnlineResult(room);
+  } else if(room.status === 'playing'){
+    gameOver = false;
+    currentTurn = room.turn || 'X';
+  }
+  updateTurn();
+}
+function enterOnlineGameScreen(){
+  const room = roomData;
+  inOnlineGame = true;
+  mode = 'online';
+  onlineLeft = false;
+  busy = false;
+  curRound = room.round || 1;
+  xRole = room.xRole || 'HOST';
+  board = normalizeBoard(room.board);
+  gameOver = false;
+  resultShown = false;
+  currentTurn = room.turn || 'X';
+  clearWinVisuals();
+  paintBoard();
+  hideResultOverlay();
+  setupOnlineHeader();
+  attachChat(onlineCode);
+  showScreen('screen-game');
+  updateTurn();
+}
+function setupOnlineHeader(){
+  $('chatBtn').hidden = false;
+  $('chatBadge').hidden = true;
+}
+function checkOpponentPresence(room){
+  if(!inOnlineGame || onlineLeft) return;
+  if(room.status !== 'playing' && room.status !== 'finished'){
+    clearTimeout(oppGraceTimer); oppGraceTimer = null;
+    return;
+  }
+  const opp = otherRole(myRole);
+  const online = !!(room.presence && room.presence[opp] === true);
+  if(online){
+    clearTimeout(oppGraceTimer); oppGraceTimer = null;
+    return;
+  }
+  if(!oppGraceTimer){
+    oppGraceTimer = setTimeout(() => {
+      oppGraceTimer = null;
+      const p = roomData && roomData.presence && roomData.presence[otherRole(myRole)];
+      if(p !== true) onOpponentLeft();
+    }, 7000);
+  }
+}
+function onOpponentLeft(){
+  if(!inOnlineGame || onlineLeft) return;
+  onlineLeft = true;
+  clearTimeout(oppGraceTimer); oppGraceTimer = null;
+  appendSystemMessage('⚠️ প্রতিপক্ষ গেম ছেড়ে চলে গেছে');
+  $('leftOverlay').classList.add('show');
+  updateTurn();
+}
+function showOnlineResult(room){
+  const w = room.winner;
+  const rx = room.xRole || 'HOST';
+  gameOver = true;
+  let combo = null;
+  if(Array.isArray(room.winCombo)) combo = room.winCombo;
+  else if(room.winCombo && typeof room.winCombo === 'object') combo = Object.values(room.winCombo);
+  if(combo && w !== 'draw') highlightWin(combo);
+
+  const winRole = w === 'draw' ? null : (w === 'X' ? rx : otherRole(rx));
+
+  if(w === 'draw') profile.draws++;
+  else if(winRole === myRole) profile.wins++;
+  else profile.losses++;
+  saveProfile();
+
+  let emoji, text;
+  if(w === 'draw'){ emoji = '🤝'; text = 'ড্র হয়েছে!'; playMelody('draw'); }
+  else if(winRole === myRole){ emoji = '🎉'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
+  else { emoji = '😢'; text = `${nameOf(winRole)} জিতেছে`; playMelody('lose'); }
+
+  const nxt = room.nextXRole || (w === 'draw' ? otherRole(rx) : winRole);
+  showResultOverlay(emoji, text, `${nameOf(nxt)} (X)`);
+  updateTurn();
+}
+function makeOnlineMove(i){
+  if(!roomRef || busy || onlineLeft || gameOver || resultShown) return;
+  if(currentTurn !== mySymbol() || board[i]) return;
+  busy = true;
+  const me = myRole;
+  roomRef.transaction(room => {
+    if(!room || room.status !== 'playing') return;
+    const rx = room.xRole || 'HOST';
+    const mover = rx === me ? 'X' : 'O';
+    if(room.turn !== mover) return;
+    const b = normalizeBoard(room.board);
+    if(b[i]) return;
+    b[i] = mover;
+    const upd = Object.assign({}, room, { board: b, turn: other(mover) });
+    const r = checkWinner(b);
+    if(r){
+      upd.status = 'finished';
+      upd.winner = r.winner;
+      upd.winCombo = r.combo;
+      // জয়ী (বা ড্র হলে বিপরীত পক্ষ) পরের রাউন্ডে X পাবে
+      upd.nextXRole = r.winner === 'X' ? rx : otherRole(rx);
+    }
+    return upd;
+  }).then(res => {
+    if(!res.committed) busy = false;
+  }).catch(() => { busy = false; });
+}
+function onlinePlayAgain(){
+  if(!roomRef) return;
+  roomRef.transaction(room => {
+    if(!room || room.status !== 'finished') return;
+    const nx = room.nextXRole || room.xRole || 'HOST';
+    return Object.assign({}, room, {
+      board: ['','','','','','','','',''],
+      turn: 'X',
+      xRole: nx,
+      nextXRole: nx,
+      round: (room.round || 1) + 1,
+      status: 'playing',
+      winner: null,
+      winCombo: null
+    });
+  }).catch(() => {});
+}
+
+/* ================= CHAT ================= */
+function attachChat(code){
+  chatRef = db.ref(`rooms/${code}/chat`);
+  readRef = db.ref(`rooms/${code}/read`);
+  chatInitDone = false;
+  chatRef.on('child_added', snap => onChatMessage(snap.key, snap.val()));
+  chatRef.once('value', () => { chatInitDone = true; });
+  readRef.on('value', snap => {
+    const d = snap.val() || {};
+    oppReadKey = d[otherRole(myRole)] || '';
+    applySeen();
+  });
+}
+function onChatMessage(key, msg){
+  if(!msg || renderedKeys.has(key)) return;
+  renderedKeys.add(key);
+  lastChatKey = key;
+  const mine = msg.sender === myRole;
+  appendChatBubble(key, msg, mine);
+  if(!mine && chatInitDone){
+    playSound('chat');
+    if(chatOpen){
+      markChatRead();
+    } else {
+      unread++;
+      $('chatBadge').textContent = unread;
+      $('chatBadge').hidden = false;
+      showChatToast(msg);
+    }
+  }
+}
+function appendChatBubble(key, msg, mine){
+  const box = $('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + (mine ? 'me' : 'other');
+  const time = new Date(msg.time || Date.now()).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const who = mine ? '' : `<span class="who">${escapeHtml(msg.name || 'প্রতিপক্ষ')}</span>`;
+  const status = mine ? ` · <span class="chat-status" data-key="${escapeHtml(key)}">✓ পাঠানো হয়েছে</span>` : '';
+  div.innerHTML = `${who}<div>${escapeHtml(msg.text || '')}</div><span class="chat-meta">${time}${status}</span>`;
+  box.appendChild(div);
+  scrollChat();
+  if(mine) applySeen();
+}
+function applySeen(){
+  document.querySelectorAll('#chatMessages .chat-status[data-key]').forEach(el => {
+    const seen = !!oppReadKey && el.dataset.key <= oppReadKey;
+    el.classList.toggle('seen', seen);
+    el.textContent = seen ? '✓✓ দেখা হয়েছে' : '✓ পাঠানো হয়েছে';
+  });
+}
+function appendSystemMessage(text){
+  const d = document.createElement('div');
+  d.className = 'chat-system';
+  d.textContent = text;
+  $('chatMessages').appendChild(d);
+  scrollChat();
+}
+function markChatRead(){
+  if(!onlineCode || !lastChatKey || !db) return;
+  db.ref(`rooms/${onlineCode}/read/${myRole}`).set(lastChatKey).catch(() => {});
+}
+function sendChatMessage(text){
+  const t = String(text || '').trim().slice(0, 300);
+  if(!t || !onlineCode || !chatRef) return;
+  chatRef.push({ sender: myRole, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
+}
+function sendText(){
+  const inp = $('chatInput');
+  sendChatMessage(inp.value);
+  inp.value = '';
+  inp.focus();
+}
+function sendEmoji(el){ sendChatMessage(el.dataset.emoji); }
+function openChat(){
+  if(mode !== 'online' || !inOnlineGame) return;
+  chatOpen = true;
+  unread = 0;
+  $('chatBadge').hidden = true;
+  $('chatToast').classList.remove('show');
+  $('chatDrawer').classList.add('open');
+  markChatRead();
+  scrollChat();
+}
+function closeChat(){
+  chatOpen = false;
+  $('chatDrawer').classList.remove('open');
+}
+function showChatToast(msg){
+  const t = $('chatToast');
+  t.textContent = `💬 ${msg.name || 'প্রতিপক্ষ'}: ${msg.text || ''}`;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ================= ACTIONS / EVENTS ================= */
 function onDocClick(e){
-  const cell = e.target.closest('.cell');
-  if(cell && cell.dataset.index !== undefined){
+  const cell = e.target.closest && e.target.closest('#board .cell');
+  if(cell){
     handleCellClick(Number(cell.dataset.index));
     return;
   }
-  const el = e.target.closest('[data-action]');
+  const el = e.target.closest && e.target.closest('[data-action]');
   if(!el) return;
-  const act = ACTIONS[el.dataset.action];
-  if(act) act(el);
+  const fn = ACTIONS[el.dataset.action];
+  if(typeof fn === 'function') fn(el);
+}
+const ACTIONS = {
+  saveName, goMenu, goDifficulty, goOnline, goProfile,
+  startComputer, startLocal, createRoom, joinRoom, cancelRoom,
+  copyRoomCode, copyRoomLink, shareRoomLink,
+  updateProfileName, resetStats, exitGame, playAgain,
+  openChat, closeChat, toggleSound, sendEmoji, sendText, hideErr
+};
+function bindKeys(){
+  $('nameInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) saveName();
+  });
+  $('joinCodeInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) joinRoom();
+  });
+  $('joinCodeInput').addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+  });
+  $('chatInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing){ e.preventDefault(); sendText(); }
+  });
+  $('profileNameInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) updateProfileName();
+  });
 }
 
-/* ===================== INIT ===================== */
+/* ================= INIT ================= */
 function init(){
   try{
     if(typeof firebase !== 'undefined'){
-      firebase.initializeApp(firebaseConfig);
+      if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
       db = firebase.database();
-    } else {
-      console.warn('Firebase লোড হয়নি, শুধু কম্পিউটার/লোকাল মোড চলবে');
     }
-  }catch(e){ console.error('Firebase init error:', e); }
-
-  document.addEventListener('click', onDocClick);
-  document.getElementById('nameInput').addEventListener('keydown', e=>{ if(e.key==='Enter') saveName(); });
-  document.getElementById('joinCodeInput').addEventListener('keydown', e=>{ if(e.key==='Enter') joinRoom(); });
-  document.getElementById('chatInput').addEventListener('keydown', e=>{ if(e.key==='Enter') sendChatMessage(e.target.value); });
-
-  profile = loadProfile();
-  if(profile.name){
-    setGreeting();
-    showScreen('screen-menu');
-  } else {
-    showScreen('screen-name');
+  }catch(e){
+    console.warn('[XO] Firebase init failed', e);
+    db = null;
   }
-  renderProfileScreen();
-  document.getElementById('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  readRoomParam();
+  cellEls = Array.from(document.querySelectorAll('#board .cell'));
+  loadProfile();
+  soundOn = store.get('xo_sound') !== '0';
+  updateSoundBtn();
+  document.addEventListener('click', onDocClick);
+  bindKeys();
+  renderMenu();
+  if(!profile.name){
+    showScreen('screen-name');
+    return;
+  }
+  if(!applyPendingRoom()) showScreen('screen-menu');
 }
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', init);
 } else {
   init();
-}
-
-function setGreeting(){
-  document.getElementById('menuGreeting').textContent = `স্বাগতম, ${profile.name}!`;
-}
-
-/* ===================== SCREEN NAV ===================== */
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  currentScreenId = id;
-}
-
-/* ===================== PROFILE ===================== */
-function loadProfile(){
-  const raw = store.get('xo_profile');
-  if(raw){ try{ return Object.assign({name:'', wins:0, losses:0, draws:0}, JSON.parse(raw)); }catch(e){} }
-  return {name:'', wins:0, losses:0, draws:0};
-}
-function saveProfile(){ store.set('xo_profile', JSON.stringify(profile)); }
-function saveName(){
-  const val = (document.getElementById('nameInput').value || '').trim();
-  if(!val){ alert('নাম লিখুন'); return; }
-  profile.name = val;
-  saveProfile();
-  setGreeting();
-  renderProfileScreen();
-  showScreen('screen-menu');
-}
-function updateProfileName(){
-  const val = (document.getElementById('profileNameInput').value || '').trim();
-  if(!val){ alert('নাম লিখুন'); return; }
-  profile.name = val; saveProfile();
-  setGreeting();
-  alert('নাম আপডেট হয়েছে!');
-}
-function renderProfileScreen(){
-  document.getElementById('profileNameInput').value = profile.name || '';
-  document.getElementById('statWins').textContent = profile.wins;
-  document.getElementById('statLosses').textContent = profile.losses;
-  document.getElementById('statDraws').textContent = profile.draws;
-  const total = profile.wins + profile.losses + profile.draws;
-  document.getElementById('statTotal').textContent = total;
-  document.getElementById('statWinrate').textContent = total>0 ? Math.round(profile.wins/total*100)+'%' : '0%';
-}
-function resetStats(){
-  if(confirm('সব পরিসংখ্যান মুছে ফেলতে চান?')){
-    profile.wins=0; profile.losses=0; profile.draws=0;
-    saveProfile(); renderProfileScreen();
-  }
-}
-function recordProfileResult(outcome){
-  if(outcome==='win') profile.wins++;
-  else if(outcome==='loss') profile.losses++;
-  else profile.draws++;
-  saveProfile(); renderProfileScreen();
-}
-
-/* ===================== GAME SETUP ===================== */
-function setupGameScreenFor(type){
-  const chatBtn = document.getElementById('chatBtn');
-  const scorePill = document.getElementById('scorePill');
-  chatBtn.style.display = (type==='online') ? 'inline-flex' : 'none';
-  scorePill.style.display = (type==='local') ? 'inline-flex' : 'none';
-  if(type==='computer'){
-    document.getElementById('leftName').textContent = (profile.name||'আপনি')+' ❌';
-    document.getElementById('rightName').textContent = '🤖 কম্পিউটার';
-  } else if(type==='local'){
-    document.getElementById('leftName').textContent = 'Player 1 ❌';
-    document.getElementById('rightName').textContent = 'Player 2 ⭕';
-    scorePill.textContent = `X:${localScore.X} O:${localScore.O} ড্র:${localScore.draw}`;
-  }
-}
-
-function startComputerGame(level){
-  mode='computer'; difficulty=level;
-  starter='X'; lastResult=null;
-  board=Array(9).fill(''); currentPlayer='X'; gameActive=true;
-  showScreen('screen-game');
-  setupGameScreenFor('computer');
-  clearBoardUI(); hideResultOverlay();
-  updateTurnIndicator();
-}
-
-function startLocalGame(){
-  mode='local';
-  starter='X'; lastResult=null; localScore={X:0,O:0,draw:0};
-  board=Array(9).fill(''); currentPlayer='X'; gameActive=true;
-  showScreen('screen-game');
-  setupGameScreenFor('local');
-  clearBoardUI(); hideResultOverlay();
-  updateTurnIndicator();
-}
-
-/* ===================== BOARD / RENDER ===================== */
-function clearBoardUI(){
-  document.querySelectorAll('.cell').forEach(c=>{ c.innerHTML=''; c.classList.remove('win-cell'); });
-  document.querySelectorAll('.win-line').forEach(l=>l.remove());
-  displayedBoard = Array(9).fill('');
-}
-function renderBoard(){
-  const cells = document.querySelectorAll('.cell');
-  for(let i=0;i<9;i++){
-    if(displayedBoard[i] !== board[i]){
-      cells[i].innerHTML=''; cells[i].classList.remove('win-cell');
-      if(board[i]==='X'){ cells[i].appendChild(createXSVG()); if(mode==='online') playSound('move'); }
-      else if(board[i]==='O'){ cells[i].appendChild(createOSVG()); if(mode==='online') playSound('move'); }
-      displayedBoard[i] = board[i];
-    }
-  }
-}
-function createXSVG(){ return markupToNode(`<svg viewBox="0 0 100 100" class="mark mark-x"><line x1="20" y1="20" x2="80" y2="80"/><line x1="80" y1="20" x2="20" y2="80"/></svg>`); }
-function createOSVG(){ return markupToNode(`<svg viewBox="0 0 100 100" class="mark mark-o"><circle cx="50" cy="50" r="35"/></svg>`); }
-function markupToNode(svg){ const div=document.createElement('div'); div.innerHTML=svg; return div.firstElementChild; }
-
-function placeMark(i, symbol){
-  board[i]=symbol; displayedBoard[i]=symbol;
-  const cell = document.querySelectorAll('.cell')[i];
-  cell.innerHTML=''; cell.appendChild(symbol==='X'?createXSVG():createOSVG());
-  playSound('move');
-}
-
-function drawWinLine(combo){
-  const key = combo.join(',');
-  const d = LINE_DATA[key];
-  if(!d) return;
-  const line = document.createElement('div');
-  line.className='win-line';
-  line.style.top = d.top+'%';
-  line.style.left = d.left+'%';
-  line.style.transform = `translate(-50%,-50%) rotate(${d.angle}deg)`;
-  line.style.setProperty('--line-width', d.width+'%');
-  document.getElementById('board').appendChild(line);
-}
-function highlightWinCells(combo){
-  const cells = document.querySelectorAll('.cell');
-  combo.forEach(i=>cells[i].classList.add('win-cell'));
-}
-
-/* ===================== GAME LOGIC ===================== */
-function emptyIndices(b){ return b.reduce((a,v,i)=>{ if(v==='') a.push(i); return a; },[]); }
-function checkGameEndArr(b){
-  for(const combo of WIN_COMBOS){
-    const [a,c,d]=combo;
-    if(b[a] && b[a]===b[c] && b[a]===b[d]) return {winner:b[a], combo};
-  }
-  if(b.every(v=>v!=='')) return {winner:'draw', combo:null};
-  return null;
-}
-
-function handleCellClick(i){
-  if(!gameActive) return;
-  if(board[i]!=='') return;
-
-  if(mode==='online'){
-    if(currentPlayer!==mySymbol) return;
-    makeOnlineMove(i);
-    return;
-  }
-  if(mode==='computer' && currentPlayer!==playerSymbol) return;
-
-  placeMark(i, currentPlayer);
-  const result = checkGameEndArr(board);
-  if(result){ endRound(result); return; }
-
-  currentPlayer = currentPlayer==='X' ? 'O' : 'X';
-  updateTurnIndicator();
-
-  if(mode==='computer' && currentPlayer===computerSymbol && gameActive){
-    setTimeout(computerMove, 500+Math.random()*400);
-  }
-}
-
-function updateTurnIndicator(){
-  const el = document.getElementById('turnIndicator');
-  if(mode==='online' && oppLeftShown){ el.textContent='⚠️ প্রতিপক্ষ চলে গেছে'; return; }
-  if(!gameActive){ el.textContent='খেলা শেষ হয়েছে'; return; }
-  if(mode==='online'){
-    el.textContent = currentPlayer===mySymbol ? '👉 আপনার পালা' : '⏳ প্রতিপক্ষের পালা';
-  } else if(mode==='computer'){
-    el.textContent = currentPlayer===playerSymbol ? '👉 আপনার পালা' : '🤖 কম্পিউটার ভাবছে...';
-  } else {
-    el.textContent = (currentPlayer==='X'?'❌':'⭕')+' '+currentPlayer+' এর পালা';
-  }
-}
-
-function endRound(result){
-  gameActive=false;
-  if(result.winner!=='draw'){ drawWinLine(result.combo); highlightWinCells(result.combo); }
-  lastResult = result.winner;
-
-  if(mode==='local'){
-    updateLocalScore(result.winner);
-    playSound(result.winner==='draw'?'draw':'win');
-  } else if(mode==='computer'){
-    const outcome = result.winner==='draw' ? 'draw' : (result.winner===playerSymbol ? 'win' : 'loss');
-    recordProfileResult(outcome);
-    playSound(outcome==='win'?'win':outcome==='loss'?'lose':'draw');
-  }
-  showResultOverlay(result.winner);
-}
-function updateLocalScore(winner){
-  if(winner==='draw') localScore.draw++; else localScore[winner]++;
-  document.getElementById('scorePill').textContent = `X:${localScore.X} O:${localScore.O} ড্র:${localScore.draw}`;
-}
-
-/* ===================== COMPUTER AI ===================== */
-function minimax(b, depth, isMax, aiSym, humanSym){
-  const res = checkGameEndArr(b);
-  if(res){
-    if(res.winner===aiSym) return 10-depth;
-    if(res.winner===humanSym) return depth-10;
-    return 0;
-  }
-  const avail = emptyIndices(b);
-  if(isMax){
-    let best=-Infinity;
-    for(const i of avail){ b[i]=aiSym; best=Math.max(best, minimax(b,depth+1,false,aiSym,humanSym)); b[i]=''; }
-    return best;
-  } else {
-    let best=Infinity;
-    for(const i of avail){ b[i]=humanSym; best=Math.min(best, minimax(b,depth+1,true,aiSym,humanSym)); b[i]=''; }
-    return best;
-  }
-}
-function bestMove(b, aiSym, humanSym){
-  let bestScore=-Infinity, move=null;
-  for(const i of emptyIndices(b)){
-    b[i]=aiSym;
-    const score = minimax(b,0,false,aiSym,humanSym);
-    b[i]='';
-    if(score>bestScore){ bestScore=score; move=i; }
-  }
-  return move;
-}
-function computerMove(){
-  if(!gameActive) return;
-  const avail = emptyIndices(board);
-  if(avail.length===0) return;
-  let idx;
-  if(difficulty==='easy'){
-    idx = avail[Math.floor(Math.random()*avail.length)];
-  } else if(difficulty==='medium'){
-    idx = Math.random()<0.6 ? bestMove(board.slice(), computerSymbol, playerSymbol) : avail[Math.floor(Math.random()*avail.length)];
-  } else {
-    idx = bestMove(board.slice(), computerSymbol, playerSymbol);
-  }
-  placeMark(idx, computerSymbol);
-  const result = checkGameEndArr(board);
-  if(result){ endRound(result); return; }
-  currentPlayer = playerSymbol;
-  updateTurnIndicator();
-}
-
-/* ===================== PLAY AGAIN ===================== */
-function playAgain(){
-  if(mode==='online'){ onlinePlayAgain(); return; }
-
-  clearBoardUI();
-  hideResultOverlay();
-
-  let newStarter;
-  if(lastResult===null) newStarter='X';
-  else if(lastResult==='draw') newStarter = (starter==='X') ? 'O' : 'X';
-  else newStarter = lastResult;
-
-  starter = newStarter;
-  board = Array(9).fill('');
-  currentPlayer = starter;
-  gameActive = true;
-  updateTurnIndicator();
-
-  if(mode==='computer' && currentPlayer===computerSymbol){
-    setTimeout(computerMove, 600);
-  }
-}
-
-/* ===================== RESULT OVERLAY ===================== */
-function showResultOverlay(winner){
-  const overlay = document.getElementById('resultOverlay');
-  const textEl = document.getElementById('resultText');
-  const emojiEl = document.getElementById('resultEmoji');
-  let msg='', emoji='🎉', celebrate=false;
-
-  if(winner==='draw'){
-    msg='🤝 খেলা ড্র হয়েছে!'; emoji='🤝';
-  } else if(mode==='local'){
-    msg = (winner==='X' ? '❌ Player 1' : '⭕ Player 2') + ' জিতেছে!'; emoji='🏆'; celebrate=true;
-  } else if(mode==='computer'){
-    if(winner===playerSymbol){ msg='🎉 আপনি জিতেছেন!'; emoji='🏆'; celebrate=true; }
-    else { msg='😢 আপনি হেরে গেছেন।'; emoji='😢'; }
-  } else if(mode==='online'){
-    if(winner===mySymbol){ msg='🎉 আপনি জিতেছেন!'; emoji='🏆'; celebrate=true; }
-    else { msg='😢 আপনি হেরে গেছেন।'; emoji='😢'; }
-  }
-  textEl.textContent=msg; emojiEl.textContent=emoji;
-
-  const nextStarter = winner==='draw' ? (starter==='X'?'O':'X') : winner;
-  let starterLabel;
-  if(mode==='local') starterLabel = nextStarter==='X' ? 'Player 1 (❌)' : 'Player 2 (⭕)';
-  else if(mode==='computer') starterLabel = nextStarter===playerSymbol ? 'আপনি ❌' : '🤖 কম্পিউটার ⭕';
-  else starterLabel = (nextStarter===mySymbol ? 'আপনি' : 'প্রতিপক্ষ') + (nextStarter==='X' ? ' ❌' : ' ⭕');
-  document.getElementById('nextStarterNote').textContent = `➡️ পরের রাউন্ডে প্রথমে খেলবে: ${starterLabel}`;
-
-  overlay.classList.add('show');
-  if(celebrate) launchConfetti();
-}
-function hideResultOverlay(){ document.getElementById('resultOverlay').classList.remove('show'); }
-function hideLeftOverlay(){ document.getElementById('leftOverlay').classList.remove('show'); }
-
-/* ===================== EXIT ===================== */
-function exitGame(){
-  if(mode==='online') leaveOnlineRoom();
-  mode=null; gameActive=false;
-  hideResultOverlay(); hideLeftOverlay();
-  showScreen('screen-menu');
-}
-
-function detachOnlineListeners(){
-  if(roomRef){ roomRef.off(); roomRef=null; }
-  if(chatRef){ chatRef.off(); chatRef=null; }
-  if(readRef){ readRef.off(); readRef=null; }
-  if(presenceConnRef && presenceConnListener){ presenceConnRef.off('value', presenceConnListener); }
-  presenceConnRef=null; presenceConnListener=null;
-}
-function resetOnlineState(){
-  roomCode=null; mySymbol=null; isHost=false; oppName=null; resultShown=false;
-  oppJoinedOnce=false; oppLeftShown=false;
-  lastOtherKey=null; lastSentReadKey=null; oppReadKey='';
-  chatOpen=false;
-  document.getElementById('chatDrawer').classList.remove('open');
-  unreadCount=0; updateChatBadge();
-}
-function leaveOnlineRoom(){
-  const code = roomCode, sym = mySymbol;
-  detachOnlineListeners();
-  resetOnlineState();
-  if(!code || !sym || !db) return;
-  const presRef = db.ref('rooms/'+code+'/presence/'+sym);
-  presRef.onDisconnect().cancel();
-  presRef.set(false).then(()=>{
-    db.ref('rooms/'+code+'/presence').once('value').then(s=>{
-      const p = s.val() || {};
-      if(!p.X && !p.O) db.ref('rooms/'+code).remove();
-    });
-  });
-}
-function hardExitOnline(){
-  detachOnlineListeners();
-  resetOnlineState();
-  mode=null; gameActive=false;
-  hideResultOverlay(); hideLeftOverlay();
-  showScreen('screen-menu');
-}
-
-/* ===================== ONLINE: PRESENCE ===================== */
-function setupPresence(){
-  if(!db || !roomCode || !mySymbol) return;
-  const presRef = db.ref('rooms/'+roomCode+'/presence/'+mySymbol);
-  presenceConnRef = db.ref('.info/connected');
-  presenceConnListener = snap=>{
-    if(snap.val()===true){
-      presRef.onDisconnect().set(false);
-      presRef.set(true);
-    }
-  };
-  presenceConnRef.on('value', presenceConnListener);
-}
-
-/* ===================== ONLINE: ROOM ===================== */
-function generateRoomCode(){ return String(Math.floor(1000+Math.random()*9000)); }
-function oppSymbol(){ return mySymbol==='X' ? 'O' : 'X'; }
-
-function createRoom(){
-  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করুন।'); return; }
-  mode='online';
-  roomCode = generateRoomCode();
-  mySymbol='X'; isHost=true; resultShown=false;
-  const ref = db.ref('rooms/'+roomCode);
-  ref.set({
-    board:['','','','','','','','',''],
-    turn:'X',
-    starter:'X',
-    players:{X: profile.name||'হোস্ট', O: null},
-    presence:{X:true, O:false},
-    status:'waiting',
-    winner:null,
-    winCombo:null,
-    createdAt: Date.now()
-  }).then(()=>{
-    document.getElementById('roomCodeDisplay').textContent = roomCode;
-    showScreen('screen-waiting');
-    attachRoomListener();
-  }).catch(e=>alert('রুম তৈরি করা যায়নি: '+e.message));
-}
-
-function joinRoom(){
-  const code = document.getElementById('joinCodeInput').value.trim();
-  if(code.length!==4 || isNaN(code)){ alert('৪ সংখ্যার সঠিক কোড দিন'); return; }
-  if(!db){ alert('সার্ভার সংযোগ ব্যর্থ হয়েছে। ইন্টারনেট সংযোগ চেক করুন।'); return; }
-  const ref = db.ref('rooms/'+code);
-  ref.once('value').then(snap=>{
-    const data = snap.val();
-    if(!data){ alert('এই কোডে কোনো রুম পাওয়া যায়নি।'); return; }
-    if(data.status!=='waiting'){ alert('রুমটি এখন জয়েন করা যাবে না।'); return; }
-    if(data.presence && data.presence.X===false){ alert('রুমের হোস্ট এখন অফলাইনে আছেন। একটু পরে আবার চেষ্টা করুন।'); return; }
-    mode='online';
-    roomCode=code; mySymbol='O'; isHost=false; resultShown=false;
-    ref.update({
-      'players/O': profile.name||'খেলোয়াড় ২',
-      'presence/O': true,
-      status:'playing'
-    }).then(()=>{
-      attachRoomListener();
-    });
-  }).catch(e=>alert('ত্রুটি: '+e.message));
-}
-
-function cancelRoom(){
-  const code = roomCode;
-  detachOnlineListeners();
-  if(code && db){
-    db.ref('rooms/'+code+'/presence/X').onDisconnect().cancel();
-    db.ref('rooms/'+code).remove();
-  }
-  resetOnlineState();
-  mode=null;
-  showScreen('screen-online');
-}
-
-function copyRoomCode(){
-  const btn = document.getElementById('copyBtn');
-  const flash = ()=>{
-    const old = btn.textContent; btn.textContent='✅ কপি হয়েছে';
-    setTimeout(()=>btn.textContent=old,1500);
-  };
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(roomCode).then(flash).catch(()=>alert('কোড: '+roomCode));
-  } else {
-    alert('কোড: '+roomCode);
-  }
-}
-
-function attachRoomListener(){
-  roomRef = db.ref('rooms/'+roomCode);
-
-  setupPresence();
-
-  roomRef.on('value', snap=>{
-    const data = snap.val();
-    if(!data){
-      alert('রুমটি বন্ধ হয়ে গেছে।');
-      hardExitOnline();
-      return;
-    }
-    oppName = mySymbol==='X' ? (data.players?data.players.O:null) : (data.players?data.players.X:null);
-
-    const pres = data.presence || {};
-    const oppSym = oppSymbol();
-    if(pres[oppSym]===true) oppJoinedOnce = true;
-    if(oppJoinedOnce && pres[oppSym]===false && !oppLeftShown && data.status!=='waiting'){
-      oppLeftShown = true;
-      onOpponentLeft();
-    }
-
-    if(data.status==='waiting'){
-      document.getElementById('roomCodeDisplay').textContent = roomCode;
-      if(currentScreenId!=='screen-waiting') showScreen('screen-waiting');
-      return;
-    }
-
-    if(currentScreenId!=='screen-game'){
-      enterOnlineGameScreen();
-    }
-
-    const isEmptyBoard = data.board.every(c=>c==='');
-    if(isEmptyBoard && resultShown){
-      clearBoardUI();
-      hideResultOverlay();
-      resultShown=false;
-    }
-
-    board = data.board.slice();
-    currentPlayer = data.turn;
-    starter = data.starter || 'X';
-    gameActive = (data.status==='playing') && !oppLeftShown;
-    renderBoard();
-    updateOnlineHeaderNames();
-    updateTurnIndicator();
-
-    if(data.status==='finished' && !resultShown){
-      resultShown = true;
-      gameActive = false;
-      if(data.winCombo){ drawWinLine(data.winCombo); highlightWinCells(data.winCombo); }
-      handleOnlineResult(data.winner);
-    }
-  });
-}
-
-function onOpponentLeft(){
-  gameActive=false;
-  updateTurnIndicator();
-  appendSystemMessage('⚠️ প্রতিপক্ষ গেম ছেড়ে চলে গেছে');
-  playSound('draw');
-  document.getElementById('leftOverlay').classList.add('show');
-}
-
-function enterOnlineGameScreen(){
-  showScreen('screen-game');
-  setupGameScreenFor('online');
-  clearBoardUI();
-  hideResultOverlay(); hideLeftOverlay();
-  listenChat();
-}
-function updateOnlineHeaderNames(){
-  const xName = mySymbol==='X' ? (profile.name||'আপনি') : (oppName||'হোস্ট');
-  const oName = mySymbol==='O' ? (profile.name||'আপনি') : (oppName||'প্রতিপক্ষ');
-  document.getElementById('leftName').textContent = xName+' ❌';
-  document.getElementById('rightName').textContent = oName+' ⭕';
-}
-
-function makeOnlineMove(i){
-  if(!roomRef || oppLeftShown) return;
-  roomRef.once('value').then(snap=>{
-    const data = snap.val();
-    if(!data || data.status!=='playing') return;
-    if(data.board[i]!=='') return;
-    if(data.turn!==mySymbol) return;
-    const newBoard = data.board.slice();
-    newBoard[i] = mySymbol;
-    const result = checkGameEndArr(newBoard);
-    const updates = {board:newBoard};
-    if(result){
-      updates.status='finished';
-      updates.winner=result.winner;
-      updates.winCombo=result.combo||null;
-    } else {
-      updates.turn = mySymbol==='X' ? 'O' : 'X';
-    }
-    roomRef.update(updates);
-  });
-}
-
-function handleOnlineResult(winner){
-  const outcome = winner==='draw' ? 'draw' : (winner===mySymbol ? 'win' : 'loss');
-  recordProfileResult(outcome);
-  playSound(outcome==='win'?'win':outcome==='loss'?'lose':'draw');
-  showResultOverlay(winner);
-}
-
-function onlinePlayAgain(){
-  if(!roomRef || oppLeftShown) return;
-  db.ref('rooms/'+roomCode).once('value').then(snap=>{
-    const data = snap.val();
-    if(!data) return;
-    let newStarter;
-    if(!data.winner || data.winner==='draw'){
-      const prevStarter = data.starter || 'X';
-      newStarter = prevStarter==='X' ? 'O' : 'X';
-    } else {
-      newStarter = data.winner;
-    }
-    db.ref('rooms/'+roomCode).update({
-      board:['','','','','','','','',''],
-      turn:newStarter,
-      starter:newStarter,
-      winner:null,
-      winCombo:null,
-      status:'playing'
-    });
-  });
-}
-
-/* ===================== CHAT ===================== */
-function toggleChat(){
-  chatOpen = !chatOpen;
-  document.getElementById('chatDrawer').classList.toggle('open', chatOpen);
-  if(chatOpen){
-    unreadCount=0; updateChatBadge();
-    markChatRead();
-    const box = document.getElementById('chatMessages');
-    box.scrollTop = box.scrollHeight;
-  }
-}
-function updateChatBadge(){
-  const badge = document.getElementById('chatBadge');
-  if(unreadCount>0){ badge.style.display='flex'; badge.textContent = unreadCount>9?'9+':unreadCount; }
-  else badge.style.display='none';
-}
-
-function markChatRead(){
-  if(!roomCode || !lastOtherKey || !db) return;
-  if(lastSentReadKey===lastOtherKey) return;
-  lastSentReadKey = lastOtherKey;
-  db.ref('rooms/'+roomCode+'/read/'+mySymbol).set(lastOtherKey);
-}
-
-function applySeenState(el){
-  const key = el.dataset.key;
-  const seen = !!oppReadKey && key <= oppReadKey;
-  el.textContent = seen ? '✓✓ দেখা হয়েছে' : '✓ পাঠানো হয়েছে';
-  el.classList.toggle('seen', seen);
-}
-
-function listenChat(){
-  document.getElementById('chatMessages').innerHTML='';
-  unreadCount=0; updateChatBadge();
-  lastOtherKey=null; lastSentReadKey=null; oppReadKey='';
-  if(chatRef) chatRef.off();
-  if(readRef) readRef.off();
-
-  chatRef = db.ref('rooms/'+roomCode+'/chat');
-  chatRef.on('child_added', snap=>{
-    const msg = snap.val();
-    if(!msg) return;
-    appendChatBubble(snap.key, msg);
-    if(msg.sender !== mySymbol){
-      lastOtherKey = snap.key;
-      playSound('chat');
-      if(chatOpen){ markChatRead(); }
-      else { unreadCount++; updateChatBadge(); showChatToast(msg); }
-    }
-  });
-
-  readRef = db.ref('rooms/'+roomCode+'/read');
-  readRef.on('value', snap=>{
-    const r = snap.val() || {};
-    oppReadKey = r[oppSymbol()] || '';
-    document.querySelectorAll('.chat-status').forEach(applySeenState);
-  });
-}
-
-function sendChatMessage(text){
-  text = (text||'').trim();
-  if(!text || !roomCode || !db) return;
-  db.ref('rooms/'+roomCode+'/chat').push({
-    sender: mySymbol,
-    name: profile.name||'খেলোয়াড়',
-    text: text,
-    time: Date.now()
-  });
-  document.getElementById('chatInput').value='';
-}
-
-function appendChatBubble(key, msg){
-  const box = document.getElementById('chatMessages');
-  const isMe = msg.sender===mySymbol;
-  const div = document.createElement('div');
-  div.className = 'chat-msg ' + (isMe ? 'me' : 'other');
-  let statusHtml = '';
-  if(isMe) statusHtml = `<span class="chat-status" data-key="${escapeHtml(key)}"></span>`;
-  div.innerHTML = `<span class="chat-name">${escapeHtml(msg.name||'')}</span><div class="chat-bubble">${escapeHtml(msg.text)}</div>${statusHtml}`;
-  box.appendChild(div);
-  const st = div.querySelector('.chat-status');
-  if(st) applySeenState(st);
-  box.scrollTop = box.scrollHeight;
-}
-
-function appendSystemMessage(text){
-  const box = document.getElementById('chatMessages');
-  const div = document.createElement('div');
-  div.className = 'chat-system';
-  div.textContent = text;
-  box.appendChild(div);
-  box.scrollTop = box.scrollHeight;
-}
-
-function showChatToast(msg){
-  const toast = document.createElement('div');
-  toast.className='chat-toast';
-  toast.textContent = `${msg.name}: ${msg.text}`;
-  document.body.appendChild(toast);
-  setTimeout(()=>toast.classList.add('show'),10);
-  setTimeout(()=>{ toast.classList.remove('show'); setTimeout(()=>toast.remove(),300); },3000);
-}
-function escapeHtml(str){
-  const div=document.createElement('div');
-  div.textContent = String(str==null?'':str);
-  return div.innerHTML;
-}
-
-/* ===================== SOUND ===================== */
-let audioCtx=null;
-function ensureAudio(){ if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }
-function beep(freq,dur,type='sine',delay=0,vol=0.2){
-  try{
-    ensureAudio();
-    const t0 = audioCtx.currentTime+delay;
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type=type; osc.frequency.value=freq;
-    gain.gain.setValueAtTime(vol,t0);
-    gain.gain.exponentialRampToValueAtTime(0.001,t0+dur);
-    osc.connect(gain); gain.connect(audioCtx.destination);
-    osc.start(t0); osc.stop(t0+dur);
-  }catch(e){}
-}
-function playSound(type){
-  if(!soundOn) return;
-  switch(type){
-    case 'move': beep(440,.08); break;
-    case 'win': beep(523,.15); beep(659,.15,'sine',.15); beep(784,.25,'sine',.3); break;
-    case 'lose': beep(300,.3,'sawtooth'); break;
-    case 'draw': beep(350,.2); beep(350,.2,'sine',.2); break;
-    case 'chat': beep(880,.08,'triangle'); break;
-  }
-}
-function toggleSound(){
-  soundOn = !soundOn;
-  store.set('xo_sound', soundOn?'1':'0');
-  document.getElementById('soundBtn').textContent = soundOn?'🔊':'🔇';
-}
-
-/* ===================== CONFETTI ===================== */
-function launchConfetti(){
-  const colors=['#ffd700','#ff5e7a','#4fd1ff','#9b5cff','#4ade80'];
-  for(let i=0;i<60;i++){
-    const c=document.createElement('div');
-    c.className='confetti-piece';
-    c.style.left = Math.random()*100+'vw';
-    c.style.background = colors[Math.floor(Math.random()*colors.length)];
-    c.style.animationDuration = (2+Math.random()*2)+'s';
-    const size = (6+Math.random()*6)+'px';
-    c.style.width=size; c.style.height=size;
-    document.body.appendChild(c);
-    setTimeout(()=>c.remove(),4000);
-  }
 }
 </script>
 </body>

@@ -10,37 +10,6 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
-<script>
-function showErr(msg){
-  var bar = document.getElementById('errBar');
-  var txt = document.getElementById('errText');
-  if(!bar || !txt) return;
-  txt.textContent = '⚠️ ত্রুটি: ' + msg;
-  bar.style.display = 'block';
-}
-function hideErr(){
-  var bar = document.getElementById('errBar');
-  if(bar) bar.style.display = 'none';
-}
-window.addEventListener('error', function(e){
-  var msg = (e && e.message) ? e.message : '';
-  if(!msg || msg === 'Script error.'){
-    console.warn('[XO] opaque script error ignored');
-    return;
-  }
-  showErr(msg + (e.lineno ? ' (লাইন ' + e.lineno + ')' : ''));
-});
-window.addEventListener('unhandledrejection', function(e){
-  var r = e.reason;
-  var m = (r && r.message) ? r.message : (r ? String(r) : '');
-  if(!m || m === 'Script error.'){
-    console.warn('[XO] opaque rejection ignored');
-    return;
-  }
-  showErr(m);
-});
-</script>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none !important}

@@ -171,6 +171,56 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .stat-box span{font-size:26px;font-weight:800}
 .stat-box small{opacity:.75;font-size:12px}
 
+/* Local 2-Player Setup Box */
+.duo-input-group{
+  display:flex;flex-direction:column;gap:10px;
+  text-align:left;
+}
+.duo-field{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,0,0,.24);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;
+  padding:6px 12px 6px 8px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.duo-field:focus-within{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(255,209,102,.2);
+}
+.duo-badge{
+  width:38px;height:38px;border-radius:13px;
+  display:grid;place-items:center;
+  font-size:17px;font-weight:800;flex-shrink:0;
+}
+.duo-badge.x-badge{
+  background:rgba(255,93,122,.22);
+  border:1px solid rgba(255,93,122,.5);
+  color:var(--x);
+  text-shadow:0 0 8px rgba(255,93,122,.6);
+}
+.duo-badge.o-badge{
+  background:rgba(79,209,255,.22);
+  border:1px solid rgba(79,209,255,.5);
+  color:var(--o);
+  text-shadow:0 0 8px rgba(79,209,255,.6);
+}
+.duo-field input{
+  flex:1;min-width:0;
+  background:none;border:none;outline:none;
+  color:#fff;font:inherit;font-size:15.5px;font-weight:600;
+  padding:8px 4px;
+}
+.duo-field input::placeholder{color:rgba(255,255,255,.45);font-weight:400}
+.duo-vs-row{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  font-size:11.5px;font-weight:800;letter-spacing:.15em;color:var(--gold);opacity:.85;
+}
+.duo-vs-row::before,.duo-vs-row::after{
+  content:'';height:1px;flex:1;
+  background:linear-gradient(90deg,transparent,rgba(255,209,102,.4),transparent);
+}
+
 @keyframes pillPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 
 /* Friends Screen Styles */
@@ -366,6 +416,9 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .anim-close .close-x{animation:closePulse 2.8s ease-in-out infinite;transform-origin:12px 12px}
 @keyframes closePulse{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.12) rotate(90deg)}}
 
+.anim-play .play-tri{animation:playNudge 2s ease-in-out infinite}
+@keyframes playNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
+
 /* Status Pill Badge */
 .status-badge{
   display:inline-flex;align-items:center;gap:6px;
@@ -440,6 +493,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .players{flex:1;display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0}
 .player{flex:1;min-width:0;padding:8px 6px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid transparent;font-size:13px;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;transition:all .3s}
 .player.active{border-color:var(--gold);box-shadow:0 0 16px rgba(255,209,102,.35)}
+.player.editable{cursor:pointer}
+.player.editable:active{transform:scale(.96)}
 #rightPlayer{text-align:right}
 .score-pill{padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.3);font-weight:800;font-size:13px;white-space:nowrap}
 .header-actions{display:flex;gap:6px}
@@ -791,8 +846,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
       <span class="btn-label" data-i18n="playCpu">কম্পিউটারের সাথে খেলুন</span>
     </button>
 
-    <!-- Play with Friend Local -->
-    <button class="btn btn-primary btn-shine" data-action="startLocal" data-tap-anim="1">
+    <!-- Play with Friend Local (Opens 2-Player Name Setup) -->
+    <button class="btn btn-primary btn-shine" data-action="goLocalSetup" data-tap-anim="1">
       <span class="btn-icon-box anim-duo">
         <svg viewBox="0 0 24 24">
           <circle cx="9" cy="8" r="3.2"/>
@@ -816,6 +871,49 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </svg>
       </span>
       <span class="btn-label" data-i18n="playOnline">অনলাইনে বন্ধুর সাথে খেলুন</span>
+    </button>
+  </div>
+</section>
+
+<!-- LOCAL 2-PLAYER NAME SETUP -->
+<section id="screen-local-setup" class="screen">
+  <div class="card">
+    <h2 class="title" data-i18n="localSetupTitle">দুই খেলোয়াড়ের নাম</h2>
+    <p class="sub" data-i18n="localSetupSub">একই ডিভাইসে খেলার জন্য দুজনের নাম লিখুন</p>
+
+    <div class="duo-input-group">
+      <div class="duo-field">
+        <span class="duo-badge x-badge">✕</span>
+        <input id="localP1Input" maxlength="14" placeholder="প্রথম খেলোয়াড়ের নাম" autocomplete="off">
+      </div>
+
+      <div class="duo-vs-row">VS</div>
+
+      <div class="duo-field">
+        <span class="duo-badge o-badge">◯</span>
+        <input id="localP2Input" maxlength="14" placeholder="দ্বিতীয় খেলোয়াড়ের নাম" autocomplete="off">
+      </div>
+    </div>
+
+    <p class="hint" id="localSetupMsg"></p>
+
+    <button class="btn btn-primary btn-shine" data-action="startLocalWithNames" data-tap-anim="1">
+      <span class="btn-icon-box anim-play">
+        <svg class="play-tri" viewBox="0 0 24 24">
+          <polygon points="6 4 20 12 6 20 6 4"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="startMatchBtn">খেলা শুরু করুন</span>
+    </button>
+
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -1100,9 +1198,9 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
     <header class="game-header">
       <button class="icon-btn" data-action="exitGame" aria-label="Exit">←</button>
       <div class="players">
-        <div class="player" id="leftPlayer"><span id="leftName">আপনি</span></div>
+        <div class="player" id="leftPlayer" data-action="editLocalNamesInGame"><span id="leftName">আপনি</span></div>
         <div class="score-pill" id="scorePill">0 : 0</div>
-        <div class="player" id="rightPlayer"><span id="rightName">প্রতিপক্ষ</span></div>
+        <div class="player" id="rightPlayer" data-action="editLocalNamesInGame"><span id="rightName">প্রতিপক্ষ</span></div>
       </div>
       <div class="header-actions">
         <button class="icon-btn anim-chat" id="chatBtn" data-action="openChat" aria-label="Chat" hidden>
@@ -1321,6 +1419,11 @@ const I18N = {
     playCpu: 'কম্পিউটারের সাথে খেলুন',
     playLocal: 'বন্ধুর সাথে (একই ডিভাইসে)',
     playOnline: 'অনলাইনে বন্ধুর সাথে খেলুন',
+    localSetupTitle: 'দুই খেলোয়াড়ের নাম',
+    localSetupSub: 'একই ডিভাইসে খেলার জন্য দুজনের নাম লিখুন',
+    localP1Ph: 'প্রথম খেলোয়াড়ের নাম',
+    localP2Ph: 'দ্বিতীয় খেলোয়াড়ের নাম',
+    startMatchBtn: 'খেলা শুরু করুন',
     friendsTitle: 'বন্ধু তালিকা',
     yourFriendId: 'আপনার ফ্রেন্ড আইডি',
     copyBtn: 'কপি',
@@ -1400,6 +1503,11 @@ const I18N = {
     playCpu: 'Play vs Computer',
     playLocal: 'Pass & Play (Same Device)',
     playOnline: 'Play Online with Friend',
+    localSetupTitle: 'Player Names',
+    localSetupSub: 'Enter names for both players on this device',
+    localP1Ph: 'Player 1 Name',
+    localP2Ph: 'Player 2 Name',
+    startMatchBtn: 'Start Match',
     friendsTitle: 'Friends',
     yourFriendId: 'Your Friend ID',
     copyBtn: 'Copy',
@@ -1487,6 +1595,8 @@ function applyLanguage(){
   });
 
   if($('nameInput')) $('nameInput').placeholder = t('namePlaceholder');
+  if($('localP1Input')) $('localP1Input').placeholder = t('localP1Ph');
+  if($('localP2Input')) $('localP2Input').placeholder = t('localP2Ph');
   if($('friendIdInput')) $('friendIdInput').placeholder = t('friendIdPlaceholder');
   if($('profileNameInput')) $('profileNameInput').placeholder = t('profileNamePh');
   if($('chatInput')) $('chatInput').placeholder = t('chatPlaceholder');
@@ -1523,6 +1633,7 @@ let audioCtx = null;
 
 let mode = null;               // 'computer' | 'local' | 'online'
 let level = 'medium';
+let localNames = { P1:'', P2:'' };
 let board = Array(9).fill('');
 let cellEls = [];
 let currentTurn = 'X';
@@ -2192,8 +2303,8 @@ function scheduleComputer(){
 function nameOf(role){
   if(role === 'HUMAN') return profile.name || t('you');
   if(role === 'CPU') return t('cpuLabel', level);
-  if(role === 'P1') return t('p1');
-  if(role === 'P2') return t('p2');
+  if(role === 'P1') return localNames.P1 || t('p1');
+  if(role === 'P2') return localNames.P2 || t('p2');
   if(role === 'HOST' || role === 'GUEST'){
     const p = roomData && roomData.players;
     if(p && p[role]) return p[role];
@@ -2229,6 +2340,8 @@ function updateTurn(){
   $('turnIndicator').textContent = text;
   $('leftPlayer').classList.toggle('active', live && currentTurn === symOf(left));
   $('rightPlayer').classList.toggle('active', live && currentTurn === symOf(right));
+  $('leftPlayer').classList.toggle('editable', mode === 'local');
+  $('rightPlayer').classList.toggle('editable', mode === 'local');
   $('leftName').textContent = `${nameOf(left)} · ${symOf(left)}`;
   $('rightName').textContent = `${nameOf(right)} · ${symOf(right)}`;
   if(mode === 'online'){
@@ -2354,7 +2467,42 @@ function startComputer(el){
   showScreen('screen-game');
   if(currentTurn === computerSymbol) scheduleComputer();
 }
-function startLocal(){
+function goLocalSetup(){
+  const savedP2 = store.get('xo_local_p2') || '';
+  $('localP1Input').value = localNames.P1 || profile.name || '';
+  $('localP2Input').value = localNames.P2 || savedP2 || '';
+  $('localSetupMsg').textContent = '';
+  showScreen('screen-local-setup');
+  setTimeout(() => {
+    const target = $('localP1Input').value.trim() ? $('localP2Input') : $('localP1Input');
+    target.focus();
+  }, 120);
+}
+function editLocalNamesInGame(){
+  if(mode !== 'local') return;
+  $('localP1Input').value = localNames.P1 || profile.name || '';
+  $('localP2Input').value = localNames.P2 || '';
+  $('localSetupMsg').textContent = '';
+  showScreen('screen-local-setup');
+}
+function startLocalWithNames(){
+  const n1 = $('localP1Input').value.trim();
+  const n2 = $('localP2Input').value.trim();
+  if(!n1 || !n2){
+    $('localSetupMsg').textContent = lang === 'bn'
+      ? 'অনুগ্রহ করে দুজনের নামই লিখুন'
+      : 'Please enter both player names';
+    return;
+  }
+  localNames.P1 = n1;
+  localNames.P2 = n2;
+  store.set('xo_local_p2', n2);
+
+  if(mode === 'local'){
+    showScreen('screen-game');
+    updateTurn();
+    return;
+  }
   mode = 'local';
   resetSession();
   xRole = 'P1';
@@ -2412,7 +2560,14 @@ function saveName(){
   renderMenu();
   if(!applyPendingRoom()) showScreen('screen-menu');
 }
-function goMenu(){ renderMenu(); showScreen('screen-menu'); }
+function goMenu(){
+  if(mode === 'local' && $('screen-local-setup').classList.contains('active')){
+    showScreen('screen-game');
+    return;
+  }
+  renderMenu();
+  showScreen('screen-menu');
+}
 function goDifficulty(){ showScreen('screen-difficulty'); }
 function goOnline(){ setOnlineMsg(''); showScreen('screen-online'); }
 function goProfile(){
@@ -3140,11 +3295,12 @@ function onDocDblClick(e){
 }
 const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
+  goLocalSetup, startLocalWithNames, editLocalNamesInGame,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
   acceptFriendRequest, declineFriendRequest,
   askUnfriend, closeUnfriendModal, confirmUnfriend,
   openFriendChat, inviteFriendToGame, acceptGameInvite, declineGameInvite,
-  startComputer, startLocal, createRoom, joinRoom, cancelRoom,
+  startComputer, createRoom, joinRoom, cancelRoom,
   copyRoomCode, copyRoomLink, shareRoomLink,
   updateProfileName, resetStats, exitGame, playAgain,
   openChat, closeChat, toggleSound, sendEmoji, sendText,
@@ -3154,6 +3310,12 @@ const ACTIONS = {
 function bindKeys(){
   $('nameInput').addEventListener('keydown', e => {
     if(e.key === 'Enter' && !e.isComposing) saveName();
+  });
+  $('localP1Input').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) $('localP2Input').focus();
+  });
+  $('localP2Input').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) startLocalWithNames();
   });
   $('joinCodeInput').addEventListener('keydown', e => {
     if(e.key === 'Enter' && !e.isComposing) joinRoom();

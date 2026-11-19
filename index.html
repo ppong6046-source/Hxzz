@@ -15,7 +15,7 @@ function showErr(msg){
   var bar = document.getElementById('errBar');
   var txt = document.getElementById('errText');
   if(!bar || !txt) return;
-  txt.textContent = '⚠️ ত্রুটি: ' + msg;
+  txt.textContent = '⚠️ ' + msg;
   bar.style.display = 'block';
 }
 function hideErr(){
@@ -28,7 +28,7 @@ window.addEventListener('error', function(e){
     console.warn('[XO] opaque script error ignored');
     return;
   }
-  showErr(msg + (e.lineno ? ' (লাইন ' + e.lineno + ')' : ''));
+  showErr(msg + (e.lineno ? ' (Line ' + e.lineno + ')' : ''));
 });
 window.addEventListener('unhandledrejection', function(e){
   var r = e.reason;
@@ -64,7 +64,83 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 /* screens */
 .screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;padding:20px;overflow:hidden}
 .screen.active{display:flex}
-.card{width:min(92vw,410px);max-height:92dvh;overflow-y:auto;padding:26px 20px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:13px;text-align:center;animation:pop .5s ease}
+
+/* Menu Top Bar (Left: Profile, Right: Language + Friends) */
+.menu-top-bar{
+  position:fixed;
+  top:max(14px, env(safe-area-inset-top, 14px));
+  left:16px;right:16px;
+  z-index:30;
+  display:flex;align-items:center;justify-content:space-between;
+  pointer-events:none;
+}
+.menu-top-right{
+  display:flex;align-items:center;gap:10px;
+  pointer-events:auto;
+}
+.top-pill-btn{
+  pointer-events:auto;
+  height:44px;min-width:44px;
+  padding:0 12px;
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.11);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 8px 24px rgba(0,0,0,.28), inset 0 1px 1px rgba(255,255,255,.32);
+  color:#fff;font:inherit;font-size:13.5px;font-weight:700;
+  cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  position:relative;
+  transition:transform .16s,background .2s,border-color .2s;
+}
+.top-pill-btn:active{transform:scale(.92)}
+.top-pill-btn svg{
+  width:20px;height:20px;
+  fill:none;stroke:#fff;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+  overflow:visible;flex-shrink:0;
+}
+.top-pill-profile{
+  padding:0;width:44px;
+  background:linear-gradient(135deg,rgba(79,209,255,.26),rgba(74,139,255,.26));
+  border-color:rgba(79,209,255,.45);
+}
+.top-pill-friends{
+  padding:0;width:44px;
+  background:linear-gradient(135deg,rgba(16,185,129,.28),rgba(6,182,212,.26));
+  border-color:rgba(52,211,153,.45);
+}
+.top-pill-lang{
+  padding:0 11px;
+  background:rgba(20,15,45,.55);
+  border-color:rgba(255,209,102,.38);
+  color:#ffe9a8;
+  font-size:12.5px;
+  letter-spacing:.03em;
+}
+.top-pill-lang svg{width:17px;height:17px;stroke:var(--gold)}
+.top-pill-btn.is-tapped{
+  animation:topBtnPop .42s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes topBtnPop{
+  0%{transform:scale(1) rotate(0deg)}
+  30%{transform:scale(1.18) rotate(-10deg)}
+  65%{transform:scale(1.1) rotate(8deg)}
+  100%{transform:scale(1) rotate(0deg)}
+}
+.top-badge{
+  position:absolute;top:-5px;right:-5px;
+  min-width:19px;height:19px;padding:0 5px;
+  border-radius:999px;
+  background:#ff3b5c;color:#fff;
+  font-size:10.5px;font-weight:800;
+  display:grid;place-items:center;
+  box-shadow:0 2px 10px rgba(255,59,92,.75);
+  animation:pillPulse 1.8s ease-in-out infinite;
+}
+
+.card{width:min(92vw,410px);max-height:92dvh;overflow-y:auto;padding:26px 20px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px;text-align:center;animation:pop .5s ease}
 .card::-webkit-scrollbar{width:0;height:0}
 @keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
 .logo{width:130px;height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 12px rgba(255,93,122,.55))}
@@ -95,17 +171,6 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .stat-box span{font-size:26px;font-weight:800}
 .stat-box small{opacity:.75;font-size:12px}
 
-/* Notification pill on menu button */
-.menu-pill-badge{
-  margin-left:auto;
-  min-width:24px;height:24px;padding:0 7px;
-  border-radius:999px;
-  background:#ff3b5c;color:#fff;
-  font-size:12px;font-weight:800;
-  display:inline-flex;align-items:center;justify-content:center;
-  box-shadow:0 0 12px rgba(255,59,92,.7);
-  animation:pillPulse 1.8s ease-in-out infinite;
-}
 @keyframes pillPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 
 /* Friends Screen Styles */
@@ -249,7 +314,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   overflow:visible;
 }
 
-/* Menu Icons Idle Subtle Animations */
+/* Menu & Top Icons Idle Subtle Animations */
 .anim-bot .bot-antenna{animation:botSignal 2.2s ease-in-out infinite;transform-origin:12px 6px}
 .anim-bot .bot-eye{animation:botBlink 3.6s ease-in-out infinite;transform-origin:center}
 @keyframes botSignal{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
@@ -650,7 +715,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 </head>
 <body>
 
-<div id="errBar"><span id="errText"></span><button data-action="hideErr" aria-label="বন্ধ">✕</button></div>
+<div id="errBar"><span id="errText"></span><button data-action="hideErr" aria-label="Close">✕</button></div>
 
 <div class="bg">
   <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
@@ -660,15 +725,50 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <section id="screen-name" class="screen active">
   <div class="card">
     <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
-    <p class="sub">আপনার নাম লিখুন</p>
+    <p class="sub" data-i18n="enterName">আপনার নাম লিখুন</p>
     <input id="nameInput" class="input" maxlength="15" placeholder="যেমন: রাহুল" autocomplete="off">
-    <button class="btn btn-primary" data-action="saveName">শুরু করুন</button>
+    <button class="btn btn-primary" data-action="saveName" data-i18n="startBtn">শুরু করুন</button>
     <p class="hint" id="nameMsg"></p>
   </div>
 </section>
 
 <!-- MENU -->
 <section id="screen-menu" class="screen">
+  <!-- Top Bar: Profile (Left) | Language + Friends (Right) -->
+  <div class="menu-top-bar">
+    <!-- Left: Profile Icon -->
+    <button class="top-pill-btn top-pill-profile anim-user" data-action="goProfile" data-top-anim="1" aria-label="প্রোফাইল">
+      <svg viewBox="0 0 24 24">
+        <circle class="user-head" cx="12" cy="8" r="4"/>
+        <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
+      </svg>
+    </button>
+
+    <!-- Right: Language (EN/BN) + Friends Icon -->
+    <div class="menu-top-right">
+      <button class="top-pill-btn top-pill-lang" id="langToggleBtn" data-action="toggleLang" data-top-anim="1" aria-label="Language">
+        <svg viewBox="0 0 24 24">
+          <path d="M5 8l6 6"/>
+          <path d="M4 14l6-6 2-3"/>
+          <path d="M2 5h12"/>
+          <path d="M7 2h1"/>
+          <path d="M22 22l-5-10-5 10"/>
+          <path d="M14 18h6"/>
+        </svg>
+        <span id="langBadgeText">EN</span>
+      </button>
+
+      <button class="top-pill-btn top-pill-friends anim-friends" data-action="goFriends" data-top-anim="1" aria-label="বন্ধু">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
+          <path class="friend-heart" d="M18 4.5c.8-.9 2.2-.9 3 0 .8.9.8 2.3 0 3.2L18 10.7l-3-3c-.8-.9-.8-2.3 0-3.2.8-.9 2.2-.9 3 0z" fill="#fff" stroke="none"/>
+        </svg>
+        <span class="top-badge" id="menuFriendBadge" hidden>0</span>
+      </button>
+    </div>
+  </div>
+
   <div class="card">
     <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
     <p class="sub" id="menuGreeting"></p>
@@ -688,7 +788,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <line x1="21" y1="13" x2="23" y2="13"/>
         </svg>
       </span>
-      <span class="btn-label">কম্পিউটারের সাথে খেলুন</span>
+      <span class="btn-label" data-i18n="playCpu">কম্পিউটারের সাথে খেলুন</span>
     </button>
 
     <!-- Play with Friend Local -->
@@ -703,7 +803,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           </g>
         </svg>
       </span>
-      <span class="btn-label">বন্ধুর সাথে (একই ডিভাইসে)</span>
+      <span class="btn-label" data-i18n="playLocal">বন্ধুর সাথে (একই ডিভাইসে)</span>
     </button>
 
     <!-- Play Online -->
@@ -715,31 +815,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <ellipse class="globe-ring" cx="12" cy="12" rx="4" ry="9"/>
         </svg>
       </span>
-      <span class="btn-label">অনলাইনে বন্ধুর সাথে খেলুন</span>
-    </button>
-
-    <!-- Friends (Separate Option) -->
-    <button class="btn btn-emerald btn-shine" data-action="goFriends" data-tap-anim="1">
-      <span class="btn-icon-box anim-friends">
-        <svg viewBox="0 0 24 24">
-          <circle cx="9" cy="8" r="3.2"/>
-          <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
-          <path class="friend-heart" d="M18 4.5c.8-.9 2.2-.9 3 0 .8.9.8 2.3 0 3.2L18 10.7l-3-3c-.8-.9-.8-2.3 0-3.2.8-.9 2.2-.9 3 0z" fill="#fff" stroke="none"/>
-        </svg>
-      </span>
-      <span class="btn-label">বন্ধু</span>
-      <span class="menu-pill-badge" id="menuFriendBadge" hidden>0</span>
-    </button>
-
-    <!-- Profile -->
-    <button class="btn btn-info btn-shine" data-action="goProfile" data-tap-anim="1">
-      <span class="btn-icon-box anim-user">
-        <svg viewBox="0 0 24 24">
-          <circle class="user-head" cx="12" cy="8" r="4"/>
-          <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
-        </svg>
-      </span>
-      <span class="btn-label">প্রোফাইল</span>
+      <span class="btn-label" data-i18n="playOnline">অনলাইনে বন্ধুর সাথে খেলুন</span>
     </button>
   </div>
 </section>
@@ -747,17 +823,17 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <!-- FRIENDS -->
 <section id="screen-friends" class="screen">
   <div class="card">
-    <h2 class="title">বন্ধু তালিকা</h2>
+    <h2 class="title" data-i18n="friendsTitle">বন্ধু তালিকা</h2>
 
     <!-- My Friend ID -->
     <div class="my-id-card">
       <div class="my-id-info">
-        <small>আপনার ফ্রেন্ড আইডি</small>
+        <small data-i18n="yourFriendId">আপনার ফ্রেন্ড আইডি</small>
         <div class="my-id-code" id="myFriendIdDisplay">------</div>
       </div>
       <button class="mini-copy-btn" id="copyFriendIdBtn" data-action="copyMyFriendId">
         <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        <span class="btn-label">কপি</span>
+        <span class="btn-label" data-i18n="copyBtn">কপি</span>
       </button>
     </div>
 
@@ -765,7 +841,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
     <div class="friend-add-row">
       <input id="friendIdInput" class="input" maxlength="6" placeholder="বন্ধুর আইডি" autocomplete="off">
       <button class="btn btn-primary friend-add-btn" data-action="sendFriendRequest">
-        <span>রিকোয়েস্ট</span>
+        <span data-i18n="reqBtn">রিকোয়েস্ট</span>
       </button>
     </div>
     <div class="hint" id="friendMsg"></div>
@@ -773,11 +849,11 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
     <!-- Tabs: Friends vs Requests -->
     <div class="friend-tabs">
       <button class="tab-btn active" id="tabFriendsBtn" data-action="switchFriendTab" data-tab="friends">
-        <span>বন্ধুরা</span>
+        <span data-i18n="tabFriends">বন্ধুরা</span>
         <span class="tab-count" id="friendsCount">0</span>
       </button>
       <button class="tab-btn" id="tabRequestsBtn" data-action="switchFriendTab" data-tab="requests">
-        <span>রিকোয়েস্ট</span>
+        <span data-i18n="tabRequests">রিকোয়েস্ট</span>
         <span class="tab-count" id="requestsCount">0</span>
       </button>
     </div>
@@ -794,7 +870,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <polyline points="11 6 5 12 11 18"/>
         </svg>
       </span>
-      <span class="btn-label">ফিরে যান</span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -802,7 +878,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <!-- DIFFICULTY -->
 <section id="screen-difficulty" class="screen">
   <div class="card">
-    <h2 class="title">লেভেল বেছে নিন</h2>
+    <h2 class="title" data-i18n="chooseLevel">লেভেল বেছে নিন</h2>
 
     <!-- Easy -->
     <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="easy" data-tap-anim="1">
@@ -814,7 +890,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <circle cx="15" cy="9.5" r="1" fill="#fff" stroke="none"/>
         </svg>
       </span>
-      <span class="btn-label">সহজ</span>
+      <span class="btn-label" data-i18n="levelEasy">সহজ</span>
     </button>
 
     <!-- Medium -->
@@ -828,7 +904,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <circle class="brain-spark" cx="15.5" cy="13" r="1.2" fill="#fff" stroke="none"/>
         </svg>
       </span>
-      <span class="btn-label">মাঝারি</span>
+      <span class="btn-label" data-i18n="levelMedium">মাঝারি</span>
     </button>
 
     <!-- Hard -->
@@ -839,7 +915,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <path class="fire-inner" d="M12 13c1.5 1.5 2.5 2.7 2.5 4.3a2.5 2.5 0 0 1-5 0c0-1.6 1-2.8 2.5-4.3z"/>
         </svg>
       </span>
-      <span class="btn-label">কঠিন (অজয়)</span>
+      <span class="btn-label" data-i18n="levelHard">কঠিন (অজয়)</span>
     </button>
 
     <!-- Back -->
@@ -850,7 +926,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <polyline points="11 6 5 12 11 18"/>
         </svg>
       </span>
-      <span class="btn-label">ফিরে যান</span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -858,7 +934,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <!-- ONLINE -->
 <section id="screen-online" class="screen">
   <div class="card">
-    <h2 class="title">অনলাইন খেলা</h2>
+    <h2 class="title" data-i18n="onlineTitle">অনলাইন খেলা</h2>
 
     <!-- Create Room -->
     <button class="btn btn-primary btn-shine" data-action="createRoom" data-tap-anim="1">
@@ -868,10 +944,10 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
       </span>
-      <span class="btn-label">নতুন রুম তৈরি করুন</span>
+      <span class="btn-label" data-i18n="createRoom">নতুন রুম তৈরি করুন</span>
     </button>
 
-    <div class="divider">অথবা</div>
+    <div class="divider" data-i18n="orDivider">অথবা</div>
     <input id="joinCodeInput" class="input code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
 
     <!-- Join Room -->
@@ -885,7 +961,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           </g>
         </svg>
       </span>
-      <span class="btn-label">রুমে যোগ দিন</span>
+      <span class="btn-label" data-i18n="joinRoom">রুমে যোগ দিন</span>
     </button>
 
     <p class="hint" id="onlineMsg"></p>
@@ -898,7 +974,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <polyline points="11 6 5 12 11 18"/>
         </svg>
       </span>
-      <span class="btn-label">ফিরে যান</span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -906,8 +982,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <!-- WAITING -->
 <section id="screen-waiting" class="screen">
   <div class="card">
-    <h2 class="title">বন্ধুর জন্য অপেক্ষা</h2>
-    <p class="sub">কোড বা লিংকটি বন্ধুকে পাঠান</p>
+    <h2 class="title" data-i18n="waitingTitle">বন্ধুর জন্য অপেক্ষা</h2>
+    <p class="sub" data-i18n="waitingSub">কোড বা লিংকটি বন্ধুকে পাঠান</p>
     <div class="room-code-box" id="roomCodeDisplay">----</div>
 
     <!-- Animated Copy Code Button -->
@@ -919,7 +995,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </svg>
         <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       </span>
-      <span class="btn-label">কোড কপি করুন</span>
+      <span class="btn-label" data-i18n="copyCode">কোড কপি করুন</span>
     </button>
 
     <!-- Animated Copy Link Button -->
@@ -931,7 +1007,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </svg>
         <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       </span>
-      <span class="btn-label">লিংক কপি করুন</span>
+      <span class="btn-label" data-i18n="copyLink">লিংক কপি করুন</span>
     </button>
 
     <!-- Animated Share Link Button -->
@@ -946,7 +1022,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </svg>
         <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
       </span>
-      <span class="btn-label">শেয়ার করুন</span>
+      <span class="btn-label" data-i18n="shareBtn">শেয়ার করুন</span>
     </button>
 
     <div class="link-preview" id="linkPreview"></div>
@@ -958,7 +1034,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
       </span>
-      <span class="btn-label">বাতিল করুন</span>
+      <span class="btn-label" data-i18n="cancelBtn">বাতিল করুন</span>
     </button>
   </div>
 </section>
@@ -966,7 +1042,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <!-- PROFILE -->
 <section id="screen-profile" class="screen">
   <div class="card">
-    <h2 class="title">প্রোফাইল</h2>
+    <h2 class="title" data-i18n="profileTitle">প্রোফাইল</h2>
     <input id="profileNameInput" class="input" maxlength="15" placeholder="আপনার নাম">
 
     <!-- Update Name -->
@@ -977,17 +1053,17 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <path class="edit-pen" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
         </svg>
       </span>
-      <span class="btn-label">নাম পরিবর্তন করুন</span>
+      <span class="btn-label" data-i18n="updateName">নাম পরিবর্তন করুন</span>
     </button>
 
     <div class="hint" id="profileMsg"></div>
 
     <div class="stats-grid">
-      <div class="stat-box"><span id="statWins">0</span><small>জয়</small></div>
-      <div class="stat-box"><span id="statLosses">0</span><small>হার</small></div>
-      <div class="stat-box"><span id="statDraws">0</span><small>ড্র</small></div>
+      <div class="stat-box"><span id="statWins">0</span><small data-i18n="statWin">জয়</small></div>
+      <div class="stat-box"><span id="statLosses">0</span><small data-i18n="statLoss">হার</small></div>
+      <div class="stat-box"><span id="statDraws">0</span><small data-i18n="statDraw">ড্র</small></div>
     </div>
-    <p class="sub">মোট খেলা: <b id="statTotal">0</b> · জয়ের হার: <b id="statWinrate">0%</b></p>
+    <p class="sub" id="profileSummaryLine"></p>
 
     <!-- Reset Stats -->
     <button class="btn btn-ghost" data-action="resetStats" data-tap-anim="1">
@@ -1002,7 +1078,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <line x1="14" y1="11" x2="14" y2="17"/>
         </svg>
       </span>
-      <span class="btn-label">পরিসংখ্যান রিসেট</span>
+      <span class="btn-label" data-i18n="resetStats">পরিসংখ্যান রিসেট</span>
     </button>
 
     <!-- Back -->
@@ -1013,7 +1089,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <polyline points="11 6 5 12 11 18"/>
         </svg>
       </span>
-      <span class="btn-label">ফিরে যান</span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -1022,14 +1098,14 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <section id="screen-game" class="screen">
   <div class="game-wrap">
     <header class="game-header">
-      <button class="icon-btn" data-action="exitGame" aria-label="বের হন">←</button>
+      <button class="icon-btn" data-action="exitGame" aria-label="Exit">←</button>
       <div class="players">
         <div class="player" id="leftPlayer"><span id="leftName">আপনি</span></div>
         <div class="score-pill" id="scorePill">0 : 0</div>
         <div class="player" id="rightPlayer"><span id="rightName">প্রতিপক্ষ</span></div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn anim-chat" id="chatBtn" data-action="openChat" aria-label="চ্যাট" hidden>
+        <button class="icon-btn anim-chat" id="chatBtn" data-action="openChat" aria-label="Chat" hidden>
           <svg class="chat-bubble" viewBox="0 0 24 24">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
             <circle class="chat-dot d1" cx="9" cy="12" r="1.15"/>
@@ -1079,7 +1155,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
               <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
             </svg>
           </span>
-          <span class="btn-label">আবার খেলো</span>
+          <span class="btn-label" data-i18n="playAgain">আবার খেলো</span>
         </button>
         <button class="btn btn-ghost" data-action="exitGame" data-tap-anim="1">
           <span class="btn-icon-box anim-home">
@@ -1089,7 +1165,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
               <path d="M9.5 20.5v-5.5h5v5.5"/>
             </svg>
           </span>
-          <span class="btn-label">মেনু</span>
+          <span class="btn-label" data-i18n="menuBtn">মেনু</span>
         </button>
       </div>
     </div>
@@ -1105,8 +1181,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
           <line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
       </div>
-      <h2>প্রতিপক্ষ গেম ছেড়ে চলে গেছে</h2>
-      <p class="next-starter-note">আর খেলা সম্ভব নয়।</p>
+      <h2 data-i18n="oppLeftTitle">প্রতিপক্ষ গেম ছেড়ে চলে গেছে</h2>
+      <p class="next-starter-note" data-i18n="oppLeftSub">আর খেলা সম্ভব নয়।</p>
       <button class="btn btn-primary btn-shine" data-action="exitGame" data-tap-anim="1">
         <span class="btn-icon-box anim-home">
           <svg viewBox="0 0 24 24">
@@ -1115,7 +1191,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
             <path d="M9.5 20.5v-5.5h5v5.5"/>
           </svg>
         </span>
-        <span class="btn-label">মেনুতে ফিরুন</span>
+        <span class="btn-label" data-i18n="backToMenu">মেনুতে ফিরুন</span>
       </button>
     </div>
   </div>
@@ -1137,7 +1213,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </span>
         <span id="chatDrawerTitle">চ্যাট</span>
       </span>
-      <button class="icon-btn anim-close" data-action="closeChat" aria-label="বন্ধ">
+      <button class="icon-btn anim-close" data-action="closeChat" aria-label="Close">
         <svg class="close-x" viewBox="0 0 24 24">
           <line x1="18" y1="6" x2="6" y2="18"/>
           <line x1="6" y1="6" x2="18" y2="18"/>
@@ -1164,12 +1240,12 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </div>
         <div class="reply-preview-body" id="replyPreviewText"></div>
       </div>
-      <button class="reply-cancel-btn" data-action="cancelReply" aria-label="রিপ্লাই বাতিল">✕</button>
+      <button class="reply-cancel-btn" data-action="cancelReply" aria-label="Cancel reply">✕</button>
     </div>
 
     <div class="chat-input-row">
       <input id="chatInput" class="input" placeholder="বার্তা লিখুন..." maxlength="300" autocomplete="off">
-      <button class="btn btn-primary chat-send" id="sendText" data-action="sendText" aria-label="পাঠান">
+      <button class="btn btn-primary chat-send" id="sendText" data-action="sendText" aria-label="Send">
         <svg class="chat-send-icon" viewBox="0 0 24 24">
           <line x1="22" y1="2" x2="11" y2="13"/>
           <polygon points="22 2 15 22 11 13 2 9 22 2"/>
@@ -1191,11 +1267,11 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         <circle cx="17.5" cy="13" r="1" fill="currentColor" stroke="none"/>
       </svg>
     </div>
-    <h2>খেলার আমন্ত্রণ!</h2>
+    <h2 data-i18n="inviteTitle">খেলার আমন্ত্রণ!</h2>
     <p class="sub" id="inviteFromText">বন্ধু আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে</p>
     <div class="btn-row">
-      <button class="btn btn-primary" data-action="acceptGameInvite">খেলুন</button>
-      <button class="btn btn-ghost" data-action="declineGameInvite">না</button>
+      <button class="btn btn-primary" data-action="acceptGameInvite" data-i18n="playBtn">খেলুন</button>
+      <button class="btn btn-ghost" data-action="declineGameInvite" data-i18n="noBtn">না</button>
     </div>
   </div>
 </div>
@@ -1211,11 +1287,11 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         <line x1="23" y1="8" x2="18" y2="13"/>
       </svg>
     </div>
-    <h2>আনফ্রেন্ড করবেন?</h2>
+    <h2 data-i18n="unfriendTitle">আনফ্রেন্ড করবেন?</h2>
     <p class="sub" id="unfriendConfirmText">আপনি কি নিশ্চিতভাবে বন্ধু তালিকা থেকে সরাতে চান?</p>
     <div class="btn-row">
-      <button class="btn btn-danger" data-action="confirmUnfriend">আনফ্রেন্ড</button>
-      <button class="btn btn-ghost" data-action="closeUnfriendModal">বাতিল</button>
+      <button class="btn btn-danger" data-action="confirmUnfriend" data-i18n="unfriendBtn">আনফ্রেন্ড</button>
+      <button class="btn btn-ghost" data-action="closeUnfriendModal" data-i18n="cancelBtn">বাতিল</button>
     </div>
   </div>
 </div>
@@ -1234,9 +1310,201 @@ const firebaseConfig = {
   appId: "1:214600063739:web:70ab1a6556ef4e59c6ee5e"
 };
 
+/* ================= LANGUAGE / I18N ================= */
+let lang = 'bn'; // 'bn' | 'en'
+const I18N = {
+  bn: {
+    enterName: 'আপনার নাম লিখুন',
+    namePlaceholder: 'যেমন: রাহুল',
+    startBtn: 'শুরু করুন',
+    welcome: n => n ? `স্বাগতম, ${n}!` : 'স্বাগতম!',
+    playCpu: 'কম্পিউটারের সাথে খেলুন',
+    playLocal: 'বন্ধুর সাথে (একই ডিভাইসে)',
+    playOnline: 'অনলাইনে বন্ধুর সাথে খেলুন',
+    friendsTitle: 'বন্ধু তালিকা',
+    yourFriendId: 'আপনার ফ্রেন্ড আইডি',
+    copyBtn: 'কপি',
+    copiedShort: 'কপি হয়েছে',
+    friendIdPlaceholder: 'বন্ধুর আইডি',
+    reqBtn: 'রিকোয়েস্ট',
+    tabFriends: 'বন্ধুরা',
+    tabRequests: 'রিকোয়েস্ট',
+    backBtn: 'ফিরে যান',
+    chooseLevel: 'লেভেল বেছে নিন',
+    levelEasy: 'সহজ',
+    levelMedium: 'মাঝারি',
+    levelHard: 'কঠিন (অজয়)',
+    onlineTitle: 'অনলাইন খেলা',
+    createRoom: 'নতুন রুম তৈরি করুন',
+    orDivider: 'অথবা',
+    joinRoom: 'রুমে যোগ দিন',
+    waitingTitle: 'বন্ধুর জন্য অপেক্ষা',
+    waitingSub: 'কোড বা লিংকটি বন্ধুকে পাঠান',
+    copyCode: 'কোড কপি করুন',
+    copiedBang: 'কপি হয়েছে!',
+    copyLink: 'লিংক কপি করুন',
+    linkCopied: 'লিংক কপি হয়েছে!',
+    shareBtn: 'শেয়ার করুন',
+    sharedBang: 'শেয়ার হয়েছে!',
+    cancelBtn: 'বাতিল করুন',
+    profileTitle: 'প্রোফাইল',
+    profileNamePh: 'আপনার নাম',
+    updateName: 'নাম পরিবর্তন করুন',
+    statWin: 'জয়',
+    statLoss: 'হার',
+    statDraw: 'ড্র',
+    resetStats: 'পরিসংখ্যান রিসেট',
+    playAgain: 'আবার খেলো',
+    menuBtn: 'মেনু',
+    oppLeftTitle: 'প্রতিপক্ষ গেম ছেড়ে চলে গেছে',
+    oppLeftSub: 'আর খেলা সম্ভব নয়।',
+    backToMenu: 'মেনুতে ফিরুন',
+    chatTitle: 'চ্যাট',
+    chatPlaceholder: 'বার্তা লিখুন...',
+    inviteTitle: 'খেলার আমন্ত্রণ!',
+    playBtn: 'খেলুন',
+    noBtn: 'না',
+    unfriendTitle: 'আনফ্রেন্ড করবেন?',
+    unfriendBtn: 'আনফ্রেন্ড',
+    yourTurn: 'আপনার পালা',
+    oppTurn: 'প্রতিপক্ষের পালা',
+    cpuThinking: 'কম্পিউটার ভাবছে…',
+    turnOf: (n, s) => `${n} (${s}) এর পালা`,
+    drawText: 'ড্র হয়েছে!',
+    youWin: 'আপনি জিতেছেন!',
+    cpuWin: 'কম্পিউটার জিতেছে',
+    someoneWin: n => `${n} জিতেছে!`,
+    nextStarter: n => `পরের রাউন্ডে প্রথমে খেলবে: ${n}`,
+    onlineStatus: '● অনলাইনে আছেন',
+    offlineStatus: '○ অফলাইন',
+    inviteBtn: 'ইনভাইট',
+    acceptBtn: 'গ্রহণ',
+    emptyFriends: 'এখনো কোনো বন্ধু নেই।<br>উপরে বন্ধুর ৬ অক্ষরের আইডি দিয়ে রিকোয়েস্ট পাঠান!',
+    emptyRequests: 'কোনো নতুন ফ্রেন্ড রিকোয়েস্ট নেই।',
+    replyingTo: w => `উত্তর দিচ্ছেন: ${w}`,
+    replySelf: 'নিজেকে',
+    sentStatus: '✓ পাঠানো হয়েছে',
+    seenStatus: '✓✓ দেখা হয়েছে',
+    statsSummary: (t, r) => `মোট খেলা: <b>${t}</b> · জয়ের হার: <b>${r}%</b>`,
+    cpuLabel: l => `কম্পিউটার (${{easy:'সহজ',medium:'মাঝারি',hard:'কঠিন'}[l]})`,
+    p1: 'খেলোয়াড় ১',
+    p2: 'খেলোয়াড় ২',
+    you: 'আপনি',
+    opp: 'প্রতিপক্ষ'
+  },
+  en: {
+    enterName: 'Enter your name',
+    namePlaceholder: 'e.g. Alex',
+    startBtn: 'Start',
+    welcome: n => n ? `Welcome, ${n}!` : 'Welcome!',
+    playCpu: 'Play vs Computer',
+    playLocal: 'Pass & Play (Same Device)',
+    playOnline: 'Play Online with Friend',
+    friendsTitle: 'Friends',
+    yourFriendId: 'Your Friend ID',
+    copyBtn: 'Copy',
+    copiedShort: 'Copied',
+    friendIdPlaceholder: 'Friend ID',
+    reqBtn: 'Request',
+    tabFriends: 'Friends',
+    tabRequests: 'Requests',
+    backBtn: 'Go Back',
+    chooseLevel: 'Select Difficulty',
+    levelEasy: 'Easy',
+    levelMedium: 'Medium',
+    levelHard: 'Hard (Unbeatable)',
+    onlineTitle: 'Online Match',
+    createRoom: 'Create New Room',
+    orDivider: 'OR',
+    joinRoom: 'Join Room',
+    waitingTitle: 'Waiting for Friend',
+    waitingSub: 'Share this code or link with your friend',
+    copyCode: 'Copy Code',
+    copiedBang: 'Copied!',
+    copyLink: 'Copy Link',
+    linkCopied: 'Link Copied!',
+    shareBtn: 'Share',
+    sharedBang: 'Shared!',
+    cancelBtn: 'Cancel',
+    profileTitle: 'Profile',
+    profileNamePh: 'Your Name',
+    updateName: 'Update Name',
+    statWin: 'Wins',
+    statLoss: 'Losses',
+    statDraw: 'Draws',
+    resetStats: 'Reset Stats',
+    playAgain: 'Play Again',
+    menuBtn: 'Menu',
+    oppLeftTitle: 'Opponent Left the Game',
+    oppLeftSub: 'The match can no longer continue.',
+    backToMenu: 'Back to Menu',
+    chatTitle: 'Chat',
+    chatPlaceholder: 'Type a message...',
+    inviteTitle: 'Game Invite!',
+    playBtn: 'Play',
+    noBtn: 'Decline',
+    unfriendTitle: 'Unfriend Player?',
+    unfriendBtn: 'Unfriend',
+    yourTurn: 'Your Turn',
+    oppTurn: "Opponent's Turn",
+    cpuThinking: 'Computer is thinking…',
+    turnOf: (n, s) => `${n} (${s})'s Turn`,
+    drawText: "It's a Draw!",
+    youWin: 'You Won!',
+    cpuWin: 'Computer Won',
+    someoneWin: n => `${n} Won!`,
+    nextStarter: n => `Starts next round: ${n}`,
+    onlineStatus: '● Online',
+    offlineStatus: '○ Offline',
+    inviteBtn: 'Invite',
+    acceptBtn: 'Accept',
+    emptyFriends: 'No friends yet.<br>Enter a friend’s 6-character ID above to send a request!',
+    emptyRequests: 'No new friend requests.',
+    replyingTo: w => `Replying to: ${w}`,
+    replySelf: 'Yourself',
+    sentStatus: '✓ Sent',
+    seenStatus: '✓✓ Seen',
+    statsSummary: (t, r) => `Total Games: <b>${t}</b> · Win Rate: <b>${r}%</b>`,
+    cpuLabel: l => `Computer (${{easy:'Easy',medium:'Medium',hard:'Hard'}[l]})`,
+    p1: 'Player 1',
+    p2: 'Player 2',
+    you: 'You',
+    opp: 'Opponent'
+  }
+};
+function t(key, ...args){
+  const val = (I18N[lang] && I18N[lang][key]) || I18N.bn[key];
+  return typeof val === 'function' ? val(...args) : (val || '');
+}
+function applyLanguage(){
+  document.documentElement.lang = lang;
+  const badge = $('langBadgeText');
+  if(badge) badge.textContent = lang === 'bn' ? 'EN' : 'বাং';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if(I18N[lang][k]) el.textContent = I18N[lang][k];
+  });
+
+  if($('nameInput')) $('nameInput').placeholder = t('namePlaceholder');
+  if($('friendIdInput')) $('friendIdInput').placeholder = t('friendIdPlaceholder');
+  if($('profileNameInput')) $('profileNameInput').placeholder = t('profileNamePh');
+  if($('chatInput')) $('chatInput').placeholder = t('chatPlaceholder');
+
+  renderMenu();
+  renderStats();
+  renderFriendsUI();
+  updateTurn();
+  applySeen();
+}
+function toggleLang(){
+  lang = lang === 'bn' ? 'en' : 'bn';
+  store.set('xo_lang', lang);
+  applyLanguage();
+}
+
 /* ================= CONSTANTS ================= */
 const WIN_COMBOS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-const LEVEL_LABEL = { easy:'সহজ', medium:'মাঝারি', hard:'কঠিন' };
 const SOUNDS = {
   move:[620,0.12,'sine'], chat:[1000,0.14,'sine']
 };
@@ -1371,7 +1639,7 @@ function syncUserDirectory(){
   }).catch(() => {});
 }
 function renderMenu(){
-  $('menuGreeting').textContent = profile.name ? `স্বাগতম, ${profile.name}!` : 'স্বাগতম!';
+  $('menuGreeting').textContent = t('welcome', profile.name);
   updateFriendBadges();
 }
 function renderStats(){
@@ -1380,8 +1648,8 @@ function renderStats(){
   $('statWins').textContent = profile.wins;
   $('statLosses').textContent = profile.losses;
   $('statDraws').textContent = profile.draws;
-  $('statTotal').textContent = total;
-  $('statWinrate').textContent = rate + '%';
+  const sumEl = $('profileSummaryLine');
+  if(sumEl) sumEl.innerHTML = t('statsSummary', total, rate);
 }
 
 /* ================= SOUND ================= */
@@ -1455,10 +1723,9 @@ function initSocialSystem(){
       }
     });
 
-    // If currently chatting with someone who just unfriended us, close chat smoothly
     if(chatOpen && chatContext === 'dm' && activeDmFriend && !newMap[activeDmFriend.id]){
       closeChat();
-      setFriendStatus('warn', 'বন্ধু তালিকা থেকে সরানো হয়েছে');
+      setFriendStatus('warn', lang === 'bn' ? 'বন্ধু তালিকা থেকে সরানো হয়েছে' : 'Removed from friends list');
     }
 
     friendsMap = newMap;
@@ -1483,7 +1750,9 @@ function initSocialSystem(){
     }
     if(inOnlineGame) return;
     incomingInvite = inv;
-    $('inviteFromText').textContent = `${inv.fromName || 'বন্ধু'} আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে!`;
+    $('inviteFromText').textContent = lang === 'bn'
+      ? `${inv.fromName || 'বন্ধু'} আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে!`
+      : `${inv.fromName || 'A friend'} invited you to play!`;
     $('inviteOverlay').classList.add('show');
     playSound('chat');
   });
@@ -1517,7 +1786,7 @@ function watchFriendDmUnread(fid){
       updateFriendBadges();
       renderFriendsUI();
       playSound('chat');
-      const fname = (friendsMap[fid] && friendsMap[fid].name) || msg.name || 'বন্ধু';
+      const fname = (friendsMap[fid] && friendsMap[fid].name) || msg.name || 'Friend';
       showChatToast(fname, msg.text || '', { type:'dm', friendId: fid, friendName: fname });
     }
   });
@@ -1565,10 +1834,10 @@ function copyMyFriendId(){
   copyText(profile.id, ok => {
     if(ok){
       btn.classList.add('is-done');
-      if(lbl) lbl.textContent = 'কপি হয়েছে';
+      if(lbl) lbl.textContent = t('copiedShort');
       setTimeout(() => {
         btn.classList.remove('is-done');
-        if(lbl) lbl.textContent = 'কপি';
+        if(lbl) lbl.textContent = t('copyBtn');
       }, 1600);
     }
   });
@@ -1582,52 +1851,52 @@ function switchFriendTab(el){
   $('requestsListBox').hidden = tab !== 'requests';
 }
 async function sendFriendRequest(){
-  if(!db){ setFriendStatus('warn', 'ইন্টারনেট সংযোগ নেই'); return; }
+  if(!db){ setFriendStatus('warn', lang === 'bn' ? 'ইন্টারনেট সংযোগ নেই' : 'No internet connection'); return; }
   const targetId = $('friendIdInput').value.trim().toUpperCase();
   if(!/^[A-Z0-9]{6}$/.test(targetId)){
-    setFriendStatus('warn', '৬ অক্ষরের সঠিক ফ্রেন্ড আইডি লিখুন');
+    setFriendStatus('warn', lang === 'bn' ? '৬ অক্ষরের সঠিক ফ্রেন্ড আইডি লিখুন' : 'Enter a valid 6-character Friend ID');
     return;
   }
   if(targetId === profile.id){
-    setFriendStatus('warn', 'নিজের আইডিতে রিকোয়েস্ট পাঠানো যাবে না');
+    setFriendStatus('warn', lang === 'bn' ? 'নিজের আইডিতে রিকোয়েস্ট পাঠানো যাবে না' : 'Cannot send request to yourself');
     return;
   }
   if(friendsMap[targetId]){
-    setFriendStatus('warn', 'ইনি আগেই আপনার বন্ধু তালিকায় আছেন');
+    setFriendStatus('warn', lang === 'bn' ? 'ইনি আগেই আপনার বন্ধু তালিকায় আছেন' : 'Already in your friends list');
     return;
   }
-  setFriendStatus('ok', 'খোঁজা হচ্ছে...');
+  setFriendStatus('ok', lang === 'bn' ? 'খোঁজা হচ্ছে...' : 'Searching...');
   try{
     const snap = await db.ref(`users/${targetId}/info`).once('value');
     const info = snap.val();
     if(!info || !info.name){
-      setFriendStatus('warn', 'এই আইডিতে কোনো খেলোয়াড় পাওয়া যায়নি');
+      setFriendStatus('warn', lang === 'bn' ? 'এই আইডিতে কোনো খেলোয়াড় পাওয়া যায়নি' : 'No player found with this ID');
       return;
     }
     await db.ref(`users/${targetId}/requests/${profile.id}`).set({
       id: profile.id,
-      name: profile.name || 'খেলোয়াড়',
+      name: profile.name || 'Player',
       time: Date.now()
     });
     $('friendIdInput').value = '';
-    setFriendStatus('ok', `${info.name}-কে ফ্রেন্ড রিকোয়েস্ট পাঠানো হয়েছে!`);
+    setFriendStatus('ok', lang === 'bn' ? `${info.name}-কে ফ্রেন্ড রিকোয়েস্ট পাঠানো হয়েছে!` : `Friend request sent to ${info.name}!`);
   }catch(e){
-    setFriendStatus('warn', 'ত্রুটি: ' + (e.message || e));
+    setFriendStatus('warn', (e.message || e));
   }
 }
 async function acceptFriendRequest(el){
   const fid = el && el.dataset.fid;
   if(!fid || !db) return;
   const req = requestsMap[fid];
-  const fname = (req && req.name) || 'বন্ধু';
+  const fname = (req && req.name) || 'Friend';
   try{
     const now = Date.now();
     await db.ref(`users/${profile.id}/friends/${fid}`).set({ id: fid, name: fname, addedAt: now });
-    await db.ref(`users/${fid}/friends/${profile.id}`).set({ id: profile.id, name: profile.name || 'খেলোয়াড়', addedAt: now });
+    await db.ref(`users/${fid}/friends/${profile.id}`).set({ id: profile.id, name: profile.name || 'Player', addedAt: now });
     await db.ref(`users/${profile.id}/requests/${fid}`).remove();
-    setFriendStatus('ok', `${fname} এখন আপনার বন্ধু!`);
+    setFriendStatus('ok', lang === 'bn' ? `${fname} এখন আপনার বন্ধু!` : `${fname} is now your friend!`);
   }catch(e){
-    setFriendStatus('warn', 'রিকোয়েস্ট গ্রহণ করা যায়নি');
+    setFriendStatus('warn', lang === 'bn' ? 'রিকোয়েস্ট গ্রহণ করা যায়নি' : 'Could not accept request');
   }
 }
 async function declineFriendRequest(el){
@@ -1638,10 +1907,12 @@ async function declineFriendRequest(el){
 
 function askUnfriend(el){
   const fid = el && el.dataset.fid;
-  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  const fname = (el && el.dataset.fname) || 'Friend';
   if(!fid) return;
   pendingUnfriend = { id: fid, name: fname };
-  $('unfriendConfirmText').textContent = `আপনি কি নিশ্চিতভাবে ${fname}-কে আনফ্রেন্ড করতে চান?`;
+  $('unfriendConfirmText').textContent = lang === 'bn'
+    ? `আপনি কি নিশ্চিতভাবে ${fname}-কে আনফ্রেন্ড করতে চান?`
+    : `Are you sure you want to unfriend ${fname}?`;
   $('unfriendOverlay').classList.add('show');
 }
 function closeUnfriendModal(){
@@ -1655,9 +1926,9 @@ async function confirmUnfriend(){
   try{
     await db.ref(`users/${profile.id}/friends/${fid}`).remove();
     await db.ref(`users/${fid}/friends/${profile.id}`).remove();
-    setFriendStatus('ok', `${fname}-কে আনফ্রেন্ড করা হয়েছে`);
+    setFriendStatus('ok', lang === 'bn' ? `${fname}-কে আনফ্রেন্ড করা হয়েছে` : `Unfriended ${fname}`);
   }catch(e){
-    setFriendStatus('warn', 'আনফ্রেন্ড করা যায়নি, আবার চেষ্টা করুন');
+    setFriendStatus('warn', lang === 'bn' ? 'আনফ্রেন্ড করা যায়নি, আবার চেষ্টা করুন' : 'Failed to unfriend, try again');
   }
 }
 
@@ -1668,7 +1939,7 @@ function renderFriendsUI(){
 
   const fList = Object.values(friendsMap);
   if(!fList.length){
-    fBox.innerHTML = `<div class="empty-box">এখনো কোনো বন্ধু নেই।<br>উপরে বন্ধুর ৬ অক্ষরের আইডি দিয়ে রিকোয়েস্ট পাঠান!</div>`;
+    fBox.innerHTML = `<div class="empty-box">${t('emptyFriends')}</div>`;
   } else {
     fList.sort((a, b) => (friendOnlineState[b.id] ? 1 : 0) - (friendOnlineState[a.id] ? 1 : 0));
     fBox.innerHTML = fList.map(f => {
@@ -1683,20 +1954,20 @@ function renderFriendsUI(){
               <span class="presence-dot ${isOnline ? 'online' : ''}"></span>
             </div>
             <div class="friend-meta">
-              <div class="friend-name">${escapeHtml(f.name || 'বন্ধু')}</div>
-              <div class="friend-sub ${isOnline ? 'on' : ''}">${isOnline ? '● অনলাইনে আছেন' : '○ অফলাইন'} · #${escapeHtml(f.id)}</div>
+              <div class="friend-name">${escapeHtml(f.name || 'Friend')}</div>
+              <div class="friend-sub ${isOnline ? 'on' : ''}">${isOnline ? t('onlineStatus') : t('offlineStatus')} · #${escapeHtml(f.id)}</div>
             </div>
           </div>
           <div class="friend-actions">
-            <button class="f-act-btn f-btn-chat" data-action="openFriendChat" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" aria-label="মেসেজ">
+            <button class="f-act-btn f-btn-chat" data-action="openFriendChat" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" aria-label="Chat">
               <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
               ${uCount > 0 ? `<span class="unread-dot">${uCount}</span>` : ''}
             </button>
-            <button class="f-act-btn f-btn-invite" data-action="inviteFriendToGame" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" ${isOnline ? '' : 'disabled'}>
+            <button class="f-act-btn f-btn-invite" data-action="inviteFriendToGame" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" ${isOnline ? '' : 'disabled'}>
               <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span>ইনভাইট</span>
+              <span>${t('inviteBtn')}</span>
             </button>
-            <button class="f-act-btn f-btn-unfriend" data-action="askUnfriend" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" aria-label="আনফ্রেন্ড">
+            <button class="f-act-btn f-btn-unfriend" data-action="askUnfriend" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" aria-label="Unfriend">
               <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
             </button>
           </div>
@@ -1707,7 +1978,7 @@ function renderFriendsUI(){
 
   const rList = Object.values(requestsMap);
   if(!rList.length){
-    rBox.innerHTML = `<div class="empty-box">কোনো নতুন ফ্রেন্ড রিকোয়েস্ট নেই।</div>`;
+    rBox.innerHTML = `<div class="empty-box">${t('emptyRequests')}</div>`;
   } else {
     rBox.innerHTML = rList.map(r => {
       const initial = escapeHtml((r.name || 'R').charAt(0).toUpperCase());
@@ -1716,12 +1987,12 @@ function renderFriendsUI(){
           <div class="friend-left">
             <div class="friend-avatar">${initial}</div>
             <div class="friend-meta">
-              <div class="friend-name">${escapeHtml(r.name || 'খেলোয়াড়')}</div>
-              <div class="friend-sub">আইডি: #${escapeHtml(r.id)}</div>
+              <div class="friend-name">${escapeHtml(r.name || 'Player')}</div>
+              <div class="friend-sub">ID: #${escapeHtml(r.id)}</div>
             </div>
           </div>
           <div class="friend-actions">
-            <button class="f-act-btn f-btn-accept" data-action="acceptFriendRequest" data-fid="${escapeHtml(r.id)}">গ্রহণ</button>
+            <button class="f-act-btn f-btn-accept" data-action="acceptFriendRequest" data-fid="${escapeHtml(r.id)}">${t('acceptBtn')}</button>
             <button class="f-act-btn f-btn-decline" data-action="declineFriendRequest" data-fid="${escapeHtml(r.id)}">✕</button>
           </div>
         </div>
@@ -1734,13 +2005,13 @@ function renderFriendsUI(){
 async function inviteFriendToGame(el){
   if(!db) return;
   const fid = el && el.dataset.fid;
-  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  const fname = (el && el.dataset.fname) || 'Friend';
   if(!fid) return;
   if(!friendOnlineState[fid]){
-    setFriendStatus('warn', `${fname} এখন অফলাইনে আছেন`);
+    setFriendStatus('warn', lang === 'bn' ? `${fname} এখন অফলাইনে আছেন` : `${fname} is offline`);
     return;
   }
-  setFriendStatus('ok', `${fname}-কে আমন্ত্রণ পাঠানো হচ্ছে...`);
+  setFriendStatus('ok', lang === 'bn' ? `${fname}-কে আমন্ত্রণ পাঠানো হচ্ছে...` : `Sending invite to ${fname}...`);
   try{
     let code = null;
     for(let t=0; t<10 && !code; t++){
@@ -1748,7 +2019,7 @@ async function inviteFriendToGame(el){
       const s = await db.ref('rooms/' + c).once('value');
       if(!s.exists()) code = c;
     }
-    if(!code){ setFriendStatus('warn', 'রুম তৈরি করা যাচ্ছে না'); return; }
+    if(!code){ setFriendStatus('warn', lang === 'bn' ? 'রুম তৈরি করা যাচ্ছে না' : 'Could not create room'); return; }
 
     await db.ref('rooms/' + code).set({
       board: ['','','','','','','','',''],
@@ -1756,7 +2027,7 @@ async function inviteFriendToGame(el){
       xRole: 'HOST',
       nextXRole: 'HOST',
       round: 1,
-      players: { HOST: profile.name || 'হোস্ট' },
+      players: { HOST: profile.name || 'Host' },
       presence: { HOST: true, GUEST: false },
       status: 'waiting',
       createdAt: Date.now()
@@ -1764,7 +2035,7 @@ async function inviteFriendToGame(el){
 
     await db.ref(`users/${fid}/invite`).set({
       fromId: profile.id,
-      fromName: profile.name || 'বন্ধু',
+      fromName: profile.name || 'Friend',
       roomCode: code,
       time: Date.now()
     });
@@ -1773,13 +2044,13 @@ async function inviteFriendToGame(el){
     myRole = 'HOST';
     xRole = 'HOST';
     $('roomCodeDisplay').textContent = code;
-    $('linkPreview').textContent = `${fname}-এর জন্য অপেক্ষা করা হচ্ছে...`;
+    $('linkPreview').textContent = lang === 'bn' ? `${fname}-এর জন্য অপেক্ষা করা হচ্ছে...` : `Waiting for ${fname}...`;
     $('shareBtn').hidden = !navigator.share;
     showScreen('screen-waiting');
     attachRoomListener(code);
     setupPresence();
   }catch(e){
-    setFriendStatus('warn', 'আমন্ত্রণ পাঠানো যায়নি');
+    setFriendStatus('warn', lang === 'bn' ? 'আমন্ত্রণ পাঠানো যায়নি' : 'Failed to send invite');
   }
 }
 
@@ -1796,20 +2067,20 @@ async function acceptGameInvite(){
     const snap = await ref.once('value');
     const room = snap.val();
     if(!room || room.status !== 'waiting'){
-      showErr('রুমটি আর সক্রিয় নেই');
+      showErr(lang === 'bn' ? 'রুমটি আর সক্রিয় নেই' : 'Room is no longer active');
       return;
     }
     onlineCode = code;
     myRole = 'GUEST';
     await ref.update({
-      'players/GUEST': profile.name || 'খেলোয়াড়',
+      'players/GUEST': profile.name || 'Player',
       'presence/GUEST': true,
       status: 'playing'
     });
     attachRoomListener(code);
     setupPresence();
   }catch(e){
-    showErr('রুমে যোগ দেওয়া যায়নি');
+    showErr(lang === 'bn' ? 'রুমে যোগ দেওয়া যায়নি' : 'Could not join room');
   }
 }
 
@@ -1919,14 +2190,14 @@ function scheduleComputer(){
   }, 450);
 }
 function nameOf(role){
-  if(role === 'HUMAN') return profile.name || 'আপনি';
-  if(role === 'CPU') return `কম্পিউটার (${LEVEL_LABEL[level]})`;
-  if(role === 'P1') return 'খেলোয়াড় ১';
-  if(role === 'P2') return 'খেলোয়াড় ২';
+  if(role === 'HUMAN') return profile.name || t('you');
+  if(role === 'CPU') return t('cpuLabel', level);
+  if(role === 'P1') return t('p1');
+  if(role === 'P2') return t('p2');
   if(role === 'HOST' || role === 'GUEST'){
     const p = roomData && roomData.players;
     if(p && p[role]) return p[role];
-    return role === myRole ? (profile.name || 'আপনি') : 'প্রতিপক্ষ';
+    return role === myRole ? (profile.name || t('you')) : t('opp');
   }
   return '';
 }
@@ -1948,12 +2219,12 @@ function updateTurn(){
   const live = !gameOver && !resultShown;
   let text = '';
   if(mode === 'online'){
-    if(onlineLeft) text = '⚠️ প্রতিপক্ষ চলে গেছে';
-    else if(live) text = currentTurn === mySymbol() ? 'আপনার পালা' : 'প্রতিপক্ষের পালা';
+    if(onlineLeft) text = `⚠️ ${t('oppLeftTitle')}`;
+    else if(live) text = currentTurn === mySymbol() ? t('yourTurn') : t('oppTurn');
   } else if(mode === 'computer'){
-    if(live) text = currentTurn === humanSymbol ? 'আপনার পালা' : 'কম্পিউটার ভাবছে…';
+    if(live) text = currentTurn === humanSymbol ? t('yourTurn') : t('cpuThinking');
   } else if(live){
-    text = `${nameOf(roleOfSym(currentTurn))} (${currentTurn}) এর পালা`;
+    text = t('turnOf', nameOf(roleOfSym(currentTurn)), currentTurn);
   }
   $('turnIndicator').textContent = text;
   $('leftPlayer').classList.toggle('active', live && currentTurn === symOf(left));
@@ -1963,7 +2234,8 @@ function updateTurn(){
   if(mode === 'online'){
     $('scorePill').textContent = '#' + (onlineCode || '----');
   } else {
-    $('scorePill').textContent = `${sessionScore[left]} : ${sessionScore[right]}` + (sessionScore.D ? ` · ড্র ${sessionScore.D}` : '');
+    const dWord = lang === 'bn' ? 'ড্র' : 'Draw';
+    $('scorePill').textContent = `${sessionScore[left]} : ${sessionScore[right]}` + (sessionScore.D ? ` · ${dWord} ${sessionScore.D}` : '');
   }
 }
 const RESULT_HERO_ICONS = {
@@ -2004,7 +2276,7 @@ function showResultOverlay(type, text, nextName){
   hero.className = 'result-hero hero-' + type;
   hero.innerHTML = RESULT_HERO_ICONS[type] || RESULT_HERO_ICONS.win;
   $('resultText').textContent = text;
-  $('nextStarterText').textContent = `পরের রাউন্ডে প্রথমে খেলবে: ${nextName}`;
+  $('nextStarterText').textContent = t('nextStarter', nextName);
   $('resultOverlay').classList.add('show');
 }
 function launchConfetti(){
@@ -2054,12 +2326,12 @@ function endRound(r){
 
   let heroType, text;
   if(w === 'draw'){
-    heroType = 'draw'; text = 'ড্র হয়েছে!'; playMelody('draw');
+    heroType = 'draw'; text = t('drawText'); playMelody('draw');
   } else if(mode === 'computer'){
-    if(winRole === 'HUMAN'){ heroType = 'win'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
-    else { heroType = 'lose'; text = 'কম্পিউটার জিতেছে'; playMelody('lose'); }
+    if(winRole === 'HUMAN'){ heroType = 'win'; text = t('youWin'); playMelody('win'); launchConfetti(); }
+    else { heroType = 'lose'; text = t('cpuWin'); playMelody('lose'); }
   } else {
-    heroType = 'win'; text = `${nameOf(winRole)} জিতেছে!`; playMelody('win'); launchConfetti();
+    heroType = 'win'; text = t('someoneWin', nameOf(winRole)); playMelody('win'); launchConfetti();
   }
   showResultOverlay(heroType, text, `${nameOf(nextXRole)} (X)`);
   updateTurn();
@@ -2133,7 +2405,7 @@ function setProfileStatus(type, text){
 }
 function saveName(){
   const n = $('nameInput').value.trim();
-  if(!n){ $('nameMsg').textContent = 'একটি নাম লিখুন'; return; }
+  if(!n){ $('nameMsg').textContent = lang === 'bn' ? 'একটি নাম লিখুন' : 'Please enter a name'; return; }
   profile.name = n;
   saveProfile();
   initSocialSystem();
@@ -2151,18 +2423,19 @@ function goProfile(){
 }
 function updateProfileName(){
   const n = $('profileNameInput').value.trim();
-  if(!n){ setProfileStatus('warn', 'নাম খালি রাখা যাবে না'); return; }
+  if(!n){ setProfileStatus('warn', lang === 'bn' ? 'নাম খালি রাখা যাবে না' : 'Name cannot be empty'); return; }
   profile.name = n;
   saveProfile();
   renderMenu();
-  setProfileStatus('ok', 'নাম আপডেট হয়েছে');
+  setProfileStatus('ok', lang === 'bn' ? 'নাম আপডেট হয়েছে' : 'Name updated');
 }
 function resetStats(){
-  if(!confirm('পরিসংখ্যান মুছে ফেলতে চান?')) return;
+  const msg = lang === 'bn' ? 'পরিসংখ্যান মুছে ফেলতে চান?' : 'Reset all match stats?';
+  if(!confirm(msg)) return;
   profile.wins = 0; profile.losses = 0; profile.draws = 0;
   saveProfile();
   renderStats();
-  setProfileStatus('ok', 'পরিসংখ্যান রিসেট হয়েছে');
+  setProfileStatus('ok', lang === 'bn' ? 'পরিসংখ্যান রিসেট হয়েছে' : 'Stats reset');
 }
 
 /* ================= COPY / SHARE / LINK ================= */
@@ -2188,7 +2461,7 @@ function flashBtn(btn, okText, ok, origText){
     btn.classList.add('is-done');
     if(lbl) lbl.textContent = okText;
   } else {
-    if(lbl) lbl.textContent = '❌ কপি হয়নি';
+    if(lbl) lbl.textContent = lang === 'bn' ? '❌ কপি হয়নি' : '❌ Failed';
   }
   btn._t = setTimeout(() => {
     btn.classList.remove('is-done');
@@ -2202,14 +2475,14 @@ function buildRoomLink(code){
 function copyRoomCode(){
   if(!onlineCode) return;
   const btn = $('copyBtn');
-  copyText(onlineCode, ok => flashBtn(btn, 'কপি হয়েছে!', ok, 'কোড কপি করুন'));
+  copyText(onlineCode, ok => flashBtn(btn, t('copiedBang'), ok, t('copyCode')));
 }
 function copyRoomLink(){
   if(!onlineCode) return;
   const btn = $('linkBtn');
   const link = buildRoomLink(onlineCode);
   $('linkPreview').textContent = link;
-  copyText(link, ok => flashBtn(btn, 'লিংক কপি হয়েছে!', ok, 'লিংক কপি করুন'));
+  copyText(link, ok => flashBtn(btn, t('linkCopied'), ok, t('copyLink')));
 }
 function shareRoomLink(){
   if(!onlineCode) return;
@@ -2217,11 +2490,11 @@ function shareRoomLink(){
   const link = buildRoomLink(onlineCode);
   if(navigator.share){
     navigator.share({
-      title: 'XO খেলা',
-      text: `আমার সাথে XO খেলুন! রুম কোড: ${onlineCode}`,
+      title: 'XO Game',
+      text: lang === 'bn' ? `আমার সাথে XO খেলুন! রুম কোড: ${onlineCode}` : `Play XO with me! Room code: ${onlineCode}`,
       url: link
     }).then(() => {
-      flashBtn(btn, 'শেয়ার হয়েছে!', true, 'শেয়ার করুন');
+      flashBtn(btn, t('sharedBang'), true, t('shareBtn'));
     }).catch(() => {});
   } else {
     copyRoomLink();
@@ -2238,14 +2511,14 @@ function applyPendingRoom(){
   if(!pendingRoomCode) return false;
   $('joinCodeInput').value = pendingRoomCode;
   pendingRoomCode = null;
-  setOnlineMsg('লিংক থেকে রুম কোড এসেছে। "রুমে যোগ দিন" চাপুন।');
+  setOnlineMsg(lang === 'bn' ? 'লিংক থেকে রুম কোড এসেছে। "রুমে যোগ দিন" চাপুন।' : 'Room code loaded from link. Tap Join Room.');
   showScreen('screen-online');
   return true;
 }
 
 /* ================= ONLINE ================= */
 function requireDb(){
-  if(!db){ setOnlineMsg('অনলাইন সার্ভিস চালু হয়নি। ইন্টারনেট চেক করুন।'); return false; }
+  if(!db){ setOnlineMsg(lang === 'bn' ? 'অনলাইন সার্ভিস চালু হয়নি। ইন্টারনেট চেক করুন।' : 'Online service unavailable.'); return false; }
   return true;
 }
 async function createRoom(){
@@ -2258,14 +2531,14 @@ async function createRoom(){
       const s = await db.ref('rooms/' + c).once('value');
       if(!s.exists()) code = c;
     }
-    if(!code){ setOnlineMsg('রুম তৈরি করা যাচ্ছে না, আবার চেষ্টা করুন'); return; }
+    if(!code){ setOnlineMsg(lang === 'bn' ? 'রুম তৈরি করা যাচ্ছে না' : 'Could not create room'); return; }
     await db.ref('rooms/' + code).set({
       board: ['','','','','','','','',''],
       turn: 'X',
       xRole: 'HOST',
       nextXRole: 'HOST',
       round: 1,
-      players: { HOST: profile.name || 'হোস্ট' },
+      players: { HOST: profile.name || 'Host' },
       presence: { HOST: true, GUEST: false },
       status: 'waiting',
       createdAt: Date.now()
@@ -2280,29 +2553,29 @@ async function createRoom(){
     attachRoomListener(code);
     setupPresence();
   }catch(e){
-    setOnlineMsg('ত্রুটি: ' + (e.message || e));
+    setOnlineMsg((e.message || e));
   }
 }
 async function joinRoom(){
   if(!requireDb()) return;
   const code = $('joinCodeInput').value.trim();
-  if(!/^\d{4}$/.test(code)){ setOnlineMsg('৪ সংখ্যার সঠিক কোড লিখুন'); return; }
-  setOnlineMsg('যোগ দেওয়া হচ্ছে...');
+  if(!/^\d{4}$/.test(code)){ setOnlineMsg(lang === 'bn' ? '৪ সংখ্যার সঠিক কোড লিখুন' : 'Enter a valid 4-digit code'); return; }
+  setOnlineMsg(lang === 'bn' ? 'যোগ দেওয়া হচ্ছে...' : 'Joining...');
   try{
     const ref = db.ref('rooms/' + code);
     const snap = await ref.once('value');
     const room = snap.val();
-    if(!room){ setOnlineMsg('এই কোডে কোনো রুম নেই'); return; }
+    if(!room){ setOnlineMsg(lang === 'bn' ? 'এই কোডে কোনো রুম নেই' : 'Room not found'); return; }
     if(room.status !== 'waiting' || (room.players && room.players.GUEST)){
-      setOnlineMsg('রুমটি ভর্তি বা বন্ধ হয়ে গেছে'); return;
+      setOnlineMsg(lang === 'bn' ? 'রুমটি ভর্তি বা বন্ধ হয়ে গেছে' : 'Room is full or closed'); return;
     }
     if(room.presence && room.presence.HOST === false){
-      setOnlineMsg('রুমের হোস্ট এখন অফলাইনে আছেন। একটু পরে আবার চেষ্টা করুন।'); return;
+      setOnlineMsg(lang === 'bn' ? 'রুমের হোস্ট এখন অফলাইনে আছেন।' : 'Room host is offline.'); return;
     }
     onlineCode = code;
     myRole = 'GUEST';
     await ref.update({
-      'players/GUEST': profile.name || 'খেলোয়াড়',
+      'players/GUEST': profile.name || 'Player',
       'presence/GUEST': true,
       status: 'playing'
     });
@@ -2310,7 +2583,7 @@ async function joinRoom(){
     setupPresence();
     setOnlineMsg('');
   }catch(e){
-    setOnlineMsg('ত্রুটি: ' + (e.message || e));
+    setOnlineMsg((e.message || e));
     onlineCode = null;
   }
 }
@@ -2478,7 +2751,7 @@ function onOpponentLeft(){
   if(!inOnlineGame || onlineLeft) return;
   onlineLeft = true;
   clearTimeout(oppGraceTimer); oppGraceTimer = null;
-  appendSystemMessage('⚠️ প্রতিপক্ষ গেম ছেড়ে চলে গেছে');
+  appendSystemMessage(`⚠️ ${t('oppLeftTitle')}`);
   $('leftOverlay').classList.add('show');
   updateTurn();
 }
@@ -2499,9 +2772,9 @@ function showOnlineResult(room){
   saveProfile();
 
   let heroType, text;
-  if(w === 'draw'){ heroType = 'draw'; text = 'ড্র হয়েছে!'; playMelody('draw'); }
-  else if(winRole === myRole){ heroType = 'win'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
-  else { heroType = 'lose'; text = `${nameOf(winRole)} জিতেছে`; playMelody('lose'); }
+  if(w === 'draw'){ heroType = 'draw'; text = t('drawText'); playMelody('draw'); }
+  else if(winRole === myRole){ heroType = 'win'; text = t('youWin'); playMelody('win'); launchConfetti(); }
+  else { heroType = 'lose'; text = t('someoneWin', nameOf(winRole)); playMelody('lose'); }
 
   const nxt = room.nextXRole || (w === 'draw' ? otherRole(rx) : winRole);
   showResultOverlay(heroType, text, `${nameOf(nxt)} (X)`);
@@ -2561,19 +2834,19 @@ function resetChatUI(title){
   chatInitDone = false;
   cancelReply();
   $('chatMessages').innerHTML = '';
-  $('chatDrawerTitle').textContent = title || 'চ্যাট';
+  $('chatDrawerTitle').textContent = title || t('chatTitle');
 }
 
 function setReplyTarget(key){
   const item = chatCache.get(key);
   if(!item) return;
-  const whoLabel = item.mine ? 'নিজেকে' : (item.name || 'বন্ধু');
+  const whoLabel = item.mine ? t('replySelf') : (item.name || 'Friend');
   replyingTo = {
     key: item.key,
-    name: item.mine ? (profile.name || 'আমি') : (item.name || 'বন্ধু'),
+    name: item.mine ? (profile.name || t('you')) : (item.name || 'Friend'),
     text: item.text || ''
   };
-  $('replyPreviewWho').textContent = `উত্তর দিচ্ছেন: ${whoLabel}`;
+  $('replyPreviewWho').textContent = t('replyingTo', whoLabel);
   $('replyPreviewText').textContent = item.text || '';
   $('replyPreviewBar').hidden = false;
   $('chatInput').focus();
@@ -2599,7 +2872,7 @@ function scrollToQuotedMsg(key){
 function attachRoomChat(code){
   chatContext = 'room';
   activeDmFriend = null;
-  resetChatUI('চ্যাট');
+  resetChatUI(t('chatTitle'));
   chatRef = db.ref(`rooms/${code}/chat`);
   readRef = db.ref(`rooms/${code}/read`);
 
@@ -2618,7 +2891,7 @@ function attachRoomChat(code){
         unread++;
         $('chatBadge').textContent = unread;
         $('chatBadge').hidden = false;
-        showChatToast(msg.name || 'প্রতিপক্ষ', msg.text || '', { type:'room' });
+        showChatToast(msg.name || t('opp'), msg.text || '', { type:'room' });
       }
     }
   });
@@ -2633,7 +2906,7 @@ function attachRoomChat(code){
 function openFriendChat(el){
   if(!db) return;
   const fid = el && el.dataset.fid;
-  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  const fname = (el && el.dataset.fname) || 'Friend';
   if(!fid) return;
 
   chatContext = 'dm';
@@ -2675,7 +2948,7 @@ function openFriendChat(el){
 }
 
 function appendChatBubble(key, msg, mine){
-  const senderName = msg.name || (mine ? (profile.name || 'আমি') : 'বন্ধু');
+  const senderName = msg.name || (mine ? (profile.name || t('you')) : 'Friend');
   chatCache.set(key, { key, name: senderName, text: msg.text || '', mine });
 
   const box = $('chatMessages');
@@ -2688,12 +2961,12 @@ function appendChatBubble(key, msg, mine){
 
   const time = new Date(msg.time || Date.now()).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
   const who = mine ? '' : `<span class="who">${escapeHtml(senderName)}</span>`;
-  const status = mine ? ` · <span class="chat-status" data-key="${escapeHtml(key)}">✓ পাঠানো হয়েছে</span>` : '';
+  const status = mine ? ` · <span class="chat-status" data-key="${escapeHtml(key)}">${t('sentStatus')}</span>` : '';
 
   let quoteHtml = '';
   if(msg.replyTo && msg.replyTo.text){
     const qKey = escapeHtml(msg.replyTo.key || '');
-    const qWho = escapeHtml(msg.replyTo.name || 'বার্তা');
+    const qWho = escapeHtml(msg.replyTo.name || 'Message');
     const qTxt = escapeHtml(msg.replyTo.text || '');
     quoteHtml = `
       <div class="reply-quote" data-jump-key="${qKey}">
@@ -2709,7 +2982,7 @@ function appendChatBubble(key, msg, mine){
   replyBtn.type = 'button';
   replyBtn.dataset.action = 'replyMsg';
   replyBtn.dataset.key = key;
-  replyBtn.setAttribute('aria-label', 'রিপ্লাই');
+  replyBtn.setAttribute('aria-label', 'Reply');
   replyBtn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>`;
 
   if(mine){
@@ -2728,7 +3001,7 @@ function applySeen(){
   document.querySelectorAll('#chatMessages .chat-status[data-key]').forEach(el => {
     const seen = !!oppReadKey && el.dataset.key <= oppReadKey;
     el.classList.toggle('seen', seen);
-    el.textContent = seen ? '✓✓ দেখা হয়েছে' : '✓ পাঠানো হয়েছে';
+    el.textContent = seen ? t('seenStatus') : t('sentStatus');
   });
 }
 function appendSystemMessage(text){
@@ -2748,12 +3021,12 @@ function markChatRead(){
   }
 }
 function sendChatMessage(text){
-  const t = String(text || '').trim().slice(0, 300);
-  if(!t || !chatRef) return;
+  const tStr = String(text || '').trim().slice(0, 300);
+  if(!tStr || !chatRef) return;
 
   const payload = {
-    name: profile.name || 'আমি',
-    text: t,
+    name: profile.name || t('you'),
+    text: tStr,
     time: Date.now()
   };
   if(replyingTo){
@@ -2803,11 +3076,11 @@ function closeChat(){
 }
 function showChatToast(senderName, text, actionPayload){
   pendingToastAction = actionPayload || null;
-  const t = $('chatToast');
-  t.innerHTML = `<svg class="chat-bubble" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><circle class="chat-dot d1" cx="9" cy="12" r="1.15"/><circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/><circle class="chat-dot d3" cx="16" cy="12" r="1.15"/></svg><span>${escapeHtml(senderName)}: ${escapeHtml(text)}</span>`;
-  t.classList.add('show');
+  const toastEl = $('chatToast');
+  toastEl.innerHTML = `<svg class="chat-bubble" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><circle class="chat-dot d1" cx="9" cy="12" r="1.15"/><circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/><circle class="chat-dot d3" cx="16" cy="12" r="1.15"/></svg><span>${escapeHtml(senderName)}: ${escapeHtml(text)}</span>`;
+  toastEl.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
 }
 function handleToastClick(){
   $('chatToast').classList.remove('show');
@@ -2843,6 +3116,15 @@ function onDocClick(e){
   const fn = ACTIONS[el.dataset.action];
   if(typeof fn !== 'function') return;
 
+  if(el.dataset.topAnim === '1'){
+    triggerTapWiggle(el);
+    if(el.dataset.action === 'toggleLang'){
+      fn(el);
+      return;
+    }
+    setTimeout(() => fn(el), 160);
+    return;
+  }
   if(el.dataset.tapAnim === '1'){
     triggerTapWiggle(el);
     setTimeout(() => fn(el), 240);
@@ -2857,7 +3139,7 @@ function onDocDblClick(e){
   }
 }
 const ACTIONS = {
-  saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends,
+  saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
   acceptFriendRequest, declineFriendRequest,
   askUnfriend, closeUnfriendModal, confirmUnfriend,
@@ -2907,12 +3189,13 @@ function init(){
   readRoomParam();
   cellEls = Array.from(document.querySelectorAll('#board .cell'));
   loadProfile();
+  lang = store.get('xo_lang') === 'en' ? 'en' : 'bn';
   soundOn = store.get('xo_sound') !== '0';
   updateSoundBtn();
   document.addEventListener('click', onDocClick);
   document.addEventListener('dblclick', onDocDblClick);
   bindKeys();
-  renderMenu();
+  applyLanguage();
   if(!profile.name){
     showScreen('screen-name');
     return;

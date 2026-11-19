@@ -69,9 +69,9 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .logo{width:130px;height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 12px rgba(255,93,122,.55))}
 .title{font-size:22px;font-weight:700}
 .sub{opacity:.85;font-size:15px}
-.hint{font-size:13px;color:#ffb3c1;min-height:18px}
+.hint{font-size:13px;color:#ffb3c1;min-height:22px;display:flex;align-items:center;justify-content:center;gap:6px}
 .divider{font-size:13px;opacity:.6}
-.btn{font-family:inherit;font-size:16px;font-weight:700;padding:15px 18px;border:none;border-radius:18px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .2s,opacity .2s;box-shadow:0 10px 25px rgba(0,0,0,.25);width:100%}
+.btn{font-family:inherit;font-size:16px;font-weight:700;padding:15px 18px;border:none;border-radius:18px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .2s,opacity .2s;box-shadow:0 10px 25px rgba(0,0,0,.25);width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5}
 .btn-primary{background:linear-gradient(135deg,#ff5d7a,#ff8a5c)}
@@ -79,7 +79,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .btn-info{background:linear-gradient(135deg,#4fd1ff,#4a8bff)}
 .btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:none}
 .btn-row{display:flex;gap:10px}
-.btn-row .btn{flex:1}
+.btn-row .btn{flex:1;padding:14px 12px;font-size:15px}
 .input{width:100%;padding:14px 16px;border-radius:16px;border:1px solid rgba(255,255,255,.25);background:rgba(0,0,0,.25);color:#fff;font:inherit;font-size:16px;outline:none;text-align:center}
 .input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,209,102,.25)}
 .code-input{font-size:26px;letter-spacing:.5em;font-weight:700;text-indent:.5em}
@@ -88,9 +88,220 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .loader{width:34px;height:34px;margin:6px auto;border-radius:50%;border:4px solid rgba(255,255,255,.2);border-top-color:var(--gold);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat-box{background:rgba(0,0,0,.22);border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;gap:4px}
+.stat-box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;gap:4px;transition:transform .2s,border-color .3s}
 .stat-box span{font-size:26px;font-weight:800}
 .stat-box small{opacity:.75;font-size:12px}
+
+/* Premium Animated Button Icons */
+.btn-icon-box{
+  width:26px;height:26px;
+  display:inline-flex;align-items:center;justify-content:center;
+  position:relative;flex-shrink:0;
+  background:rgba(255,255,255,.18);
+  border-radius:8px;padding:4px;
+  box-shadow:inset 0 1px 1px rgba(255,255,255,.35), 0 2px 6px rgba(0,0,0,.18);
+  transform-origin:center;
+}
+.btn-icon-box svg{
+  width:100%;height:100%;
+  fill:none;stroke:#fff;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+  overflow:visible;
+}
+
+/* Menu Icons Idle Subtle Animations */
+.anim-bot .bot-antenna{animation:botSignal 2.2s ease-in-out infinite;transform-origin:12px 6px}
+.anim-bot .bot-eye{animation:botBlink 3.6s ease-in-out infinite;transform-origin:center}
+@keyframes botSignal{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1.5px)}
+}
+@keyframes botBlink{
+  0%,44%,52%,100%{transform:scaleY(1)}
+  48%{transform:scaleY(0.15)}
+}
+
+.anim-duo .duo-back{animation:duoSway 3s ease-in-out infinite}
+@keyframes duoSway{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(1.5px)}
+}
+
+.anim-globe .globe-ring{animation:globeSpin 5s linear infinite;transform-origin:12px 12px}
+@keyframes globeSpin{
+  0%{transform:scaleX(1)}
+  50%{transform:scaleX(0.45)}
+  100%{transform:scaleX(1)}
+}
+
+.anim-user .user-head{animation:userNod 2.8s ease-in-out infinite}
+@keyframes userNod{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1.3px)}
+}
+
+/* Difficulty, Online, Profile & Result Icons Idle Animations */
+.anim-smile .smile-face{animation:smileFloat 2.6s ease-in-out infinite;transform-origin:center}
+@keyframes smileFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-1.3px) scale(1.06)}
+}
+
+.anim-brain .brain-spark{animation:brainPulse 2.2s ease-in-out infinite;transform-origin:center}
+@keyframes brainPulse{
+  0%,100%{opacity:.55;transform:scale(.92)}
+  50%{opacity:1;transform:scale(1.12)}
+}
+
+.anim-fire .fire-inner{animation:fireFlicker 1.4s ease-in-out infinite;transform-origin:12px 18px}
+@keyframes fireFlicker{
+  0%,100%{transform:scaleY(1) skewX(0deg)}
+  35%{transform:scaleY(1.14) skewX(-5deg)}
+  70%{transform:scaleY(.92) skewX(5deg)}
+}
+
+.anim-plus .plus-cross{animation:plusPulse 2.8s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes plusPulse{
+  0%,100%{transform:rotate(0deg) scale(1)}
+  50%{transform:rotate(90deg) scale(1.08)}
+}
+
+.anim-door .door-arrow{animation:doorEnter 2.2s ease-in-out infinite}
+@keyframes doorEnter{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(2.4px)}
+}
+
+.anim-back .back-arrow{animation:backSlide 2.2s ease-in-out infinite}
+@keyframes backSlide{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(-2.4px)}
+}
+
+.anim-replay .replay-spin{animation:replayRock 3s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes replayRock{
+  0%,100%{transform:rotate(0deg)}
+  50%{transform:rotate(24deg)}
+}
+
+.anim-home .home-roof{animation:homeLift 2.6s ease-in-out infinite;transform-origin:center}
+@keyframes homeLift{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-1.3px)}
+}
+
+.anim-edit .edit-pen{animation:penWrite 2.4s ease-in-out infinite;transform-origin:17px 7px}
+@keyframes penWrite{
+  0%,100%{transform:translate(0,0) rotate(0deg)}
+  40%{transform:translate(-1.5px,1.5px) rotate(-8deg)}
+  70%{transform:translate(1px,-1px) rotate(4deg)}
+}
+
+.anim-trash .trash-lid{animation:trashLidLift 2.6s ease-in-out infinite;transform-origin:5px 7px}
+@keyframes trashLidLift{
+  0%,100%{transform:rotate(0deg)}
+  50%{transform:rotate(-14deg) translateY(-1px)}
+}
+
+.anim-close .close-x{animation:closePulse 2.8s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes closePulse{
+  0%,100%{transform:scale(1) rotate(0deg)}
+  50%{transform:scale(1.12) rotate(90deg)}
+}
+
+/* Status Pill Badge (Profile Message) */
+.status-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 12px;border-radius:999px;
+  font-size:12.5px;font-weight:600;
+  animation:statusPop .35s cubic-bezier(.34,1.56,.64,1);
+}
+.status-badge.ok{
+  background:rgba(34,197,94,.2);
+  border:1px solid rgba(74,222,128,.45);
+  color:#86efac;
+}
+.status-badge.warn{
+  background:rgba(255,93,122,.2);
+  border:1px solid rgba(255,93,122,.45);
+  color:#ffb3c1;
+}
+.status-badge svg{
+  width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.6;
+  stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:24;stroke-dashoffset:24;
+  animation:drawCheck .35s ease forwards .05s;
+}
+@keyframes statusPop{
+  0%{opacity:0;transform:scale(.82) translateY(4px)}
+  100%{opacity:1;transform:none}
+}
+
+/* Tap Wiggle / Spring Shake Animation on Buttons */
+.btn.is-tapped .btn-icon-box{
+  animation:iconTapWiggle .48s cubic-bezier(.34,1.56,.64,1);
+  background:rgba(255,255,255,.32);
+  box-shadow:0 0 14px rgba(255,255,255,.55);
+}
+@keyframes iconTapWiggle{
+  0%{transform:scale(1) rotate(0deg) translateY(0)}
+  20%{transform:scale(1.26) rotate(-14deg) translateY(-3px)}
+  45%{transform:scale(1.22) rotate(12deg) translateY(-2px)}
+  70%{transform:scale(1.1) rotate(-6deg) translateY(0)}
+  100%{transform:scale(1) rotate(0deg) translateY(0)}
+}
+
+/* Waiting Screen Icons Idle Subtle Animations */
+.anim-copy .copy-front{animation:copyFloat 2.6s ease-in-out infinite}
+@keyframes copyFloat{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(1.5px,-1.5px)}
+}
+.anim-link .link-part1{animation:linkPulse1 2.8s ease-in-out infinite}
+.anim-link .link-part2{animation:linkPulse2 2.8s ease-in-out infinite}
+@keyframes linkPulse1{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(-1px,1px)}
+}
+@keyframes linkPulse2{
+  0%,100%{transform:translate(0,0)}
+  50%{transform:translate(1px,-1px)}
+}
+.anim-share .share-arrow{animation:shareLift 2.2s ease-in-out infinite}
+@keyframes shareLift{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-2.5px)}
+}
+
+/* Success checkmark state */
+.btn .icon-check{display:none}
+.btn.is-done .icon-main{display:none}
+.btn.is-done .icon-check{display:block}
+.btn.is-done .btn-icon-box{
+  background:rgba(34,197,94,.35);
+  box-shadow:0 0 12px rgba(74,222,128,.6);
+  animation:popCheck .35s cubic-bezier(.2,.9,.3,1.3);
+}
+.btn.is-done .icon-check path{
+  stroke:#86efac;stroke-width:2.8;
+  stroke-dasharray:24;stroke-dashoffset:24;
+  animation:drawCheck .35s ease forwards .05s;
+}
+@keyframes popCheck{0%{transform:scale(.7)}100%{transform:scale(1)}}
+@keyframes drawCheck{to{stroke-dashoffset:0}}
+
+/* Shimmer sweep on buttons */
+.btn-shine::after{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.22),transparent);
+  transform:skewX(-20deg);
+  animation:btnSweep 4.2s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes btnSweep{
+  0%,65%{left:-100%}
+  100%{left:160%}
+}
 
 /* game header */
 .game-wrap{width:min(94vw,440px);display:flex;flex-direction:column;align-items:center;gap:14px}
@@ -129,11 +340,117 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .result-overlay{position:fixed;inset:0;z-index:120;background:rgba(8,5,24,.6);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
 .result-overlay.show{opacity:1;pointer-events:auto}
 .left-overlay{z-index:130}
-.result-card{width:min(88vw,360px);padding:26px 20px;border-radius:26px;background:rgba(30,22,60,.92);border:1px solid rgba(255,255,255,.2);text-align:center;display:flex;flex-direction:column;gap:12px;transform:scale(.9);transition:transform .35s}
+.result-card{width:min(88vw,360px);padding:26px 20px;border-radius:26px;background:rgba(30,22,60,.92);border:1px solid rgba(255,255,255,.2);text-align:center;display:flex;flex-direction:column;gap:14px;transform:scale(.9);transition:transform .35s}
 .result-overlay.show .result-card{transform:none}
 .result-card h2{font-size:21px}
-.result-emoji{font-size:54px}
-.next-starter-note{font-size:14px;color:#ffe9a8;background:rgba(0,0,0,.25);padding:10px;border-radius:14px}
+
+/* Premium Animated Result Hero Badges */
+.result-hero{
+  width:78px;height:78px;margin:0 auto;
+  border-radius:24px;
+  display:grid;place-items:center;
+  position:relative;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 12px 30px rgba(0,0,0,.35), inset 0 1px 1px rgba(255,255,255,.35);
+}
+.result-hero::before{
+  content:'';position:absolute;inset:-6px;border-radius:28px;
+  border:1.5px solid rgba(255,255,255,.25);
+  animation:heroHalo 2.2s ease-out infinite;
+  pointer-events:none;
+}
+@keyframes heroHalo{
+  0%{transform:scale(.92);opacity:.75}
+  100%{transform:scale(1.18);opacity:0}
+}
+.result-hero svg{
+  width:42px;height:42px;
+  fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+  overflow:visible;
+}
+.result-overlay.show .result-hero{
+  animation:heroEntrance .55s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+@keyframes heroEntrance{
+  0%{transform:scale(.4) rotate(-12deg);opacity:0}
+  100%{transform:scale(1) rotate(0deg);opacity:1}
+}
+
+/* Win Hero */
+.hero-win{
+  background:radial-gradient(circle at 30% 25%, rgba(255,209,102,.32), rgba(255,93,122,.16));
+  border-color:rgba(255,209,102,.55);
+  box-shadow:0 12px 32px rgba(255,209,102,.28), inset 0 1px 1px rgba(255,255,255,.45);
+}
+.hero-win::before{border-color:rgba(255,209,102,.5)}
+.hero-win svg{stroke:var(--gold);filter:drop-shadow(0 0 10px rgba(255,209,102,.65))}
+.hero-win .trophy-body{animation:trophyFloat 2.4s ease-in-out infinite;transform-origin:12px 12px}
+.hero-win .spark-1{animation:sparkTwinkle 1.6s ease-in-out infinite;transform-origin:center}
+.hero-win .spark-2{animation:sparkTwinkle 1.6s ease-in-out infinite .55s;transform-origin:center}
+@keyframes trophyFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-2.5px) rotate(-3deg)}
+}
+@keyframes sparkTwinkle{
+  0%,100%{opacity:.25;transform:scale(.7)}
+  50%{opacity:1;transform:scale(1.25)}
+}
+
+/* Draw Hero */
+.hero-draw{
+  background:radial-gradient(circle at 30% 25%, rgba(79,209,255,.32), rgba(160,107,255,.18));
+  border-color:rgba(79,209,255,.55);
+  box-shadow:0 12px 32px rgba(79,209,255,.25), inset 0 1px 1px rgba(255,255,255,.45);
+}
+.hero-draw::before{border-color:rgba(79,209,255,.5)}
+.hero-draw svg{stroke:var(--o);filter:drop-shadow(0 0 10px rgba(79,209,255,.65))}
+.hero-draw .draw-ring{animation:drawSpin 6s linear infinite;transform-origin:12px 12px}
+.hero-draw .draw-bars{animation:drawTilt 2.4s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes drawSpin{to{transform:rotate(360deg)}}
+@keyframes drawTilt{
+  0%,100%{transform:rotate(0deg)}
+  25%{transform:rotate(-8deg)}
+  75%{transform:rotate(8deg)}
+}
+
+/* Lose Hero */
+.hero-lose{
+  background:radial-gradient(circle at 30% 25%, rgba(255,93,122,.32), rgba(160,107,255,.16));
+  border-color:rgba(255,93,122,.5);
+  box-shadow:0 12px 32px rgba(255,93,122,.24), inset 0 1px 1px rgba(255,255,255,.35);
+}
+.hero-lose::before{border-color:rgba(255,93,122,.45)}
+.hero-lose svg{stroke:#ff8fa3;filter:drop-shadow(0 0 10px rgba(255,93,122,.6))}
+.hero-lose .lose-face{animation:loseSigh 2.8s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes loseSigh{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(2px) rotate(-4deg)}
+}
+
+/* Next Starter Pill */
+.next-starter-note{
+  font-size:13.5px;color:#ffe9a8;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,209,102,.2);
+  padding:10px 12px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.next-arrow-badge{
+  width:22px;height:22px;border-radius:7px;
+  background:rgba(255,209,102,.18);
+  display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.next-arrow-badge svg{
+  width:14px;height:14px;fill:none;stroke:var(--gold);stroke-width:2.4;
+  stroke-linecap:round;stroke-linejoin:round;
+  animation:nextSlide 1.5s ease-in-out infinite;
+}
+@keyframes nextSlide{
+  0%,100%{transform:translateX(-1.5px)}
+  50%{transform:translateX(2px)}
+}
 
 /* chat */
 .chat-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
@@ -187,10 +504,62 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   <div class="card">
     <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
     <p class="sub" id="menuGreeting"></p>
-    <button class="btn btn-primary" data-action="goDifficulty">🤖 কম্পিউটারের সাথে খেলুন</button>
-    <button class="btn btn-primary" data-action="startLocal">👥 বন্ধুর সাথে (একই ডিভাইসে)</button>
-    <button class="btn btn-primary" data-action="goOnline">🌐 অনলাইনে বন্ধুর সাথে খেলুন</button>
-    <button class="btn btn-info" data-action="goProfile">👤 প্রোফাইল</button>
+
+    <!-- Play with Computer -->
+    <button class="btn btn-primary btn-shine" data-action="goDifficulty" data-tap-anim="1">
+      <span class="btn-icon-box anim-bot">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="8" width="18" height="12" rx="4"/>
+          <g class="bot-antenna">
+            <line x1="12" y1="8" x2="12" y2="4"/>
+            <circle cx="12" cy="3" r="1.3" fill="#fff"/>
+          </g>
+          <circle class="bot-eye" cx="9" cy="14" r="1.4" fill="#fff" stroke="none"/>
+          <circle class="bot-eye" cx="15" cy="14" r="1.4" fill="#fff" stroke="none"/>
+          <line x1="1" y1="13" x2="3" y2="13"/>
+          <line x1="21" y1="13" x2="23" y2="13"/>
+        </svg>
+      </span>
+      <span class="btn-label">কম্পিউটারের সাথে খেলুন</span>
+    </button>
+
+    <!-- Play with Friend Local -->
+    <button class="btn btn-primary btn-shine" data-action="startLocal" data-tap-anim="1">
+      <span class="btn-icon-box anim-duo">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
+          <g class="duo-back">
+            <circle cx="16.5" cy="8.5" r="2.6"/>
+            <path d="M17 13.5a4 4 0 0 1 4 4V19"/>
+          </g>
+        </svg>
+      </span>
+      <span class="btn-label">বন্ধুর সাথে (একই ডিভাইসে)</span>
+    </button>
+
+    <!-- Play Online -->
+    <button class="btn btn-primary btn-shine" data-action="goOnline" data-tap-anim="1">
+      <span class="btn-icon-box anim-globe">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <ellipse class="globe-ring" cx="12" cy="12" rx="4" ry="9"/>
+        </svg>
+      </span>
+      <span class="btn-label">অনলাইনে বন্ধুর সাথে খেলুন</span>
+    </button>
+
+    <!-- Profile -->
+    <button class="btn btn-info btn-shine" data-action="goProfile" data-tap-anim="1">
+      <span class="btn-icon-box anim-user">
+        <svg viewBox="0 0 24 24">
+          <circle class="user-head" cx="12" cy="8" r="4"/>
+          <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
+        </svg>
+      </span>
+      <span class="btn-label">প্রোফাইল</span>
+    </button>
   </div>
 </section>
 
@@ -198,10 +567,55 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <section id="screen-difficulty" class="screen">
   <div class="card">
     <h2 class="title">লেভেল বেছে নিন</h2>
-    <button class="btn btn-primary" data-action="startComputer" data-level="easy">😊 সহজ</button>
-    <button class="btn btn-primary" data-action="startComputer" data-level="medium">🧠 মাঝারি</button>
-    <button class="btn btn-primary" data-action="startComputer" data-level="hard">🔥 কঠিন (অজয়)</button>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+
+    <!-- Easy -->
+    <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="easy" data-tap-anim="1">
+      <span class="btn-icon-box anim-smile">
+        <svg class="smile-face" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="M8.5 14.2a4.2 4.2 0 0 0 7 0"/>
+          <circle cx="9" cy="9.5" r="1" fill="#fff" stroke="none"/>
+          <circle cx="15" cy="9.5" r="1" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label">সহজ</span>
+    </button>
+
+    <!-- Medium -->
+    <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="medium" data-tap-anim="1">
+      <span class="btn-icon-box anim-brain">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 4.5a3.5 3.5 0 0 0-6.5 1.8A3.2 3.2 0 0 0 4 11.8a3.5 3.5 0 0 0 2 6.2A3 3 0 0 0 12 19.5"/>
+          <path d="M12 4.5a3.5 3.5 0 0 1 6.5 1.8A3.2 3.2 0 0 1 20 11.8a3.5 3.5 0 0 1-2 6.2A3 3 0 0 1 12 19.5"/>
+          <line x1="12" y1="4.5" x2="12" y2="19.5"/>
+          <circle class="brain-spark" cx="8.5" cy="11" r="1.2" fill="#fff" stroke="none"/>
+          <circle class="brain-spark" cx="15.5" cy="13" r="1.2" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label">মাঝারি</span>
+    </button>
+
+    <!-- Hard -->
+    <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="hard" data-tap-anim="1">
+      <span class="btn-icon-box anim-fire">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2.5c1.5 3.5 6 5.5 6 11a6 6 0 0 1-12 0c0-2.5 1.3-4.6 2.8-6.2-.2 1.8.8 3.2 2.2 3.2-.5-2.6.2-5.4 1-8z"/>
+          <path class="fire-inner" d="M12 13c1.5 1.5 2.5 2.7 2.5 4.3a2.5 2.5 0 0 1-5 0c0-1.6 1-2.8 2.5-4.3z"/>
+        </svg>
+      </span>
+      <span class="btn-label">কঠিন (অজয়)</span>
+    </button>
+
+    <!-- Back -->
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label">ফিরে যান</span>
+    </button>
   </div>
 </section>
 
@@ -209,12 +623,47 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 <section id="screen-online" class="screen">
   <div class="card">
     <h2 class="title">অনলাইন খেলা</h2>
-    <button class="btn btn-primary" data-action="createRoom">➕ নতুন রুম তৈরি করুন</button>
+
+    <!-- Create Room -->
+    <button class="btn btn-primary btn-shine" data-action="createRoom" data-tap-anim="1">
+      <span class="btn-icon-box anim-plus">
+        <svg class="plus-cross" viewBox="0 0 24 24">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </span>
+      <span class="btn-label">নতুন রুম তৈরি করুন</span>
+    </button>
+
     <div class="divider">অথবা</div>
     <input id="joinCodeInput" class="input code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
-    <button class="btn btn-secondary" data-action="joinRoom">🚪 রুমে যোগ দিন</button>
+
+    <!-- Join Room -->
+    <button class="btn btn-secondary btn-shine" data-action="joinRoom" data-tap-anim="1">
+      <span class="btn-icon-box anim-door">
+        <svg viewBox="0 0 24 24">
+          <path d="M14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+          <g class="door-arrow">
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </g>
+        </svg>
+      </span>
+      <span class="btn-label">রুমে যোগ দিন</span>
+    </button>
+
     <p class="hint" id="onlineMsg"></p>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+
+    <!-- Back -->
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label">ফিরে যান</span>
+    </button>
   </div>
 </section>
 
@@ -224,12 +673,57 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
     <h2 class="title">বন্ধুর জন্য অপেক্ষা</h2>
     <p class="sub">কোড বা লিংকটি বন্ধুকে পাঠান</p>
     <div class="room-code-box" id="roomCodeDisplay">----</div>
-    <button class="btn btn-secondary" id="copyBtn" data-action="copyRoomCode">📋 কোড কপি করুন</button>
-    <button class="btn btn-secondary" id="linkBtn" data-action="copyRoomLink">🔗 লিংক কপি করুন</button>
-    <button class="btn btn-info" id="shareBtn" data-action="shareRoomLink" hidden>📤 শেয়ার করুন</button>
+
+    <!-- Animated Copy Code Button -->
+    <button class="btn btn-secondary btn-shine" id="copyBtn" data-action="copyRoomCode">
+      <span class="btn-icon-box anim-copy">
+        <svg class="icon-main" viewBox="0 0 24 24">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect class="copy-front" x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+        </svg>
+        <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      </span>
+      <span class="btn-label">কোড কপি করুন</span>
+    </button>
+
+    <!-- Animated Copy Link Button -->
+    <button class="btn btn-secondary btn-shine" id="linkBtn" data-action="copyRoomLink">
+      <span class="btn-icon-box anim-link">
+        <svg class="icon-main" viewBox="0 0 24 24">
+          <path class="link-part1" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path class="link-part2" d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      </span>
+      <span class="btn-label">লিংক কপি করুন</span>
+    </button>
+
+    <!-- Animated Share Link Button -->
+    <button class="btn btn-info btn-shine" id="shareBtn" data-action="shareRoomLink" hidden>
+      <span class="btn-icon-box anim-share">
+        <svg class="icon-main" viewBox="0 0 24 24">
+          <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+          <g class="share-arrow">
+            <polyline points="16 6 12 2 8 6"/>
+            <line x1="12" y1="2" x2="12" y2="15"/>
+          </g>
+        </svg>
+        <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+      </span>
+      <span class="btn-label">শেয়ার করুন</span>
+    </button>
+
     <div class="link-preview" id="linkPreview"></div>
     <div class="loader"></div>
-    <button class="btn btn-ghost" data-action="cancelRoom">বাতিল করুন</button>
+    <button class="btn btn-ghost" data-action="cancelRoom" data-tap-anim="1">
+      <span class="btn-icon-box anim-close">
+        <svg class="close-x" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </span>
+      <span class="btn-label">বাতিল করুন</span>
+    </button>
   </div>
 </section>
 
@@ -238,16 +732,53 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   <div class="card">
     <h2 class="title">প্রোফাইল</h2>
     <input id="profileNameInput" class="input" maxlength="15" placeholder="আপনার নাম">
-    <button class="btn btn-secondary" data-action="updateProfileName">নাম পরিবর্তন করুন</button>
-    <p class="hint" id="profileMsg"></p>
+
+    <!-- Update Name -->
+    <button class="btn btn-secondary btn-shine" data-action="updateProfileName" data-tap-anim="1">
+      <span class="btn-icon-box anim-edit">
+        <svg viewBox="0 0 24 24">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path class="edit-pen" d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </span>
+      <span class="btn-label">নাম পরিবর্তন করুন</span>
+    </button>
+
+    <div class="hint" id="profileMsg"></div>
+
     <div class="stats-grid">
       <div class="stat-box"><span id="statWins">0</span><small>জয়</small></div>
       <div class="stat-box"><span id="statLosses">0</span><small>হার</small></div>
       <div class="stat-box"><span id="statDraws">0</span><small>ড্র</small></div>
     </div>
     <p class="sub">মোট খেলা: <b id="statTotal">0</b> · জয়ের হার: <b id="statWinrate">0%</b></p>
-    <button class="btn btn-ghost" data-action="resetStats">🗑️ পরিসংখ্যান রিসেট</button>
-    <button class="btn btn-ghost" data-action="goMenu">← ফিরে যান</button>
+
+    <!-- Reset Stats -->
+    <button class="btn btn-ghost" data-action="resetStats" data-tap-anim="1">
+      <span class="btn-icon-box anim-trash">
+        <svg viewBox="0 0 24 24">
+          <g class="trash-lid">
+            <polyline points="3 6 5 6 21 6"/>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+          </g>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+          <line x1="10" y1="11" x2="10" y2="17"/>
+          <line x1="14" y1="11" x2="14" y2="17"/>
+        </svg>
+      </span>
+      <span class="btn-label">পরিসংখ্যান রিসেট</span>
+    </button>
+
+    <!-- Back -->
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label">ফিরে যান</span>
+    </button>
   </div>
 </section>
 
@@ -288,12 +819,34 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   <!-- result -->
   <div class="result-overlay" id="resultOverlay">
     <div class="result-card">
-      <div class="result-emoji" id="resultEmoji">🎉</div>
+      <div class="result-hero hero-win" id="resultHero"></div>
       <h2 id="resultText"></h2>
-      <p class="next-starter-note" id="nextStarterNote"></p>
+      <div class="next-starter-note">
+        <span class="next-arrow-badge">
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="13 6 19 12 13 18"/></svg>
+        </span>
+        <span id="nextStarterText"></span>
+      </div>
       <div class="btn-row">
-        <button class="btn btn-primary" data-action="playAgain">🔁 আবার খেলো</button>
-        <button class="btn btn-ghost" data-action="exitGame">🏠 মেনু</button>
+        <button class="btn btn-primary btn-shine" data-action="playAgain" data-tap-anim="1">
+          <span class="btn-icon-box anim-replay">
+            <svg class="replay-spin" viewBox="0 0 24 24">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+          </span>
+          <span class="btn-label">আবার খেলো</span>
+        </button>
+        <button class="btn btn-ghost" data-action="exitGame" data-tap-anim="1">
+          <span class="btn-icon-box anim-home">
+            <svg viewBox="0 0 24 24">
+              <path class="home-roof" d="M3 10.5L12 3l9 7.5"/>
+              <path d="M5 9.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V9.5"/>
+              <path d="M9.5 20.5v-5.5h5v5.5"/>
+            </svg>
+          </span>
+          <span class="btn-label">মেনু</span>
+        </button>
       </div>
     </div>
   </div>
@@ -301,10 +854,25 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   <!-- opponent left -->
   <div class="result-overlay left-overlay" id="leftOverlay">
     <div class="result-card">
-      <div class="result-emoji">🚪</div>
+      <div class="result-hero hero-lose">
+        <svg viewBox="0 0 24 24">
+          <path d="M10 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+      </div>
       <h2>প্রতিপক্ষ গেম ছেড়ে চলে গেছে</h2>
       <p class="next-starter-note">আর খেলা সম্ভব নয়।</p>
-      <button class="btn btn-primary" data-action="exitGame">🏠 মেনুতে ফিরুন</button>
+      <button class="btn btn-primary btn-shine" data-action="exitGame" data-tap-anim="1">
+        <span class="btn-icon-box anim-home">
+          <svg viewBox="0 0 24 24">
+            <path class="home-roof" d="M3 10.5L12 3l9 7.5"/>
+            <path d="M5 9.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V9.5"/>
+            <path d="M9.5 20.5v-5.5h5v5.5"/>
+          </svg>
+        </span>
+        <span class="btn-label">মেনুতে ফিরুন</span>
+      </button>
     </div>
   </div>
 
@@ -635,11 +1203,45 @@ function updateTurn(){
     $('scorePill').textContent = `${sessionScore[left]} : ${sessionScore[right]}` + (sessionScore.D ? ` · ড্র ${sessionScore.D}` : '');
   }
 }
-function showResultOverlay(emoji, text, nextName){
+const RESULT_HERO_ICONS = {
+  win: `
+    <svg viewBox="0 0 24 24">
+      <g class="trophy-body">
+        <path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/>
+        <path d="M8 6H5.5a1.5 1.5 0 0 0-1.5 1.5v.5A3 3 0 0 0 7 11h1"/>
+        <path d="M16 6h2.5A1.5 1.5 0 0 1 20 7.5v.5A3 3 0 0 1 17 11h-1"/>
+        <line x1="12" y1="13" x2="12" y2="17"/>
+        <path d="M8 20h8"/>
+        <path d="M9.5 17h5"/>
+      </g>
+      <circle class="spark-1" cx="4.5" cy="3.5" r="1.1" fill="#ffd166" stroke="none"/>
+      <circle class="spark-2" cx="19.5" cy="3.5" r="1.1" fill="#ffd166" stroke="none"/>
+    </svg>`,
+  draw: `
+    <svg viewBox="0 0 24 24">
+      <circle class="draw-ring" cx="12" cy="12" r="9" stroke-dasharray="6 4"/>
+      <g class="draw-bars">
+        <line x1="8" y1="10" x2="16" y2="10"/>
+        <line x1="8" y1="14" x2="16" y2="14"/>
+      </g>
+    </svg>`,
+  lose: `
+    <svg viewBox="0 0 24 24">
+      <g class="lose-face">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M8.5 16a4.2 4.2 0 0 1 7 0"/>
+        <line x1="8.5" y1="9" x2="10.5" y2="10.5"/>
+        <line x1="15.5" y1="9" x2="13.5" y2="10.5"/>
+      </g>
+    </svg>`
+};
+function showResultOverlay(type, text, nextName){
   resultShown = true;
-  $('resultEmoji').textContent = emoji;
+  const hero = $('resultHero');
+  hero.className = 'result-hero hero-' + type;
+  hero.innerHTML = RESULT_HERO_ICONS[type] || RESULT_HERO_ICONS.win;
   $('resultText').textContent = text;
-  $('nextStarterNote').textContent = `➡️ পরের রাউন্ডে প্রথমে খেলবে: ${nextName}`;
+  $('nextStarterText').textContent = `পরের রাউন্ডে প্রথমে খেলবে: ${nextName}`;
   $('resultOverlay').classList.add('show');
 }
 function launchConfetti(){
@@ -687,16 +1289,16 @@ function endRound(r){
     saveProfile();
   }
 
-  let emoji, text;
+  let heroType, text;
   if(w === 'draw'){
-    emoji = '🤝'; text = 'ড্র হয়েছে!'; playMelody('draw');
+    heroType = 'draw'; text = 'ড্র হয়েছে!'; playMelody('draw');
   } else if(mode === 'computer'){
-    if(winRole === 'HUMAN'){ emoji = '🎉'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
-    else { emoji = '😢'; text = 'কম্পিউটার জিতেছে'; playMelody('lose'); }
+    if(winRole === 'HUMAN'){ heroType = 'win'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
+    else { heroType = 'lose'; text = 'কম্পিউটার জিতেছে'; playMelody('lose'); }
   } else {
-    emoji = '🏆'; text = `${nameOf(winRole)} জিতেছে!`; playMelody('win'); launchConfetti();
+    heroType = 'win'; text = `${nameOf(winRole)} জিতেছে!`; playMelody('win'); launchConfetti();
   }
-  showResultOverlay(emoji, text, `${nameOf(nextXRole)} (X)`);
+  showResultOverlay(heroType, text, `${nameOf(nextXRole)} (X)`);
   updateTurn();
 }
 function beginRound(){
@@ -758,6 +1360,14 @@ function exitGame(){
 }
 
 /* ================= NAVIGATION / PROFILE ACTIONS ================= */
+function setProfileStatus(type, text){
+  const box = $('profileMsg');
+  if(!text){ box.innerHTML = ''; return; }
+  const icon = type === 'ok'
+    ? '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'
+    : '<svg viewBox="0 0 24 24"><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
+  box.innerHTML = `<span class="status-badge ${type}">${icon}<span>${escapeHtml(text)}</span></span>`;
+}
 function saveName(){
   const n = $('nameInput').value.trim();
   if(!n){ $('nameMsg').textContent = 'একটি নাম লিখুন'; return; }
@@ -771,23 +1381,24 @@ function goDifficulty(){ showScreen('screen-difficulty'); }
 function goOnline(){ setOnlineMsg(''); showScreen('screen-online'); }
 function goProfile(){
   $('profileNameInput').value = profile.name;
-  $('profileMsg').textContent = '';
+  setProfileStatus('', '');
   renderStats();
   showScreen('screen-profile');
 }
 function updateProfileName(){
   const n = $('profileNameInput').value.trim();
-  if(!n){ $('profileMsg').textContent = 'নাম খালি রাখা যাবে না'; return; }
+  if(!n){ setProfileStatus('warn', 'নাম খালি রাখা যাবে না'); return; }
   profile.name = n;
   saveProfile();
   renderMenu();
-  $('profileMsg').textContent = '✅ নাম আপডেট হয়েছে';
+  setProfileStatus('ok', 'নাম আপডেট হয়েছে');
 }
 function resetStats(){
   if(!confirm('পরিসংখ্যান মুছে ফেলতে চান?')) return;
   profile.wins = 0; profile.losses = 0; profile.draws = 0;
   saveProfile();
   renderStats();
+  setProfileStatus('ok', 'পরিসংখ্যান রিসেট হয়েছে');
 }
 
 /* ================= COPY / SHARE / LINK ================= */
@@ -807,8 +1418,18 @@ function copyText(text, cb){
   } else fallback();
 }
 function flashBtn(btn, okText, ok, origText){
-  btn.textContent = ok ? okText : '❌ কপি হয়নি';
-  setTimeout(() => { btn.textContent = origText; }, 1600);
+  const lbl = btn.querySelector('.btn-label');
+  clearTimeout(btn._t);
+  if(ok){
+    btn.classList.add('is-done');
+    if(lbl) lbl.textContent = okText;
+  } else {
+    if(lbl) lbl.textContent = '❌ কপি হয়নি';
+  }
+  btn._t = setTimeout(() => {
+    btn.classList.remove('is-done');
+    if(lbl) lbl.textContent = origText;
+  }, 1700);
 }
 function buildRoomLink(code){
   const base = location.href.split('#')[0].split('?')[0];
@@ -817,23 +1438,26 @@ function buildRoomLink(code){
 function copyRoomCode(){
   if(!onlineCode) return;
   const btn = $('copyBtn');
-  copyText(onlineCode, ok => flashBtn(btn, '✅ কপি হয়েছে', ok, '📋 কোড কপি করুন'));
+  copyText(onlineCode, ok => flashBtn(btn, 'কপি হয়েছে!', ok, 'কোড কপি করুন'));
 }
 function copyRoomLink(){
   if(!onlineCode) return;
   const btn = $('linkBtn');
   const link = buildRoomLink(onlineCode);
   $('linkPreview').textContent = link;
-  copyText(link, ok => flashBtn(btn, '✅ লিংক কপি হয়েছে', ok, '🔗 লিংক কপি করুন'));
+  copyText(link, ok => flashBtn(btn, 'লিংক কপি হয়েছে!', ok, 'লিংক কপি করুন'));
 }
 function shareRoomLink(){
   if(!onlineCode) return;
+  const btn = $('shareBtn');
   const link = buildRoomLink(onlineCode);
   if(navigator.share){
     navigator.share({
       title: 'XO খেলা',
       text: `আমার সাথে XO খেলুন! রুম কোড: ${onlineCode}`,
       url: link
+    }).then(() => {
+      flashBtn(btn, 'শেয়ার হয়েছে!', true, 'শেয়ার করুন');
     }).catch(() => {});
   } else {
     copyRoomLink();
@@ -1103,13 +1727,13 @@ function showOnlineResult(room){
   else profile.losses++;
   saveProfile();
 
-  let emoji, text;
-  if(w === 'draw'){ emoji = '🤝'; text = 'ড্র হয়েছে!'; playMelody('draw'); }
-  else if(winRole === myRole){ emoji = '🎉'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
-  else { emoji = '😢'; text = `${nameOf(winRole)} জিতেছে`; playMelody('lose'); }
+  let heroType, text;
+  if(w === 'draw'){ heroType = 'draw'; text = 'ড্র হয়েছে!'; playMelody('draw'); }
+  else if(winRole === myRole){ heroType = 'win'; text = 'আপনি জিতেছেন!'; playMelody('win'); launchConfetti(); }
+  else { heroType = 'lose'; text = `${nameOf(winRole)} জিতেছে`; playMelody('lose'); }
 
   const nxt = room.nextXRole || (w === 'draw' ? otherRole(rx) : winRole);
-  showResultOverlay(emoji, text, `${nameOf(nxt)} (X)`);
+  showResultOverlay(heroType, text, `${nameOf(nxt)} (X)`);
   updateTurn();
 }
 function makeOnlineMove(i){
@@ -1253,6 +1877,13 @@ function showChatToast(msg){
 }
 
 /* ================= ACTIONS / EVENTS ================= */
+function triggerTapWiggle(el){
+  el.classList.remove('is-tapped');
+  void el.offsetWidth;
+  el.classList.add('is-tapped');
+  clearTimeout(el._tapT);
+  el._tapT = setTimeout(() => el.classList.remove('is-tapped'), 500);
+}
 function onDocClick(e){
   const cell = e.target.closest && e.target.closest('#board .cell');
   if(cell){
@@ -1262,7 +1893,14 @@ function onDocClick(e){
   const el = e.target.closest && e.target.closest('[data-action]');
   if(!el) return;
   const fn = ACTIONS[el.dataset.action];
-  if(typeof fn === 'function') fn(el);
+  if(typeof fn !== 'function') return;
+
+  if(el.dataset.tapAnim === '1'){
+    triggerTapWiggle(el);
+    setTimeout(() => fn(el), 240);
+    return;
+  }
+  fn(el);
 }
 const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile,

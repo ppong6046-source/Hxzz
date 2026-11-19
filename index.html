@@ -80,6 +80,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .btn-secondary{background:linear-gradient(135deg,#7c5cff,#4fd1ff)}
 .btn-info{background:linear-gradient(135deg,#4fd1ff,#4a8bff)}
 .btn-emerald{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.btn-danger{background:linear-gradient(135deg,#ef4444,#ec4899)}
 .btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:none}
 .btn-row{display:flex;gap:10px}
 .btn-row .btn{flex:1;padding:14px 12px;font-size:15px}
@@ -163,42 +164,44 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .friends-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:99px}
 
 .friend-item{
-  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
   background:rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.15);
-  border-radius:18px;padding:11px 12px;
+  border-radius:18px;padding:10px 10px;
   animation:pop .3s ease;
 }
-.friend-left{display:flex;align-items:center;gap:10px;min-width:0;text-align:left}
+.friend-left{display:flex;align-items:center;gap:9px;min-width:0;text-align:left;flex:1}
 .friend-avatar{
-  width:40px;height:40px;border-radius:14px;flex-shrink:0;
+  width:38px;height:38px;border-radius:13px;flex-shrink:0;
   background:linear-gradient(135deg,#7c5cff,#ff5d7a);
-  display:grid;place-items:center;font-weight:800;font-size:16px;position:relative;
+  display:grid;place-items:center;font-weight:800;font-size:15px;position:relative;
   box-shadow:0 4px 12px rgba(0,0,0,.25);
 }
 .presence-dot{
   position:absolute;bottom:-2px;right:-2px;
-  width:12px;height:12px;border-radius:50%;
+  width:11px;height:11px;border-radius:50%;
   border:2px solid #23194d;background:#64748b;
 }
 .presence-dot.online{background:#22c55e;box-shadow:0 0 8px #22c55e}
 .friend-meta{min-width:0}
-.friend-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.friend-sub{font-size:11.5px;opacity:.75;display:flex;align-items:center;gap:5px}
+.friend-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friend-sub{font-size:11px;opacity:.75;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .friend-sub.on{color:#86efac;opacity:1}
 
-.friend-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.friend-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .f-act-btn{
-  height:36px;padding:0 11px;border-radius:12px;border:none;
-  font:inherit;font-size:12.5px;font-weight:700;color:#fff;
-  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;
-  position:relative;transition:transform .15s,opacity .2s;
+  height:34px;padding:0 10px;border-radius:11px;border:none;
+  font:inherit;font-size:12px;font-weight:700;color:#fff;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  position:relative;transition:transform .15s,opacity .2s,background .2s;
 }
 .f-act-btn:active{transform:scale(.94)}
 .f-act-btn:disabled{opacity:.42;cursor:not-allowed}
-.f-act-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.f-btn-chat{background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);color:#bae6fd;padding:0 10px}
+.f-act-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.f-btn-chat{background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);color:#bae6fd;padding:0 9px}
 .f-btn-invite{background:linear-gradient(135deg,#ff5d7a,#ff8a5c);box-shadow:0 4px 12px rgba(255,93,122,.35)}
+.f-btn-unfriend{background:rgba(239,68,68,.18);border:1px solid rgba(248,113,113,.4);color:#fca5a5;padding:0 8px}
+.f-btn-unfriend:hover{background:rgba(239,68,68,.32)}
 .f-btn-accept{background:linear-gradient(135deg,#10b981,#059669)}
 .f-btn-decline{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:0 9px}
 .unread-dot{
@@ -213,7 +216,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   font-size:13px;opacity:.75;line-height:1.5;
 }
 
-/* Incoming Game Invite Modal */
+/* Modals (Game Invite & Unfriend Confirmation) */
 .invite-overlay{
   position:fixed;inset:0;z-index:260;
   background:rgba(6,4,20,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -1119,7 +1122,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   </div>
 </section>
 
-<!-- SHARED CHAT DRAWER (Used both in-game & with Friends outside game) -->
+<!-- SHARED CHAT DRAWER -->
 <div class="chat-drawer" id="chatDrawer">
   <div class="chat-overlay" data-action="closeChat"></div>
   <div class="chat-panel">
@@ -1198,6 +1201,26 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   </div>
 </div>
 
+<!-- UNFRIEND CONFIRMATION MODAL -->
+<div class="invite-overlay" id="unfriendOverlay">
+  <div class="invite-card" style="border-color:rgba(255,93,122,.45)">
+    <div class="result-hero hero-lose">
+      <svg viewBox="0 0 24 24">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+        <circle cx="8.5" cy="7" r="4"/>
+        <line x1="18" y1="8" x2="23" y2="13"/>
+        <line x1="23" y1="8" x2="18" y2="13"/>
+      </svg>
+    </div>
+    <h2>আনফ্রেন্ড করবেন?</h2>
+    <p class="sub" id="unfriendConfirmText">আপনি কি নিশ্চিতভাবে বন্ধু তালিকা থেকে সরাতে চান?</p>
+    <div class="btn-row">
+      <button class="btn btn-danger" data-action="confirmUnfriend">আনফ্রেন্ড</button>
+      <button class="btn btn-ghost" data-action="closeUnfriendModal">বাতিল</button>
+    </div>
+  </div>
+</div>
+
 <div class="chat-toast anim-chat" id="chatToast" data-action="handleToastClick"></div>
 
 <script>
@@ -1270,7 +1293,7 @@ let toastTimer = null;
 let pendingToastAction = null;
 let replyingTo = null;         // { key, name, text }
 const renderedKeys = new Set();
-const chatCache = new Map();   // key -> { key, name, text, mine }
+const chatCache = new Map();
 let pendingRoomCode = null;
 
 // friends system
@@ -1282,6 +1305,7 @@ const friendStatusRefs = {};
 const friendDmUnread = {};
 const friendDmRefs = {};
 let incomingInvite = null;
+let pendingUnfriend = null;    // { id, name }
 
 /* ================= HELPERS ================= */
 const $ = id => document.getElementById(id);
@@ -1432,6 +1456,12 @@ function initSocialSystem(){
       }
     });
 
+    // If currently chatting with someone who just unfriended us, close chat smoothly
+    if(chatOpen && chatContext === 'dm' && activeDmFriend && !newMap[activeDmFriend.id]){
+      closeChat();
+      setFriendStatus('warn', 'বন্ধু তালিকা থেকে সরানো হয়েছে');
+    }
+
     friendsMap = newMap;
     Object.keys(friendsMap).forEach(fid => {
       watchFriendOnline(fid);
@@ -1514,7 +1544,7 @@ function updateFriendBadges(){
   }
 }
 
-/* ================= FRIENDS SCREEN ACTIONS ================= */
+/* ================= FRIENDS SCREEN & UNFRIEND ACTIONS ================= */
 function setFriendStatus(type, text){
   const box = $('friendMsg');
   if(!box) return;
@@ -1606,6 +1636,32 @@ async function declineFriendRequest(el){
   if(!fid || !db) return;
   await db.ref(`users/${profile.id}/requests/${fid}`).remove().catch(() => {});
 }
+
+function askUnfriend(el){
+  const fid = el && el.dataset.fid;
+  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  if(!fid) return;
+  pendingUnfriend = { id: fid, name: fname };
+  $('unfriendConfirmText').textContent = `আপনি কি নিশ্চিতভাবে ${fname}-কে আনফ্রেন্ড করতে চান?`;
+  $('unfriendOverlay').classList.add('show');
+}
+function closeUnfriendModal(){
+  pendingUnfriend = null;
+  $('unfriendOverlay').classList.remove('show');
+}
+async function confirmUnfriend(){
+  if(!pendingUnfriend || !db) return;
+  const { id: fid, name: fname } = pendingUnfriend;
+  closeUnfriendModal();
+  try{
+    await db.ref(`users/${profile.id}/friends/${fid}`).remove();
+    await db.ref(`users/${fid}/friends/${profile.id}`).remove();
+    setFriendStatus('ok', `${fname}-কে আনফ্রেন্ড করা হয়েছে`);
+  }catch(e){
+    setFriendStatus('warn', 'আনফ্রেন্ড করা যায়নি, আবার চেষ্টা করুন');
+  }
+}
+
 function renderFriendsUI(){
   const fBox = $('friendsListBox');
   const rBox = $('requestsListBox');
@@ -1640,6 +1696,9 @@ function renderFriendsUI(){
             <button class="f-act-btn f-btn-invite" data-action="inviteFriendToGame" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" ${isOnline ? '' : 'disabled'}>
               <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               <span>ইনভাইট</span>
+            </button>
+            <button class="f-act-btn f-btn-unfriend" data-action="askUnfriend" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" aria-label="আনফ্রেন্ড">
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
             </button>
           </div>
         </div>
@@ -2802,6 +2861,7 @@ const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
   acceptFriendRequest, declineFriendRequest,
+  askUnfriend, closeUnfriendModal, confirmUnfriend,
   openFriendChat, inviteFriendToGame, acceptGameInvite, declineGameInvite,
   startComputer, startLocal, createRoom, joinRoom, cancelRoom,
   copyRoomCode, copyRoomLink, shareRoomLink,

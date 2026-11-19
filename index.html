@@ -64,19 +64,21 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 /* screens */
 .screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;padding:20px;overflow:hidden}
 .screen.active{display:flex}
-.card{width:min(92vw,400px);padding:28px 22px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px;text-align:center;animation:pop .5s ease}
+.card{width:min(92vw,410px);max-height:92dvh;overflow-y:auto;padding:26px 20px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:13px;text-align:center;animation:pop .5s ease}
+.card::-webkit-scrollbar{width:0;height:0}
 @keyframes pop{from{opacity:0;transform:scale(.94) translateY(10px)}to{opacity:1;transform:none}}
 .logo{width:130px;height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 12px rgba(255,93,122,.55))}
 .title{font-size:22px;font-weight:700}
 .sub{opacity:.85;font-size:15px}
 .hint{font-size:13px;color:#ffb3c1;min-height:22px;display:flex;align-items:center;justify-content:center;gap:6px}
 .divider{font-size:13px;opacity:.6}
-.btn{font-family:inherit;font-size:16px;font-weight:700;padding:15px 18px;border:none;border-radius:18px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .2s,opacity .2s;box-shadow:0 10px 25px rgba(0,0,0,.25);width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden}
+.btn{font-family:inherit;font-size:16px;font-weight:700;padding:15px 18px;border:none;border-radius:18px;color:#fff;cursor:pointer;transition:transform .15s,box-shadow .2s,opacity .2s;box-shadow:0 10px 25px rgba(0,0,0,.25);width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;flex-shrink:0}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5}
 .btn-primary{background:linear-gradient(135deg,#ff5d7a,#ff8a5c)}
 .btn-secondary{background:linear-gradient(135deg,#7c5cff,#4fd1ff)}
 .btn-info{background:linear-gradient(135deg,#4fd1ff,#4a8bff)}
+.btn-emerald{background:linear-gradient(135deg,#10b981,#06b6d4)}
 .btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:none}
 .btn-row{display:flex;gap:10px}
 .btn-row .btn{flex:1;padding:14px 12px;font-size:15px}
@@ -91,6 +93,147 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .stat-box{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;gap:4px;transition:transform .2s,border-color .3s}
 .stat-box span{font-size:26px;font-weight:800}
 .stat-box small{opacity:.75;font-size:12px}
+
+/* Notification pill on menu button */
+.menu-pill-badge{
+  margin-left:auto;
+  min-width:24px;height:24px;padding:0 7px;
+  border-radius:999px;
+  background:#ff3b5c;color:#fff;
+  font-size:12px;font-weight:800;
+  display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 0 12px rgba(255,59,92,.7);
+  animation:pillPulse 1.8s ease-in-out infinite;
+}
+@keyframes pillPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.12)}
+}
+
+/* Friends Screen Styles */
+.my-id-card{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(0,0,0,.26);
+  border:1px dashed rgba(255,209,102,.5);
+  border-radius:18px;padding:11px 14px;
+}
+.my-id-info{text-align:left}
+.my-id-info small{display:block;font-size:11px;opacity:.75}
+.my-id-code{font-size:22px;font-weight:800;letter-spacing:.18em;color:var(--gold)}
+.mini-copy-btn{
+  padding:9px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.12);color:#fff;font:inherit;font-size:12.5px;font-weight:700;
+  cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:all .2s;
+}
+.mini-copy-btn:active{transform:scale(.95)}
+.mini-copy-btn.is-done{background:rgba(34,197,94,.28);border-color:rgba(74,222,128,.6);color:#86efac}
+.mini-copy-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+.friend-add-row{display:flex;gap:8px}
+.friend-add-row .input{
+  text-align:center;font-size:18px;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;padding:12px 10px;
+}
+.friend-add-btn{width:auto;padding:12px 16px;border-radius:16px;font-size:14px;white-space:nowrap}
+
+.friend-tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  background:rgba(0,0,0,.24);padding:5px;border-radius:16px;
+}
+.tab-btn{
+  padding:9px 8px;border-radius:12px;border:none;
+  background:transparent;color:rgba(255,255,255,.72);
+  font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .2s;
+}
+.tab-btn.active{
+  background:linear-gradient(135deg,rgba(124,92,255,.55),rgba(79,209,255,.45));
+  color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.tab-count{
+  padding:1px 6px;border-radius:999px;font-size:11px;
+  background:rgba(255,255,255,.18);color:#fff;
+}
+.tab-count.alert{background:#ff3b5c}
+
+.friends-list{
+  display:flex;flex-direction:column;gap:9px;
+  max-height:34vh;overflow-y:auto;padding-right:2px;
+}
+.friends-list::-webkit-scrollbar{width:4px}
+.friends-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:99px}
+
+.friend-item{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:18px;padding:11px 12px;
+  animation:pop .3s ease;
+}
+.friend-left{display:flex;align-items:center;gap:10px;min-width:0;text-align:left}
+.friend-avatar{
+  width:40px;height:40px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#7c5cff,#ff5d7a);
+  display:grid;place-items:center;font-weight:800;font-size:16px;position:relative;
+  box-shadow:0 4px 12px rgba(0,0,0,.25);
+}
+.presence-dot{
+  position:absolute;bottom:-2px;right:-2px;
+  width:12px;height:12px;border-radius:50%;
+  border:2px solid #23194d;background:#64748b;
+}
+.presence-dot.online{
+  background:#22c55e;
+  box-shadow:0 0 8px #22c55e;
+}
+.friend-meta{min-width:0}
+.friend-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.friend-sub{font-size:11.5px;opacity:.75;display:flex;align-items:center;gap:5px}
+.friend-sub.on{color:#86efac;opacity:1}
+
+.friend-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.f-act-btn{
+  height:36px;padding:0 11px;border-radius:12px;border:none;
+  font:inherit;font-size:12.5px;font-weight:700;color:#fff;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  position:relative;transition:transform .15s,opacity .2s;
+}
+.f-act-btn:active{transform:scale(.94)}
+.f-act-btn:disabled{opacity:.42;cursor:not-allowed}
+.f-act-btn svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.f-btn-chat{background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);color:#bae6fd;padding:0 10px}
+.f-btn-invite{background:linear-gradient(135deg,#ff5d7a,#ff8a5c);box-shadow:0 4px 12px rgba(255,93,122,.35)}
+.f-btn-accept{background:linear-gradient(135deg,#10b981,#059669)}
+.f-btn-decline{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:0 9px}
+.unread-dot{
+  position:absolute;top:-5px;right:-5px;
+  min-width:17px;height:17px;padding:0 4px;border-radius:99px;
+  background:#ff3b5c;color:#fff;font-size:10px;font-weight:800;
+  display:grid;place-items:center;
+}
+.empty-box{
+  padding:22px 12px;border-radius:18px;
+  background:rgba(0,0,0,.18);border:1px dashed rgba(255,255,255,.15);
+  font-size:13px;opacity:.75;line-height:1.5;
+}
+
+/* Incoming Game Invite Modal */
+.invite-overlay{
+  position:fixed;inset:0;z-index:260;
+  background:rgba(6,4,20,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .28s;
+}
+.invite-overlay.show{opacity:1;pointer-events:auto}
+.invite-card{
+  width:min(88vw,350px);padding:24px 20px;border-radius:26px;
+  background:rgba(28,20,58,.96);border:1px solid rgba(79,209,255,.45);
+  box-shadow:0 20px 50px rgba(0,0,0,.5);
+  text-align:center;display:flex;flex-direction:column;gap:12px;
+  transform:scale(.9);transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.invite-overlay.show .invite-card{transform:none}
 
 /* Premium Animated Button Icons */
 .btn-icon-box{
@@ -112,130 +255,71 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 /* Menu Icons Idle Subtle Animations */
 .anim-bot .bot-antenna{animation:botSignal 2.2s ease-in-out infinite;transform-origin:12px 6px}
 .anim-bot .bot-eye{animation:botBlink 3.6s ease-in-out infinite;transform-origin:center}
-@keyframes botSignal{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-1.5px)}
-}
-@keyframes botBlink{
-  0%,44%,52%,100%{transform:scaleY(1)}
-  48%{transform:scaleY(0.15)}
-}
+@keyframes botSignal{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}}
+@keyframes botBlink{0%,44%,52%,100%{transform:scaleY(1)}48%{transform:scaleY(0.15)}}
 
 .anim-duo .duo-back{animation:duoSway 3s ease-in-out infinite}
-@keyframes duoSway{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(1.5px)}
-}
+@keyframes duoSway{0%,100%{transform:translateX(0)}50%{transform:translateX(1.5px)}}
 
 .anim-globe .globe-ring{animation:globeSpin 5s linear infinite;transform-origin:12px 12px}
-@keyframes globeSpin{
-  0%{transform:scaleX(1)}
-  50%{transform:scaleX(0.45)}
-  100%{transform:scaleX(1)}
-}
+@keyframes globeSpin{0%{transform:scaleX(1)}50%{transform:scaleX(0.45)}100%{transform:scaleX(1)}}
+
+.anim-friends .friend-heart{animation:heartBeat 1.8s ease-in-out infinite;transform-origin:18px 6px}
+@keyframes heartBeat{0%,100%{transform:scale(1)}45%{transform:scale(1.25)}}
 
 .anim-user .user-head{animation:userNod 2.8s ease-in-out infinite}
-@keyframes userNod{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-1.3px)}
-}
+@keyframes userNod{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.3px)}}
 
 /* Difficulty, Online, Profile & Result Icons Idle Animations */
 .anim-smile .smile-face{animation:smileFloat 2.6s ease-in-out infinite;transform-origin:center}
-@keyframes smileFloat{
-  0%,100%{transform:translateY(0) scale(1)}
-  50%{transform:translateY(-1.3px) scale(1.06)}
-}
+@keyframes smileFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-1.3px) scale(1.06)}}
 
 .anim-brain .brain-spark{animation:brainPulse 2.2s ease-in-out infinite;transform-origin:center}
-@keyframes brainPulse{
-  0%,100%{opacity:.55;transform:scale(.92)}
-  50%{opacity:1;transform:scale(1.12)}
-}
+@keyframes brainPulse{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.12)}}
 
 .anim-fire .fire-inner{animation:fireFlicker 1.4s ease-in-out infinite;transform-origin:12px 18px}
-@keyframes fireFlicker{
-  0%,100%{transform:scaleY(1) skewX(0deg)}
-  35%{transform:scaleY(1.14) skewX(-5deg)}
-  70%{transform:scaleY(.92) skewX(5deg)}
-}
+@keyframes fireFlicker{0%,100%{transform:scaleY(1) skewX(0deg)}35%{transform:scaleY(1.14) skewX(-5deg)}70%{transform:scaleY(.92) skewX(5deg)}}
 
 .anim-plus .plus-cross{animation:plusPulse 2.8s ease-in-out infinite;transform-origin:12px 12px}
-@keyframes plusPulse{
-  0%,100%{transform:rotate(0deg) scale(1)}
-  50%{transform:rotate(90deg) scale(1.08)}
-}
+@keyframes plusPulse{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(90deg) scale(1.08)}}
 
 .anim-door .door-arrow{animation:doorEnter 2.2s ease-in-out infinite}
-@keyframes doorEnter{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(2.4px)}
-}
+@keyframes doorEnter{0%,100%{transform:translateX(0)}50%{transform:translateX(2.4px)}}
 
 .anim-back .back-arrow{animation:backSlide 2.2s ease-in-out infinite}
-@keyframes backSlide{
-  0%,100%{transform:translateX(0)}
-  50%{transform:translateX(-2.4px)}
-}
+@keyframes backSlide{0%,100%{transform:translateX(0)}50%{transform:translateX(-2.4px)}}
 
 .anim-replay .replay-spin{animation:replayRock 3s ease-in-out infinite;transform-origin:12px 12px}
-@keyframes replayRock{
-  0%,100%{transform:rotate(0deg)}
-  50%{transform:rotate(24deg)}
-}
+@keyframes replayRock{0%,100%{transform:rotate(0deg)}50%{transform:rotate(24deg)}}
 
 .anim-home .home-roof{animation:homeLift 2.6s ease-in-out infinite;transform-origin:center}
-@keyframes homeLift{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-1.3px)}
-}
+@keyframes homeLift{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.3px)}}
 
 .anim-edit .edit-pen{animation:penWrite 2.4s ease-in-out infinite;transform-origin:17px 7px}
-@keyframes penWrite{
-  0%,100%{transform:translate(0,0) rotate(0deg)}
-  40%{transform:translate(-1.5px,1.5px) rotate(-8deg)}
-  70%{transform:translate(1px,-1px) rotate(4deg)}
-}
+@keyframes penWrite{0%,100%{transform:translate(0,0) rotate(0deg)}40%{transform:translate(-1.5px,1.5px) rotate(-8deg)}70%{transform:translate(1px,-1px) rotate(4deg)}}
 
 .anim-trash .trash-lid{animation:trashLidLift 2.6s ease-in-out infinite;transform-origin:5px 7px}
-@keyframes trashLidLift{
-  0%,100%{transform:rotate(0deg)}
-  50%{transform:rotate(-14deg) translateY(-1px)}
-}
+@keyframes trashLidLift{0%,100%{transform:rotate(0deg)}50%{transform:rotate(-14deg) translateY(-1px)}}
 
 .anim-close .close-x{animation:closePulse 2.8s ease-in-out infinite;transform-origin:12px 12px}
-@keyframes closePulse{
-  0%,100%{transform:scale(1) rotate(0deg)}
-  50%{transform:scale(1.12) rotate(90deg)}
-}
+@keyframes closePulse{0%,100%{transform:scale(1) rotate(0deg)}50%{transform:scale(1.12) rotate(90deg)}}
 
-/* Status Pill Badge (Profile Message) */
+/* Status Pill Badge */
 .status-badge{
   display:inline-flex;align-items:center;gap:6px;
   padding:5px 12px;border-radius:999px;
   font-size:12.5px;font-weight:600;
   animation:statusPop .35s cubic-bezier(.34,1.56,.64,1);
 }
-.status-badge.ok{
-  background:rgba(34,197,94,.2);
-  border:1px solid rgba(74,222,128,.45);
-  color:#86efac;
-}
-.status-badge.warn{
-  background:rgba(255,93,122,.2);
-  border:1px solid rgba(255,93,122,.45);
-  color:#ffb3c1;
-}
+.status-badge.ok{background:rgba(34,197,94,.2);border:1px solid rgba(74,222,128,.45);color:#86efac}
+.status-badge.warn{background:rgba(255,93,122,.2);border:1px solid rgba(255,93,122,.45);color:#ffb3c1}
 .status-badge svg{
   width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.6;
   stroke-linecap:round;stroke-linejoin:round;
   stroke-dasharray:24;stroke-dashoffset:24;
   animation:drawCheck .35s ease forwards .05s;
 }
-@keyframes statusPop{
-  0%{opacity:0;transform:scale(.82) translateY(4px)}
-  100%{opacity:1;transform:none}
-}
+@keyframes statusPop{0%{opacity:0;transform:scale(.82) translateY(4px)}100%{opacity:1;transform:none}}
 
 /* Tap Wiggle / Spring Shake Animation on Buttons */
 .btn.is-tapped .btn-icon-box{
@@ -253,25 +337,13 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 
 /* Waiting Screen Icons Idle Subtle Animations */
 .anim-copy .copy-front{animation:copyFloat 2.6s ease-in-out infinite}
-@keyframes copyFloat{
-  0%,100%{transform:translate(0,0)}
-  50%{transform:translate(1.5px,-1.5px)}
-}
+@keyframes copyFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(1.5px,-1.5px)}}
 .anim-link .link-part1{animation:linkPulse1 2.8s ease-in-out infinite}
 .anim-link .link-part2{animation:linkPulse2 2.8s ease-in-out infinite}
-@keyframes linkPulse1{
-  0%,100%{transform:translate(0,0)}
-  50%{transform:translate(-1px,1px)}
-}
-@keyframes linkPulse2{
-  0%,100%{transform:translate(0,0)}
-  50%{transform:translate(1px,-1px)}
-}
+@keyframes linkPulse1{0%,100%{transform:translate(0,0)}50%{transform:translate(-1px,1px)}}
+@keyframes linkPulse2{0%,100%{transform:translate(0,0)}50%{transform:translate(1px,-1px)}}
 .anim-share .share-arrow{animation:shareLift 2.2s ease-in-out infinite}
-@keyframes shareLift{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-2.5px)}
-}
+@keyframes shareLift{0%,100%{transform:translateY(0)}50%{transform:translateY(-2.5px)}}
 
 /* Success checkmark state */
 .btn .icon-check{display:none}
@@ -298,10 +370,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   animation:btnSweep 4.2s ease-in-out infinite;
   pointer-events:none;
 }
-@keyframes btnSweep{
-  0%,65%{left:-100%}
-  100%{left:160%}
-}
+@keyframes btnSweep{0%,65%{left:-100%}100%{left:160%}}
 
 /* game header */
 .game-wrap{width:min(94vw,440px);display:flex;flex-direction:column;align-items:center;gap:14px}
@@ -312,9 +381,39 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 #rightPlayer{text-align:right}
 .score-pill{padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.3);font-weight:800;font-size:13px;white-space:nowrap}
 .header-actions{display:flex;gap:6px}
-.icon-btn{position:relative;width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;flex-shrink:0}
-.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:#ff3b5c;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px}
+.icon-btn{position:relative;width:40px;height:40px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.1);color:#fff;font-size:18px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:transform .15s,background .2s}
+.icon-btn:active{transform:scale(.92)}
+.icon-btn svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:10px;background:#ff3b5c;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 5px;box-shadow:0 2px 8px rgba(255,59,92,.6)}
 .turn-indicator{font-size:15px;font-weight:600;min-height:22px;color:#ffe9a8}
+
+/* Premium Animated Chat Icons */
+.chat-head-title{display:inline-flex;align-items:center;gap:10px}
+.chat-head-badge{
+  width:34px;height:34px;border-radius:11px;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(79,209,255,.28),rgba(124,92,255,.32));
+  border:1px solid rgba(79,209,255,.45);
+  box-shadow:0 4px 14px rgba(79,209,255,.25), inset 0 1px 1px rgba(255,255,255,.35);
+}
+.chat-head-badge svg{
+  width:19px;height:19px;fill:none;stroke:#fff;stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;overflow:visible;
+}
+.anim-chat .chat-bubble{animation:chatFloat 2.8s ease-in-out infinite;transform-origin:center}
+.anim-chat .chat-dot{fill:#7fd8ff;stroke:none;animation:chatDotWave 1.4s ease-in-out infinite}
+.anim-chat .chat-dot.d2{animation-delay:.2s}
+.anim-chat .chat-dot.d3{animation-delay:.4s}
+@keyframes chatFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-1.5px) rotate(-4deg)}}
+@keyframes chatDotWave{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-2.2px);opacity:1}}
+.chat-drawer.open .chat-head-badge{animation:chatBadgePop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes chatBadgePop{0%{transform:scale(.5) rotate(-18deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
+.chat-send-icon{
+  width:18px;height:18px;fill:none;stroke:#fff;stroke-width:2.3;
+  stroke-linecap:round;stroke-linejoin:round;display:block;
+  transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+}
+.chat-send:active .chat-send-icon{transform:translate(3px,-3px) scale(1.1)}
 
 /* board */
 .board-wrap{width:100%;display:flex;justify-content:center}
@@ -360,23 +459,15 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   animation:heroHalo 2.2s ease-out infinite;
   pointer-events:none;
 }
-@keyframes heroHalo{
-  0%{transform:scale(.92);opacity:.75}
-  100%{transform:scale(1.18);opacity:0}
-}
+@keyframes heroHalo{0%{transform:scale(.92);opacity:.75}100%{transform:scale(1.18);opacity:0}}
 .result-hero svg{
   width:42px;height:42px;
   fill:none;stroke-width:2.2;
   stroke-linecap:round;stroke-linejoin:round;
   overflow:visible;
 }
-.result-overlay.show .result-hero{
-  animation:heroEntrance .55s cubic-bezier(.34,1.56,.64,1) forwards;
-}
-@keyframes heroEntrance{
-  0%{transform:scale(.4) rotate(-12deg);opacity:0}
-  100%{transform:scale(1) rotate(0deg);opacity:1}
-}
+.result-overlay.show .result-hero{animation:heroEntrance .55s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes heroEntrance{0%{transform:scale(.4) rotate(-12deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
 
 /* Win Hero */
 .hero-win{
@@ -389,14 +480,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .hero-win .trophy-body{animation:trophyFloat 2.4s ease-in-out infinite;transform-origin:12px 12px}
 .hero-win .spark-1{animation:sparkTwinkle 1.6s ease-in-out infinite;transform-origin:center}
 .hero-win .spark-2{animation:sparkTwinkle 1.6s ease-in-out infinite .55s;transform-origin:center}
-@keyframes trophyFloat{
-  0%,100%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(-2.5px) rotate(-3deg)}
-}
-@keyframes sparkTwinkle{
-  0%,100%{opacity:.25;transform:scale(.7)}
-  50%{opacity:1;transform:scale(1.25)}
-}
+@keyframes trophyFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-2.5px) rotate(-3deg)}}
+@keyframes sparkTwinkle{0%,100%{opacity:.25;transform:scale(.7)}50%{opacity:1;transform:scale(1.25)}}
 
 /* Draw Hero */
 .hero-draw{
@@ -409,11 +494,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .hero-draw .draw-ring{animation:drawSpin 6s linear infinite;transform-origin:12px 12px}
 .hero-draw .draw-bars{animation:drawTilt 2.4s ease-in-out infinite;transform-origin:12px 12px}
 @keyframes drawSpin{to{transform:rotate(360deg)}}
-@keyframes drawTilt{
-  0%,100%{transform:rotate(0deg)}
-  25%{transform:rotate(-8deg)}
-  75%{transform:rotate(8deg)}
-}
+@keyframes drawTilt{0%,100%{transform:rotate(0deg)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
 
 /* Lose Hero */
 .hero-lose{
@@ -424,10 +505,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .hero-lose::before{border-color:rgba(255,93,122,.45)}
 .hero-lose svg{stroke:#ff8fa3;filter:drop-shadow(0 0 10px rgba(255,93,122,.6))}
 .hero-lose .lose-face{animation:loseSigh 2.8s ease-in-out infinite;transform-origin:12px 12px}
-@keyframes loseSigh{
-  0%,100%{transform:translateY(0) rotate(0deg)}
-  50%{transform:translateY(2px) rotate(-4deg)}
-}
+@keyframes loseSigh{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(2px) rotate(-4deg)}}
 
 /* Next Starter Pill */
 .next-starter-note{
@@ -447,10 +525,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   stroke-linecap:round;stroke-linejoin:round;
   animation:nextSlide 1.5s ease-in-out infinite;
 }
-@keyframes nextSlide{
-  0%,100%{transform:translateX(-1.5px)}
-  50%{transform:translateX(2px)}
-}
+@keyframes nextSlide{0%,100%{transform:translateX(-1.5px)}50%{transform:translateX(2px)}}
 
 /* chat */
 .chat-drawer{position:fixed;inset:0;z-index:200;pointer-events:none}
@@ -472,8 +547,10 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .chat-input-row{display:flex;gap:8px;align-items:center}
 .chat-input-row .input{text-align:left;padding:12px 14px}
 .chat-send{width:auto;padding:12px 16px;border-radius:14px}
-.chat-toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-160%);z-index:150;background:rgba(22,16,48,.94);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:10px 16px;font-size:14px;max-width:90vw;transition:transform .35s;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-toast{position:fixed;top:14px;left:50%;transform:translate(-50%,-160%);z-index:250;background:rgba(22,16,48,.96);border:1px solid rgba(79,209,255,.45);border-radius:16px;padding:10px 16px;font-size:14px;max-width:90vw;transition:transform .35s;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chat-toast.show{transform:translate(-50%,0)}
+.chat-toast svg{width:17px;height:17px;fill:none;stroke:#7fd8ff;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.chat-toast span{overflow:hidden;text-overflow:ellipsis}
 
 /* confetti */
 .confetti-piece{position:fixed;top:-20px;width:10px;height:14px;z-index:300;pointer-events:none;animation:fall linear forwards}
@@ -550,6 +627,19 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
       <span class="btn-label">অনলাইনে বন্ধুর সাথে খেলুন</span>
     </button>
 
+    <!-- Friends (Separate Option) -->
+    <button class="btn btn-emerald btn-shine" data-action="goFriends" data-tap-anim="1">
+      <span class="btn-icon-box anim-friends">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
+          <path class="friend-heart" d="M18 4.5c.8-.9 2.2-.9 3 0 .8.9.8 2.3 0 3.2L18 10.7l-3-3c-.8-.9-.8-2.3 0-3.2.8-.9 2.2-.9 3 0z" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label">বন্ধু</span>
+      <span class="menu-pill-badge" id="menuFriendBadge" hidden>0</span>
+    </button>
+
     <!-- Profile -->
     <button class="btn btn-info btn-shine" data-action="goProfile" data-tap-anim="1">
       <span class="btn-icon-box anim-user">
@@ -559,6 +649,61 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         </svg>
       </span>
       <span class="btn-label">প্রোফাইল</span>
+    </button>
+  </div>
+</section>
+
+<!-- FRIENDS -->
+<section id="screen-friends" class="screen">
+  <div class="card">
+    <h2 class="title">বন্ধু তালিকা</h2>
+
+    <!-- My Friend ID -->
+    <div class="my-id-card">
+      <div class="my-id-info">
+        <small>আপনার ফ্রেন্ড আইডি</small>
+        <div class="my-id-code" id="myFriendIdDisplay">------</div>
+      </div>
+      <button class="mini-copy-btn" id="copyFriendIdBtn" data-action="copyMyFriendId">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        <span class="btn-label">কপি</span>
+      </button>
+    </div>
+
+    <!-- Send Friend Request -->
+    <div class="friend-add-row">
+      <input id="friendIdInput" class="input" maxlength="6" placeholder="বন্ধুর আইডি" autocomplete="off">
+      <button class="btn btn-primary friend-add-btn" data-action="sendFriendRequest">
+        <span>রিকোয়েস্ট</span>
+      </button>
+    </div>
+    <div class="hint" id="friendMsg"></div>
+
+    <!-- Tabs: Friends vs Requests -->
+    <div class="friend-tabs">
+      <button class="tab-btn active" id="tabFriendsBtn" data-action="switchFriendTab" data-tab="friends">
+        <span>বন্ধুরা</span>
+        <span class="tab-count" id="friendsCount">0</span>
+      </button>
+      <button class="tab-btn" id="tabRequestsBtn" data-action="switchFriendTab" data-tab="requests">
+        <span>রিকোয়েস্ট</span>
+        <span class="tab-count" id="requestsCount">0</span>
+      </button>
+    </div>
+
+    <!-- Lists -->
+    <div class="friends-list" id="friendsListBox"></div>
+    <div class="friends-list" id="requestsListBox" hidden></div>
+
+    <!-- Back -->
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -793,7 +938,15 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
         <div class="player" id="rightPlayer"><span id="rightName">প্রতিপক্ষ</span></div>
       </div>
       <div class="header-actions">
-        <button class="icon-btn" id="chatBtn" data-action="openChat" hidden>💬<span class="badge" id="chatBadge" hidden>0</span></button>
+        <button class="icon-btn anim-chat" id="chatBtn" data-action="openChat" aria-label="চ্যাট" hidden>
+          <svg class="chat-bubble" viewBox="0 0 24 24">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            <circle class="chat-dot d1" cx="9" cy="12" r="1.15"/>
+            <circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/>
+            <circle class="chat-dot d3" cx="16" cy="12" r="1.15"/>
+          </svg>
+          <span class="badge" id="chatBadge" hidden>0</span>
+        </button>
         <button class="icon-btn" id="soundBtn" data-action="toggleSound">🔊</button>
       </div>
     </header>
@@ -875,34 +1028,75 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
       </button>
     </div>
   </div>
+</section>
 
-  <!-- chat -->
-  <div class="chat-drawer" id="chatDrawer">
-    <div class="chat-overlay" data-action="closeChat"></div>
-    <div class="chat-panel">
-      <div class="chat-head">
-        <span>💬 চ্যাট</span>
-        <button class="icon-btn" data-action="closeChat" aria-label="বন্ধ">✕</button>
-      </div>
-      <div class="chat-messages" id="chatMessages"></div>
-      <div class="chat-emojis">
-        <button data-action="sendEmoji" data-emoji="👍">👍</button>
-        <button data-action="sendEmoji" data-emoji="😀">😀</button>
-        <button data-action="sendEmoji" data-emoji="😢">😢</button>
-        <button data-action="sendEmoji" data-emoji="🔥">🔥</button>
-        <button data-action="sendEmoji" data-emoji="🎉">🎉</button>
-        <button data-action="sendEmoji" data-emoji="😡">😡</button>
-        <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
-      </div>
-      <div class="chat-input-row">
-        <input id="chatInput" class="input" placeholder="বার্তা লিখুন..." maxlength="300" autocomplete="off">
-        <button class="btn btn-primary chat-send" id="sendText" data-action="sendText">➤</button>
-      </div>
+<!-- SHARED CHAT DRAWER (Used both in-game & with Friends outside game) -->
+<div class="chat-drawer" id="chatDrawer">
+  <div class="chat-overlay" data-action="closeChat"></div>
+  <div class="chat-panel">
+    <div class="chat-head">
+      <span class="chat-head-title">
+        <span class="chat-head-badge anim-chat">
+          <svg class="chat-bubble" viewBox="0 0 24 24">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            <circle class="chat-dot d1" cx="9" cy="12" r="1.15"/>
+            <circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/>
+            <circle class="chat-dot d3" cx="16" cy="12" r="1.15"/>
+          </svg>
+        </span>
+        <span id="chatDrawerTitle">চ্যাট</span>
+      </span>
+      <button class="icon-btn anim-close" data-action="closeChat" aria-label="বন্ধ">
+        <svg class="close-x" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-emojis">
+      <button data-action="sendEmoji" data-emoji="👍">👍</button>
+      <button data-action="sendEmoji" data-emoji="😀">😀</button>
+      <button data-action="sendEmoji" data-emoji="😢">😢</button>
+      <button data-action="sendEmoji" data-emoji="🔥">🔥</button>
+      <button data-action="sendEmoji" data-emoji="🎉">🎉</button>
+      <button data-action="sendEmoji" data-emoji="😡">😡</button>
+      <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
+    </div>
+    <div class="chat-input-row">
+      <input id="chatInput" class="input" placeholder="বার্তা লিখুন..." maxlength="300" autocomplete="off">
+      <button class="btn btn-primary chat-send" id="sendText" data-action="sendText" aria-label="পাঠান">
+        <svg class="chat-send-icon" viewBox="0 0 24 24">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
     </div>
   </div>
+</div>
 
-  <div class="chat-toast" id="chatToast" data-action="openChat"></div>
-</section>
+<!-- INCOMING GAME INVITE MODAL -->
+<div class="invite-overlay" id="inviteOverlay">
+  <div class="invite-card">
+    <div class="result-hero hero-win">
+      <svg viewBox="0 0 24 24">
+        <rect x="2" y="6" width="20" height="12" rx="4"/>
+        <line x1="6" y1="12" x2="10" y2="12"/>
+        <line x1="8" y1="10" x2="8" y2="14"/>
+        <circle cx="15" cy="11" r="1" fill="currentColor" stroke="none"/>
+        <circle cx="17.5" cy="13" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+    </div>
+    <h2>খেলার আমন্ত্রণ!</h2>
+    <p class="sub" id="inviteFromText">বন্ধু আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে</p>
+    <div class="btn-row">
+      <button class="btn btn-primary" data-action="acceptGameInvite">খেলুন</button>
+      <button class="btn btn-ghost" data-action="declineGameInvite">না</button>
+    </div>
+  </div>
+</div>
+
+<div class="chat-toast anim-chat" id="chatToast" data-action="handleToastClick"></div>
 
 <script>
 /* ================= FIREBASE CONFIG ================= */
@@ -922,18 +1116,16 @@ const LEVEL_LABEL = { easy:'সহজ', medium:'মাঝারি', hard:'ক�
 const SOUNDS = {
   move:[620,0.12,'sine'], chat:[1000,0.14,'sine']
 };
-// সুর: [ফ্রিকোয়েন্সি, দৈর্ঘ্য]
 const MELODIES = {
   win:[[523,0.12],[659,0.12],[784,0.12],[1047,0.35]],
   lose:[[392,0.22],[330,0.22],[262,0.5]],
   draw:[[440,0.18],[440,0.3]]
 };
-// পক্ষের জোড়া (কে কার বিপক্ষে)
 const PAIR = { HUMAN:'CPU', CPU:'HUMAN', P1:'P2', P2:'P1', HOST:'GUEST', GUEST:'HOST' };
 
 /* ================= STATE ================= */
 let db = null;
-const profile = { name:'', wins:0, losses:0, draws:0 };
+const profile = { id:'', name:'', wins:0, losses:0, draws:0 };
 let soundOn = true;
 let audioCtx = null;
 
@@ -941,19 +1133,19 @@ let mode = null;               // 'computer' | 'local' | 'online'
 let level = 'medium';
 let board = Array(9).fill('');
 let cellEls = [];
-let currentTurn = 'X';         // বোর্ডের চিহ্ন: 'X' বা 'O'
-let xRole = 'HUMAN';           // এই রাউন্ডে কোন পক্ষ X নিয়ে খেলছে
-let nextXRole = 'HUMAN';       // পরের রাউন্ডে কে X পাবে (জয়ী / ড্র হলে বিপরীত)
-let humanSymbol = 'X';         // কম্পিউটার মোডে এই রাউন্ডে আপনার চিহ্ন
-let computerSymbol = 'O';      // কম্পিউটার মোডে এই রাউন্ডে কম্পিউটারের চিহ্ন
+let currentTurn = 'X';
+let xRole = 'HUMAN';
+let nextXRole = 'HUMAN';
+let humanSymbol = 'X';
+let computerSymbol = 'O';
 let gameOver = false;
 let resultShown = false;
 let sessionScore = { HUMAN:0, CPU:0, P1:0, P2:0, D:0 };
 let computerTimer = null;
 
-// online
+// online room
 let onlineCode = null;
-let myRole = 'HOST';           // এই ডিভাইসের পরিচয়: HOST বা GUEST (স্থির)
+let myRole = 'HOST';
 let roomRef = null;
 let roomData = null;
 let inOnlineGame = false;
@@ -962,6 +1154,10 @@ let busy = false;
 let curRound = 0;
 let oppGraceTimer = null;
 let presRef = null, connRef = null, connFn = null;
+
+// chat (supports both 'room' and 'dm' with friends)
+let chatContext = null;        // 'room' | 'dm'
+let activeDmFriend = null;     // { id, name }
 let chatRef = null, readRef = null;
 let chatInitDone = false;
 let lastChatKey = '';
@@ -969,8 +1165,19 @@ let oppReadKey = '';
 let unread = 0;
 let chatOpen = false;
 let toastTimer = null;
+let pendingToastAction = null; // { type:'room' } | { type:'dm', friendId, friendName }
 const renderedKeys = new Set();
-let pendingRoomCode = null;    // লিংক থেকে আসা রুম কোড
+let pendingRoomCode = null;
+
+// friends system
+let activeFriendTab = 'friends';
+let friendsMap = {};           // friendId -> { id, name, addedAt }
+let requestsMap = {};          // senderId -> { id, name, time }
+const friendOnlineState = {};  // friendId -> boolean
+const friendStatusRefs = {};   // friendId -> Firebase Ref
+const friendDmUnread = {};     // friendId -> number
+const friendDmRefs = {};       // friendId -> { ref, initDone, lastSeenKey }
+let incomingInvite = null;     // { fromId, fromName, roomCode, time }
 
 /* ================= HELPERS ================= */
 const $ = id => document.getElementById(id);
@@ -997,21 +1204,49 @@ function showScreen(id){
 }
 function setOnlineMsg(msg){ $('onlineMsg').textContent = msg || ''; }
 function scrollChat(){ const b = $('chatMessages'); b.scrollTop = b.scrollHeight; }
+function generateFriendId(){
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let out = '';
+  for(let i=0;i<6;i++) out += chars[Math.floor(Math.random() * chars.length)];
+  return out;
+}
+function dmThreadId(idA, idB){
+  return [String(idA), String(idB)].sort().join('_');
+}
 
-/* ================= PROFILE ================= */
+/* ================= PROFILE & USER DIRECTORY ================= */
 function loadProfile(){
   try{
     const p = JSON.parse(store.get('xo_profile') || 'null');
     if(p && typeof p === 'object'){
+      profile.id = String(p.id || '');
       profile.name = String(p.name || '');
       profile.wins = Number(p.wins) || 0;
       profile.losses = Number(p.losses) || 0;
       profile.draws = Number(p.draws) || 0;
     }
   }catch(e){}
+  if(!profile.id || !/^[A-Z0-9]{6}$/.test(profile.id)){
+    profile.id = generateFriendId();
+    saveProfile();
+  }
 }
-function saveProfile(){ store.set('xo_profile', JSON.stringify(profile)); }
-function renderMenu(){ $('menuGreeting').textContent = profile.name ? `স্বাগতম, ${profile.name}!` : 'স্বাগতম!'; }
+function saveProfile(){
+  store.set('xo_profile', JSON.stringify(profile));
+  syncUserDirectory();
+}
+function syncUserDirectory(){
+  if(!db || !profile.id || !profile.name) return;
+  db.ref(`users/${profile.id}/info`).update({
+    id: profile.id,
+    name: profile.name,
+    updatedAt: Date.now()
+  }).catch(() => {});
+}
+function renderMenu(){
+  $('menuGreeting').textContent = profile.name ? `স্বাগতম, ${profile.name}!` : 'স্বাগতম!';
+  updateFriendBadges();
+}
 function renderStats(){
   const total = profile.wins + profile.losses + profile.draws;
   const rate = total ? Math.round(profile.wins / total * 100) : 0;
@@ -1056,6 +1291,379 @@ function toggleSound(){
   soundOn = !soundOn;
   store.set('xo_sound', soundOn ? '1' : '0');
   updateSoundBtn();
+}
+
+/* ================= GLOBAL PRESENCE & SOCIAL LISTENERS ================= */
+function initSocialSystem(){
+  if(!db || !profile.id || !profile.name) return;
+  syncUserDirectory();
+
+  // Global user online presence
+  const myOnlineRef = db.ref(`users/${profile.id}/online`);
+  db.ref('.info/connected').on('value', snap => {
+    if(snap.val() !== true) return;
+    myOnlineRef.onDisconnect().set(false);
+    myOnlineRef.set(true);
+  });
+
+  // Listen to incoming friend requests
+  db.ref(`users/${profile.id}/requests`).on('value', snap => {
+    requestsMap = snap.val() || {};
+    updateFriendBadges();
+    renderFriendsUI();
+  });
+
+  // Listen to accepted friends list
+  db.ref(`users/${profile.id}/friends`).on('value', snap => {
+    const newMap = snap.val() || {};
+    // Clean up removed friends
+    Object.keys(friendStatusRefs).forEach(fid => {
+      if(!newMap[fid]){
+        friendStatusRefs[fid].off();
+        delete friendStatusRefs[fid];
+        delete friendOnlineState[fid];
+      }
+    });
+    Object.keys(friendDmRefs).forEach(fid => {
+      if(!newMap[fid]){
+        friendDmRefs[fid].ref.off();
+        delete friendDmRefs[fid];
+        delete friendDmUnread[fid];
+      }
+    });
+
+    friendsMap = newMap;
+    Object.keys(friendsMap).forEach(fid => {
+      watchFriendOnline(fid);
+      watchFriendDmUnread(fid);
+    });
+    updateFriendBadges();
+    renderFriendsUI();
+  });
+
+  // Listen to incoming game invites
+  db.ref(`users/${profile.id}/invite`).on('value', snap => {
+    const inv = snap.val();
+    if(!inv || !inv.roomCode || !inv.fromId){
+      incomingInvite = null;
+      $('inviteOverlay').classList.remove('show');
+      return;
+    }
+    // Ignore stale invites older than 60s
+    if(inv.time && Date.now() - inv.time > 60000){
+      db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
+      return;
+    }
+    if(inOnlineGame) return;
+    incomingInvite = inv;
+    $('inviteFromText').textContent = `${inv.fromName || 'বন্ধু'} আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে!`;
+    $('inviteOverlay').classList.add('show');
+    playSound('chat');
+  });
+}
+
+function watchFriendOnline(fid){
+  if(friendStatusRefs[fid]) return;
+  const r = db.ref(`users/${fid}/online`);
+  friendStatusRefs[fid] = r;
+  r.on('value', snap => {
+    friendOnlineState[fid] = snap.val() === true;
+    renderFriendsUI();
+  });
+}
+
+function watchFriendDmUnread(fid){
+  if(friendDmRefs[fid]) return;
+  const tid = dmThreadId(profile.id, fid);
+  const r = db.ref(`dms/${tid}/messages`);
+  const state = { ref: r, initDone: false };
+  friendDmRefs[fid] = state;
+  friendDmUnread[fid] = 0;
+
+  r.on('child_added', snap => {
+    const msg = snap.val();
+    if(!msg || msg.senderId === profile.id) return;
+    const isThisDmOpen = chatOpen && chatContext === 'dm' && activeDmFriend && activeDmFriend.id === fid;
+    if(isThisDmOpen) return;
+    if(state.initDone){
+      friendDmUnread[fid] = (friendDmUnread[fid] || 0) + 1;
+      updateFriendBadges();
+      renderFriendsUI();
+      playSound('chat');
+      const fname = (friendsMap[fid] && friendsMap[fid].name) || msg.name || 'বন্ধু';
+      showChatToast(fname, msg.text || '', { type:'dm', friendId: fid, friendName: fname });
+    }
+  });
+  r.once('value', () => { state.initDone = true; });
+}
+
+function updateFriendBadges(){
+  const reqCount = Object.keys(requestsMap).length;
+  const dmTotal = Object.values(friendDmUnread).reduce((a, b) => a + (b || 0), 0);
+  const totalAlert = reqCount + dmTotal;
+
+  const menuBadge = $('menuFriendBadge');
+  if(menuBadge){
+    menuBadge.textContent = totalAlert;
+    menuBadge.hidden = totalAlert === 0;
+  }
+  const fCountEl = $('friendsCount');
+  const rCountEl = $('requestsCount');
+  if(fCountEl) fCountEl.textContent = Object.keys(friendsMap).length;
+  if(rCountEl){
+    rCountEl.textContent = reqCount;
+    rCountEl.classList.toggle('alert', reqCount > 0);
+  }
+}
+
+/* ================= FRIENDS SCREEN ACTIONS ================= */
+function setFriendStatus(type, text){
+  const box = $('friendMsg');
+  if(!box) return;
+  if(!text){ box.innerHTML = ''; return; }
+  const icon = type === 'ok'
+    ? '<svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'
+    : '<svg viewBox="0 0 24 24"><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>';
+  box.innerHTML = `<span class="status-badge ${type}">${icon}<span>${escapeHtml(text)}</span></span>`;
+}
+function goFriends(){
+  $('myFriendIdDisplay').textContent = profile.id;
+  setFriendStatus('', '');
+  renderFriendsUI();
+  showScreen('screen-friends');
+}
+function copyMyFriendId(){
+  const btn = $('copyFriendIdBtn');
+  const lbl = btn.querySelector('.btn-label');
+  copyText(profile.id, ok => {
+    if(ok){
+      btn.classList.add('is-done');
+      if(lbl) lbl.textContent = 'কপি হয়েছে';
+      setTimeout(() => {
+        btn.classList.remove('is-done');
+        if(lbl) lbl.textContent = 'কপি';
+      }, 1600);
+    }
+  });
+}
+function switchFriendTab(el){
+  const tab = (el && el.dataset.tab) || 'friends';
+  activeFriendTab = tab;
+  $('tabFriendsBtn').classList.toggle('active', tab === 'friends');
+  $('tabRequestsBtn').classList.toggle('active', tab === 'requests');
+  $('friendsListBox').hidden = tab !== 'friends';
+  $('requestsListBox').hidden = tab !== 'requests';
+}
+async function sendFriendRequest(){
+  if(!db){ setFriendStatus('warn', 'ইন্টারনেট সংযোগ নেই'); return; }
+  const targetId = $('friendIdInput').value.trim().toUpperCase();
+  if(!/^[A-Z0-9]{6}$/.test(targetId)){
+    setFriendStatus('warn', '৬ অক্ষরের সঠিক ফ্রেন্ড আইডি লিখুন');
+    return;
+  }
+  if(targetId === profile.id){
+    setFriendStatus('warn', 'নিজের আইডিতে রিকোয়েস্ট পাঠানো যাবে না');
+    return;
+  }
+  if(friendsMap[targetId]){
+    setFriendStatus('warn', 'ইনি আগেই আপনার বন্ধু তালিকায় আছেন');
+    return;
+  }
+  setFriendStatus('ok', 'খোঁজা হচ্ছে...');
+  try{
+    const snap = await db.ref(`users/${targetId}/info`).once('value');
+    const info = snap.val();
+    if(!info || !info.name){
+      setFriendStatus('warn', 'এই আইডিতে কোনো খেলোয়াড় পাওয়া যায়নি');
+      return;
+    }
+    await db.ref(`users/${targetId}/requests/${profile.id}`).set({
+      id: profile.id,
+      name: profile.name || 'খেলোয়াড়',
+      time: Date.now()
+    });
+    $('friendIdInput').value = '';
+    setFriendStatus('ok', `${info.name}-কে ফ্রেন্ড রিকোয়েস্ট পাঠানো হয়েছে!`);
+  }catch(e){
+    setFriendStatus('warn', 'ত্রুটি: ' + (e.message || e));
+  }
+}
+async function acceptFriendRequest(el){
+  const fid = el && el.dataset.fid;
+  if(!fid || !db) return;
+  const req = requestsMap[fid];
+  const fname = (req && req.name) || 'বন্ধু';
+  try{
+    const now = Date.now();
+    await db.ref(`users/${profile.id}/friends/${fid}`).set({ id: fid, name: fname, addedAt: now });
+    await db.ref(`users/${fid}/friends/${profile.id}`).set({ id: profile.id, name: profile.name || 'খেলোয়াড়', addedAt: now });
+    await db.ref(`users/${profile.id}/requests/${fid}`).remove();
+    setFriendStatus('ok', `${fname} এখন আপনার বন্ধু!`);
+  }catch(e){
+    setFriendStatus('warn', 'রিকোয়েস্ট গ্রহণ করা যায়নি');
+  }
+}
+async function declineFriendRequest(el){
+  const fid = el && el.dataset.fid;
+  if(!fid || !db) return;
+  await db.ref(`users/${profile.id}/requests/${fid}`).remove().catch(() => {});
+}
+function renderFriendsUI(){
+  const fBox = $('friendsListBox');
+  const rBox = $('requestsListBox');
+  if(!fBox || !rBox) return;
+
+  const fList = Object.values(friendsMap);
+  if(!fList.length){
+    fBox.innerHTML = `<div class="empty-box">এখনো কোনো বন্ধু নেই।<br>উপরে বন্ধুর ৬ অক্ষরের আইডি দিয়ে রিকোয়েস্ট পাঠান!</div>`;
+  } else {
+    // Sort online friends first
+    fList.sort((a, b) => (friendOnlineState[b.id] ? 1 : 0) - (friendOnlineState[a.id] ? 1 : 0));
+    fBox.innerHTML = fList.map(f => {
+      const isOnline = !!friendOnlineState[f.id];
+      const uCount = friendDmUnread[f.id] || 0;
+      const initial = escapeHtml((f.name || 'B').charAt(0).toUpperCase());
+      return `
+        <div class="friend-item">
+          <div class="friend-left">
+            <div class="friend-avatar">
+              ${initial}
+              <span class="presence-dot ${isOnline ? 'online' : ''}"></span>
+            </div>
+            <div class="friend-meta">
+              <div class="friend-name">${escapeHtml(f.name || 'বন্ধু')}</div>
+              <div class="friend-sub ${isOnline ? 'on' : ''}">${isOnline ? '● অনলাইনে আছেন' : '○ অফলাইন'} · #${escapeHtml(f.id)}</div>
+            </div>
+          </div>
+          <div class="friend-actions">
+            <button class="f-act-btn f-btn-chat" data-action="openFriendChat" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" aria-label="মেসেজ">
+              <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              ${uCount > 0 ? `<span class="unread-dot">${uCount}</span>` : ''}
+            </button>
+            <button class="f-act-btn f-btn-invite" data-action="inviteFriendToGame" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'বন্ধু')}" ${isOnline ? '' : 'disabled'}>
+              <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              <span>ইনভাইট</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  const rList = Object.values(requestsMap);
+  if(!rList.length){
+    rBox.innerHTML = `<div class="empty-box">কোনো নতুন ফ্রেন্ড রিকোয়েস্ট নেই।</div>`;
+  } else {
+    rBox.innerHTML = rList.map(r => {
+      const initial = escapeHtml((r.name || 'R').charAt(0).toUpperCase());
+      return `
+        <div class="friend-item">
+          <div class="friend-left">
+            <div class="friend-avatar">${initial}</div>
+            <div class="friend-meta">
+              <div class="friend-name">${escapeHtml(r.name || 'খেলোয়াড়')}</div>
+              <div class="friend-sub">আইডি: #${escapeHtml(r.id)}</div>
+            </div>
+          </div>
+          <div class="friend-actions">
+            <button class="f-act-btn f-btn-accept" data-action="acceptFriendRequest" data-fid="${escapeHtml(r.id)}">গ্রহণ</button>
+            <button class="f-act-btn f-btn-decline" data-action="declineFriendRequest" data-fid="${escapeHtml(r.id)}">✕</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+/* ================= FRIEND GAME INVITE ================= */
+async function inviteFriendToGame(el){
+  if(!db) return;
+  const fid = el && el.dataset.fid;
+  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  if(!fid) return;
+  if(!friendOnlineState[fid]){
+    setFriendStatus('warn', `${fname} এখন অফলাইনে আছেন`);
+    return;
+  }
+  setFriendStatus('ok', `${fname}-কে আমন্ত্রণ পাঠানো হচ্ছে...`);
+  try{
+    let code = null;
+    for(let t=0; t<10 && !code; t++){
+      const c = String(1000 + Math.floor(Math.random() * 9000));
+      const s = await db.ref('rooms/' + c).once('value');
+      if(!s.exists()) code = c;
+    }
+    if(!code){ setFriendStatus('warn', 'রুম তৈরি করা যাচ্ছে না'); return; }
+
+    await db.ref('rooms/' + code).set({
+      board: ['','','','','','','','',''],
+      turn: 'X',
+      xRole: 'HOST',
+      nextXRole: 'HOST',
+      round: 1,
+      players: { HOST: profile.name || 'হোস্ট' },
+      presence: { HOST: true, GUEST: false },
+      status: 'waiting',
+      createdAt: Date.now()
+    });
+
+    await db.ref(`users/${fid}/invite`).set({
+      fromId: profile.id,
+      fromName: profile.name || 'বন্ধু',
+      roomCode: code,
+      time: Date.now()
+    });
+
+    onlineCode = code;
+    myRole = 'HOST';
+    xRole = 'HOST';
+    $('roomCodeDisplay').textContent = code;
+    $('linkPreview').textContent = `${fname}-এর জন্য অপেক্ষা করা হচ্ছে...`;
+    $('shareBtn').hidden = !navigator.share;
+    showScreen('screen-waiting');
+    attachRoomListener(code);
+    setupPresence();
+  }catch(e){
+    setFriendStatus('warn', 'আমন্ত্রণ পাঠানো যায়নি');
+  }
+}
+
+async function acceptGameInvite(){
+  if(!incomingInvite || !db) return;
+  const inv = incomingInvite;
+  incomingInvite = null;
+  $('inviteOverlay').classList.remove('show');
+  await db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
+
+  const code = inv.roomCode;
+  try{
+    const ref = db.ref('rooms/' + code);
+    const snap = await ref.once('value');
+    const room = snap.val();
+    if(!room || room.status !== 'waiting'){
+      showErr('রুমটি আর সক্রিয় নেই');
+      return;
+    }
+    onlineCode = code;
+    myRole = 'GUEST';
+    await ref.update({
+      'players/GUEST': profile.name || 'খেলোয়াড়',
+      'presence/GUEST': true,
+      status: 'playing'
+    });
+    attachRoomListener(code);
+    setupPresence();
+  }catch(e){
+    showErr('রুমে যোগ দেওয়া যায়নি');
+  }
+}
+
+function declineGameInvite(){
+  $('inviteOverlay').classList.remove('show');
+  incomingInvite = null;
+  if(db && profile.id){
+    db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
+  }
 }
 
 /* ================= BOARD RENDER ================= */
@@ -1274,11 +1882,11 @@ function endRound(r){
 
   let winRole = null;
   if(w === 'draw'){
-    nextXRole = otherRole(xRole);   // ড্র হলে X বদলায়
+    nextXRole = otherRole(xRole);
     sessionScore.D++;
   } else {
     winRole = roleOfSym(w);
-    nextXRole = winRole;            // জয়ী পরের রাউন্ডে X নিয়ে প্রথমে খেলবে
+    nextXRole = winRole;
     sessionScore[winRole]++;
   }
 
@@ -1305,7 +1913,7 @@ function beginRound(){
   $('chatBtn').hidden = mode !== 'online';
   closeChat();
   resetBoardUI();
-  currentTurn = 'X';          // প্রতি রাউন্ডে X-ওয়ালা প্রথমে খেলে
+  currentTurn = 'X';
   refreshSymbols();
   updateTurn();
 }
@@ -1373,6 +1981,7 @@ function saveName(){
   if(!n){ $('nameMsg').textContent = 'একটি নাম লিখুন'; return; }
   profile.name = n;
   saveProfile();
+  initSocialSystem();
   renderMenu();
   if(!applyPendingRoom()) showScreen('screen-menu');
 }
@@ -1565,10 +2174,13 @@ function setupPresence(){
   };
   connRef.on('value', connFn);
 }
-function detachOnlineListeners(){
-  if(roomRef){ roomRef.off(); roomRef = null; }
+function detachChatListeners(){
   if(chatRef){ chatRef.off(); chatRef = null; }
   if(readRef){ readRef.off(); readRef = null; }
+}
+function detachOnlineListeners(){
+  if(roomRef){ roomRef.off(); roomRef = null; }
+  detachChatListeners();
   if(connRef && connFn) connRef.off('value', connFn);
   if(presRef){ presRef.onDisconnect().cancel(); presRef = null; }
   connRef = null; connFn = null;
@@ -1598,6 +2210,8 @@ function resetOnlineState(){
   busy = false;
   curRound = 0;
   myRole = 'HOST';
+  chatContext = null;
+  activeDmFriend = null;
   chatInitDone = false;
   lastChatKey = '';
   oppReadKey = '';
@@ -1675,7 +2289,7 @@ function enterOnlineGameScreen(){
   paintBoard();
   hideResultOverlay();
   setupOnlineHeader();
-  attachChat(onlineCode);
+  attachRoomChat(onlineCode);
   showScreen('screen-game');
   updateTurn();
 }
@@ -1755,7 +2369,6 @@ function makeOnlineMove(i){
       upd.status = 'finished';
       upd.winner = r.winner;
       upd.winCombo = r.combo;
-      // জয়ী (বা ড্র হলে বিপরীত পক্ষ) পরের রাউন্ডে X পাবে
       upd.nextXRole = r.winner === 'X' ? rx : otherRole(rx);
     }
     return upd;
@@ -1781,12 +2394,43 @@ function onlinePlayAgain(){
   }).catch(() => {});
 }
 
-/* ================= CHAT ================= */
-function attachChat(code){
+/* ================= UNIFIED CHAT (IN-GAME ROOM & FRIEND DM) ================= */
+function resetChatUI(title){
+  detachChatListeners();
+  renderedKeys.clear();
+  lastChatKey = '';
+  oppReadKey = '';
+  chatInitDone = false;
+  $('chatMessages').innerHTML = '';
+  $('chatDrawerTitle').textContent = title || 'চ্যাট';
+}
+
+function attachRoomChat(code){
+  chatContext = 'room';
+  activeDmFriend = null;
+  resetChatUI('চ্যাট');
   chatRef = db.ref(`rooms/${code}/chat`);
   readRef = db.ref(`rooms/${code}/read`);
-  chatInitDone = false;
-  chatRef.on('child_added', snap => onChatMessage(snap.key, snap.val()));
+
+  chatRef.on('child_added', snap => {
+    const key = snap.key, msg = snap.val();
+    if(!msg || renderedKeys.has(key)) return;
+    renderedKeys.add(key);
+    lastChatKey = key;
+    const mine = msg.sender === myRole;
+    appendChatBubble(key, msg, mine);
+    if(!mine && chatInitDone){
+      playSound('chat');
+      if(chatOpen && chatContext === 'room'){
+        markChatRead();
+      } else {
+        unread++;
+        $('chatBadge').textContent = unread;
+        $('chatBadge').hidden = false;
+        showChatToast(msg.name || 'প্রতিপক্ষ', msg.text || '', { type:'room' });
+      }
+    }
+  });
   chatRef.once('value', () => { chatInitDone = true; });
   readRef.on('value', snap => {
     const d = snap.val() || {};
@@ -1794,30 +2438,57 @@ function attachChat(code){
     applySeen();
   });
 }
-function onChatMessage(key, msg){
-  if(!msg || renderedKeys.has(key)) return;
-  renderedKeys.add(key);
-  lastChatKey = key;
-  const mine = msg.sender === myRole;
-  appendChatBubble(key, msg, mine);
-  if(!mine && chatInitDone){
-    playSound('chat');
-    if(chatOpen){
+
+function openFriendChat(el){
+  if(!db) return;
+  const fid = el && el.dataset.fid;
+  const fname = (el && el.dataset.fname) || 'বন্ধু';
+  if(!fid) return;
+
+  chatContext = 'dm';
+  activeDmFriend = { id: fid, name: fname };
+  friendDmUnread[fid] = 0;
+  updateFriendBadges();
+  renderFriendsUI();
+
+  resetChatUI(fname);
+  const tid = dmThreadId(profile.id, fid);
+  chatRef = db.ref(`dms/${tid}/messages`);
+  readRef = db.ref(`dms/${tid}/read`);
+
+  chatRef.on('child_added', snap => {
+    const key = snap.key, msg = snap.val();
+    if(!msg || renderedKeys.has(key)) return;
+    renderedKeys.add(key);
+    lastChatKey = key;
+    const mine = msg.senderId === profile.id;
+    appendChatBubble(key, msg, mine);
+    if(!mine && chatOpen && chatContext === 'dm'){
       markChatRead();
-    } else {
-      unread++;
-      $('chatBadge').textContent = unread;
-      $('chatBadge').hidden = false;
-      showChatToast(msg);
     }
-  }
+  });
+  chatRef.once('value', () => {
+    chatInitDone = true;
+    markChatRead();
+  });
+  readRef.on('value', snap => {
+    const d = snap.val() || {};
+    oppReadKey = d[fid] || '';
+    applySeen();
+  });
+
+  chatOpen = true;
+  $('chatToast').classList.remove('show');
+  $('chatDrawer').classList.add('open');
+  scrollChat();
 }
+
 function appendChatBubble(key, msg, mine){
   const box = $('chatMessages');
   const div = document.createElement('div');
   div.className = 'chat-msg ' + (mine ? 'me' : 'other');
   const time = new Date(msg.time || Date.now()).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-  const who = mine ? '' : `<span class="who">${escapeHtml(msg.name || 'প্রতিপক্ষ')}</span>`;
+  const who = mine ? '' : `<span class="who">${escapeHtml(msg.name || 'বন্ধু')}</span>`;
   const status = mine ? ` · <span class="chat-status" data-key="${escapeHtml(key)}">✓ পাঠানো হয়েছে</span>` : '';
   div.innerHTML = `${who}<div>${escapeHtml(msg.text || '')}</div><span class="chat-meta">${time}${status}</span>`;
   box.appendChild(div);
@@ -1839,13 +2510,22 @@ function appendSystemMessage(text){
   scrollChat();
 }
 function markChatRead(){
-  if(!onlineCode || !lastChatKey || !db) return;
-  db.ref(`rooms/${onlineCode}/read/${myRole}`).set(lastChatKey).catch(() => {});
+  if(!lastChatKey || !db) return;
+  if(chatContext === 'room' && onlineCode){
+    db.ref(`rooms/${onlineCode}/read/${myRole}`).set(lastChatKey).catch(() => {});
+  } else if(chatContext === 'dm' && activeDmFriend){
+    const tid = dmThreadId(profile.id, activeDmFriend.id);
+    db.ref(`dms/${tid}/read/${profile.id}`).set(lastChatKey).catch(() => {});
+  }
 }
 function sendChatMessage(text){
   const t = String(text || '').trim().slice(0, 300);
-  if(!t || !onlineCode || !chatRef) return;
-  chatRef.push({ sender: myRole, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
+  if(!t || !chatRef) return;
+  if(chatContext === 'room' && onlineCode){
+    chatRef.push({ sender: myRole, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
+  } else if(chatContext === 'dm' && activeDmFriend){
+    chatRef.push({ senderId: profile.id, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
+  }
 }
 function sendText(){
   const inp = $('chatInput');
@@ -1855,7 +2535,8 @@ function sendText(){
 }
 function sendEmoji(el){ sendChatMessage(el.dataset.emoji); }
 function openChat(){
-  if(mode !== 'online' || !inOnlineGame) return;
+  if(mode !== 'online' || !inOnlineGame || !onlineCode) return;
+  if(chatContext !== 'room') attachRoomChat(onlineCode);
   chatOpen = true;
   unread = 0;
   $('chatBadge').hidden = true;
@@ -1867,13 +2548,28 @@ function openChat(){
 function closeChat(){
   chatOpen = false;
   $('chatDrawer').classList.remove('open');
+  if(chatContext === 'dm'){
+    detachChatListeners();
+    chatContext = null;
+    activeDmFriend = null;
+  }
 }
-function showChatToast(msg){
+function showChatToast(senderName, text, actionPayload){
+  pendingToastAction = actionPayload || null;
   const t = $('chatToast');
-  t.textContent = `💬 ${msg.name || 'প্রতিপক্ষ'}: ${msg.text || ''}`;
+  t.innerHTML = `<svg class="chat-bubble" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/><circle class="chat-dot d1" cx="9" cy="12" r="1.15"/><circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/><circle class="chat-dot d3" cx="16" cy="12" r="1.15"/></svg><span>${escapeHtml(senderName)}: ${escapeHtml(text)}</span>`;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function handleToastClick(){
+  $('chatToast').classList.remove('show');
+  if(!pendingToastAction) return;
+  if(pendingToastAction.type === 'room'){
+    openChat();
+  } else if(pendingToastAction.type === 'dm'){
+    openFriendChat({ dataset: { fid: pendingToastAction.friendId, fname: pendingToastAction.friendName } });
+  }
 }
 
 /* ================= ACTIONS / EVENTS ================= */
@@ -1903,11 +2599,14 @@ function onDocClick(e){
   fn(el);
 }
 const ACTIONS = {
-  saveName, goMenu, goDifficulty, goOnline, goProfile,
+  saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends,
+  copyMyFriendId, switchFriendTab, sendFriendRequest,
+  acceptFriendRequest, declineFriendRequest,
+  openFriendChat, inviteFriendToGame, acceptGameInvite, declineGameInvite,
   startComputer, startLocal, createRoom, joinRoom, cancelRoom,
   copyRoomCode, copyRoomLink, shareRoomLink,
   updateProfileName, resetStats, exitGame, playAgain,
-  openChat, closeChat, toggleSound, sendEmoji, sendText, hideErr
+  openChat, closeChat, toggleSound, sendEmoji, sendText, handleToastClick, hideErr
 };
 function bindKeys(){
   $('nameInput').addEventListener('keydown', e => {
@@ -1918,6 +2617,12 @@ function bindKeys(){
   });
   $('joinCodeInput').addEventListener('input', e => {
     e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+  });
+  $('friendIdInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) sendFriendRequest();
+  });
+  $('friendIdInput').addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6);
   });
   $('chatInput').addEventListener('keydown', e => {
     if(e.key === 'Enter' && !e.isComposing){ e.preventDefault(); sendText(); }
@@ -1950,6 +2655,7 @@ function init(){
     showScreen('screen-name');
     return;
   }
+  initSocialSystem();
   if(!applyPendingRoom()) showScreen('screen-menu');
 }
 if(document.readyState === 'loading'){

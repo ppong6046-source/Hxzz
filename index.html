@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -105,10 +106,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   box-shadow:0 0 12px rgba(255,59,92,.7);
   animation:pillPulse 1.8s ease-in-out infinite;
 }
-@keyframes pillPulse{
-  0%,100%{transform:scale(1)}
-  50%{transform:scale(1.12)}
-}
+@keyframes pillPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 
 /* Friends Screen Styles */
 .my-id-card{
@@ -183,10 +181,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   width:12px;height:12px;border-radius:50%;
   border:2px solid #23194d;background:#64748b;
 }
-.presence-dot.online{
-  background:#22c55e;
-  box-shadow:0 0 8px #22c55e;
-}
+.presence-dot.online{background:#22c55e;box-shadow:0 0 8px #22c55e}
 .friend-meta{min-width:0}
 .friend-name{font-size:14.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .friend-sub{font-size:11.5px;opacity:.75;display:flex;align-items:center;gap:5px}
@@ -532,17 +527,111 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .chat-drawer.open{pointer-events:auto}
 .chat-overlay{position:absolute;inset:0;background:rgba(5,3,20,.55);opacity:0;transition:opacity .3s}
 .chat-drawer.open .chat-overlay{opacity:1}
-.chat-panel{position:absolute;left:0;right:0;bottom:0;height:72vh;max-width:560px;margin:0 auto;display:flex;flex-direction:column;background:rgba(22,16,48,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:26px 26px 0 0;border-top:1px solid rgba(255,255,255,.2);transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:14px 14px 18px}
+.chat-panel{position:absolute;left:0;right:0;bottom:0;height:74vh;max-width:560px;margin:0 auto;display:flex;flex-direction:column;background:rgba(22,16,48,.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:26px 26px 0 0;border-top:1px solid rgba(255,255,255,.2);transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.8,.2,1);padding:14px 14px 18px}
 .chat-drawer.open .chat-panel{transform:none}
 .chat-head{display:flex;justify-content:space-between;align-items:center;font-weight:700;font-size:16px;padding:0 4px 10px}
-.chat-messages{flex:1;overflow-y:auto;padding:6px 4px;display:flex;flex-direction:column}
-.chat-msg{max-width:78%;padding:9px 12px;border-radius:16px;margin:4px 0;font-size:14px;line-height:1.45;overflow-wrap:anywhere;background:rgba(255,255,255,.12)}
-.chat-msg.me{align-self:flex-end;background:linear-gradient(135deg,#ff5d7a,#ff8a5c)}
+.chat-messages{flex:1;overflow-y:auto;padding:6px 4px;display:flex;flex-direction:column;gap:4px}
+
+/* Message Row with Reply Action */
+.chat-row{display:flex;align-items:flex-end;gap:6px;margin:2px 0;max-width:100%}
+.chat-row.me{justify-content:flex-end}
+.chat-row.other{justify-content:flex-start}
+.chat-msg{
+  max-width:76%;padding:9px 12px;border-radius:18px;
+  font-size:14px;line-height:1.45;overflow-wrap:anywhere;
+  background:rgba(255,255,255,.12);
+  position:relative;cursor:pointer;user-select:none;
+  transition:transform .15s,box-shadow .3s,background .3s;
+}
+.chat-msg:active{transform:scale(.98)}
+.chat-msg.me{background:linear-gradient(135deg,#ff5d7a,#ff8a5c);border-bottom-right-radius:6px}
+.chat-msg.other{border-bottom-left-radius:6px}
+.chat-msg.highlight-flash{
+  box-shadow:0 0 0 2px var(--gold), 0 0 18px rgba(255,209,102,.55);
+}
 .chat-msg .who{display:block;font-size:11px;opacity:.75;margin-bottom:2px}
 .chat-meta{display:block;font-size:10px;opacity:.85;margin-top:3px;text-align:right}
 .chat-status.seen{color:#7fd8ff;font-weight:700}
 .chat-system{align-self:center;font-size:12px;margin:8px 0;color:#ffd6dd;opacity:.85;text-align:center}
-.chat-emojis{display:flex;gap:4px;padding:8px 0}
+
+/* Quick Reply Trigger Button beside Bubble */
+.msg-reply-btn{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+  color:rgba(255,255,255,.75);
+  display:grid;place-items:center;cursor:pointer;flex-shrink:0;
+  transition:transform .15s,background .2s,color .2s;
+}
+.msg-reply-btn:hover,.msg-reply-btn:active{
+  background:rgba(79,209,255,.25);color:#fff;transform:scale(1.1);
+}
+.msg-reply-btn svg{
+  width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+/* Quoted Reply Block inside Sent/Received Bubble */
+.reply-quote{
+  background:rgba(0,0,0,.24);
+  border-left:3px solid var(--o);
+  border-radius:10px;
+  padding:5px 8px;
+  margin-bottom:6px;
+  text-align:left;
+  font-size:12px;
+  cursor:pointer;
+}
+.chat-msg.me .reply-quote{
+  background:rgba(0,0,0,.20);
+  border-left-color:#ffe9a8;
+}
+.reply-quote-who{
+  display:block;font-size:10.5px;font-weight:700;
+  color:#7fd8ff;margin-bottom:1px;
+}
+.chat-msg.me .reply-quote-who{color:#ffe9a8}
+.reply-quote-text{
+  display:block;opacity:.88;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:210px;
+}
+
+/* Active Reply Preview Bar above Input */
+.reply-preview-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:rgba(79,209,255,.14);
+  border:1px solid rgba(79,209,255,.35);
+  border-left:4px solid var(--o);
+  border-radius:14px;
+  padding:8px 10px;
+  margin-bottom:6px;
+  animation:replyBarIn .22s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes replyBarIn{
+  from{opacity:0;transform:translateY(8px) scale(.97)}
+  to{opacity:1;transform:none}
+}
+.reply-preview-info{min-width:0;text-align:left;flex:1}
+.reply-preview-title{
+  font-size:11.5px;font-weight:700;color:#7fd8ff;
+  display:flex;align-items:center;gap:5px;
+}
+.reply-preview-title svg{
+  width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.3;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.reply-preview-body{
+  font-size:12.5px;opacity:.85;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.reply-cancel-btn{
+  width:26px;height:26px;border-radius:50%;border:none;
+  background:rgba(255,255,255,.14);color:#fff;
+  font-size:13px;cursor:pointer;display:grid;place-items:center;flex-shrink:0;
+}
+.reply-cancel-btn:active{transform:scale(.9)}
+
+.chat-emojis{display:flex;gap:4px;padding:6px 0 8px}
 .chat-emojis button{flex:1;font-size:20px;padding:6px 0;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.08);cursor:pointer}
 .chat-input-row{display:flex;gap:8px;align-items:center}
 .chat-input-row .input{text-align:left;padding:12px 14px}
@@ -1063,6 +1152,19 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
       <button data-action="sendEmoji" data-emoji="😡">😡</button>
       <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
     </div>
+
+    <!-- Active Reply Preview Bar -->
+    <div class="reply-preview-bar" id="replyPreviewBar" hidden>
+      <div class="reply-preview-info">
+        <div class="reply-preview-title">
+          <svg viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>
+          <span id="replyPreviewWho">উত্তর দিচ্ছেন</span>
+        </div>
+        <div class="reply-preview-body" id="replyPreviewText"></div>
+      </div>
+      <button class="reply-cancel-btn" data-action="cancelReply" aria-label="রিপ্লাই বাতিল">✕</button>
+    </div>
+
     <div class="chat-input-row">
       <input id="chatInput" class="input" placeholder="বার্তা লিখুন..." maxlength="300" autocomplete="off">
       <button class="btn btn-primary chat-send" id="sendText" data-action="sendText" aria-label="পাঠান">
@@ -1165,19 +1267,21 @@ let oppReadKey = '';
 let unread = 0;
 let chatOpen = false;
 let toastTimer = null;
-let pendingToastAction = null; // { type:'room' } | { type:'dm', friendId, friendName }
+let pendingToastAction = null;
+let replyingTo = null;         // { key, name, text }
 const renderedKeys = new Set();
+const chatCache = new Map();   // key -> { key, name, text, mine }
 let pendingRoomCode = null;
 
 // friends system
 let activeFriendTab = 'friends';
-let friendsMap = {};           // friendId -> { id, name, addedAt }
-let requestsMap = {};          // senderId -> { id, name, time }
-const friendOnlineState = {};  // friendId -> boolean
-const friendStatusRefs = {};   // friendId -> Firebase Ref
-const friendDmUnread = {};     // friendId -> number
-const friendDmRefs = {};       // friendId -> { ref, initDone, lastSeenKey }
-let incomingInvite = null;     // { fromId, fromName, roomCode, time }
+let friendsMap = {};
+let requestsMap = {};
+const friendOnlineState = {};
+const friendStatusRefs = {};
+const friendDmUnread = {};
+const friendDmRefs = {};
+let incomingInvite = null;
 
 /* ================= HELPERS ================= */
 const $ = id => document.getElementById(id);
@@ -1298,7 +1402,6 @@ function initSocialSystem(){
   if(!db || !profile.id || !profile.name) return;
   syncUserDirectory();
 
-  // Global user online presence
   const myOnlineRef = db.ref(`users/${profile.id}/online`);
   db.ref('.info/connected').on('value', snap => {
     if(snap.val() !== true) return;
@@ -1306,17 +1409,14 @@ function initSocialSystem(){
     myOnlineRef.set(true);
   });
 
-  // Listen to incoming friend requests
   db.ref(`users/${profile.id}/requests`).on('value', snap => {
     requestsMap = snap.val() || {};
     updateFriendBadges();
     renderFriendsUI();
   });
 
-  // Listen to accepted friends list
   db.ref(`users/${profile.id}/friends`).on('value', snap => {
     const newMap = snap.val() || {};
-    // Clean up removed friends
     Object.keys(friendStatusRefs).forEach(fid => {
       if(!newMap[fid]){
         friendStatusRefs[fid].off();
@@ -1341,7 +1441,6 @@ function initSocialSystem(){
     renderFriendsUI();
   });
 
-  // Listen to incoming game invites
   db.ref(`users/${profile.id}/invite`).on('value', snap => {
     const inv = snap.val();
     if(!inv || !inv.roomCode || !inv.fromId){
@@ -1349,7 +1448,6 @@ function initSocialSystem(){
       $('inviteOverlay').classList.remove('show');
       return;
     }
-    // Ignore stale invites older than 60s
     if(inv.time && Date.now() - inv.time > 60000){
       db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
       return;
@@ -1517,7 +1615,6 @@ function renderFriendsUI(){
   if(!fList.length){
     fBox.innerHTML = `<div class="empty-box">এখনো কোনো বন্ধু নেই।<br>উপরে বন্ধুর ৬ অক্ষরের আইডি দিয়ে রিকোয়েস্ট পাঠান!</div>`;
   } else {
-    // Sort online friends first
     fList.sort((a, b) => (friendOnlineState[b.id] ? 1 : 0) - (friendOnlineState[a.id] ? 1 : 0));
     fBox.innerHTML = fList.map(f => {
       const isOnline = !!friendOnlineState[f.id];
@@ -2217,7 +2314,9 @@ function resetOnlineState(){
   oppReadKey = '';
   unread = 0;
   chatOpen = false;
+  cancelReply();
   renderedKeys.clear();
+  chatCache.clear();
   $('chatMessages').innerHTML = '';
   $('chatBadge').hidden = true;
   $('chatDrawer').classList.remove('open');
@@ -2394,15 +2493,49 @@ function onlinePlayAgain(){
   }).catch(() => {});
 }
 
-/* ================= UNIFIED CHAT (IN-GAME ROOM & FRIEND DM) ================= */
+/* ================= UNIFIED CHAT & REPLY SYSTEM ================= */
 function resetChatUI(title){
   detachChatListeners();
   renderedKeys.clear();
+  chatCache.clear();
   lastChatKey = '';
   oppReadKey = '';
   chatInitDone = false;
+  cancelReply();
   $('chatMessages').innerHTML = '';
   $('chatDrawerTitle').textContent = title || 'চ্যাট';
+}
+
+function setReplyTarget(key){
+  const item = chatCache.get(key);
+  if(!item) return;
+  const whoLabel = item.mine ? 'নিজেকে' : (item.name || 'বন্ধু');
+  replyingTo = {
+    key: item.key,
+    name: item.mine ? (profile.name || 'আমি') : (item.name || 'বন্ধু'),
+    text: item.text || ''
+  };
+  $('replyPreviewWho').textContent = `উত্তর দিচ্ছেন: ${whoLabel}`;
+  $('replyPreviewText').textContent = item.text || '';
+  $('replyPreviewBar').hidden = false;
+  $('chatInput').focus();
+}
+
+function cancelReply(){
+  replyingTo = null;
+  const bar = $('replyPreviewBar');
+  if(bar) bar.hidden = true;
+}
+
+function scrollToQuotedMsg(key){
+  if(!key) return;
+  const target = document.querySelector(`#chatMessages .chat-msg[data-msg-key="${CSS.escape(key)}"]`);
+  if(!target) return;
+  target.scrollIntoView({ behavior:'smooth', block:'center' });
+  target.classList.remove('highlight-flash');
+  void target.offsetWidth;
+  target.classList.add('highlight-flash');
+  setTimeout(() => target.classList.remove('highlight-flash'), 1200);
 }
 
 function attachRoomChat(code){
@@ -2484,14 +2617,52 @@ function openFriendChat(el){
 }
 
 function appendChatBubble(key, msg, mine){
+  const senderName = msg.name || (mine ? (profile.name || 'আমি') : 'বন্ধু');
+  chatCache.set(key, { key, name: senderName, text: msg.text || '', mine });
+
   const box = $('chatMessages');
+  const row = document.createElement('div');
+  row.className = 'chat-row ' + (mine ? 'me' : 'other');
+
   const div = document.createElement('div');
   div.className = 'chat-msg ' + (mine ? 'me' : 'other');
+  div.dataset.msgKey = key;
+
   const time = new Date(msg.time || Date.now()).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-  const who = mine ? '' : `<span class="who">${escapeHtml(msg.name || 'বন্ধু')}</span>`;
+  const who = mine ? '' : `<span class="who">${escapeHtml(senderName)}</span>`;
   const status = mine ? ` · <span class="chat-status" data-key="${escapeHtml(key)}">✓ পাঠানো হয়েছে</span>` : '';
-  div.innerHTML = `${who}<div>${escapeHtml(msg.text || '')}</div><span class="chat-meta">${time}${status}</span>`;
-  box.appendChild(div);
+
+  let quoteHtml = '';
+  if(msg.replyTo && msg.replyTo.text){
+    const qKey = escapeHtml(msg.replyTo.key || '');
+    const qWho = escapeHtml(msg.replyTo.name || 'বার্তা');
+    const qTxt = escapeHtml(msg.replyTo.text || '');
+    quoteHtml = `
+      <div class="reply-quote" data-jump-key="${qKey}">
+        <span class="reply-quote-who">${qWho}</span>
+        <span class="reply-quote-text">${qTxt}</span>
+      </div>`;
+  }
+
+  div.innerHTML = `${who}${quoteHtml}<div>${escapeHtml(msg.text || '')}</div><span class="chat-meta">${time}${status}</span>`;
+
+  const replyBtn = document.createElement('button');
+  replyBtn.className = 'msg-reply-btn';
+  replyBtn.type = 'button';
+  replyBtn.dataset.action = 'replyMsg';
+  replyBtn.dataset.key = key;
+  replyBtn.setAttribute('aria-label', 'রিপ্লাই');
+  replyBtn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></svg>`;
+
+  if(mine){
+    row.appendChild(replyBtn);
+    row.appendChild(div);
+  } else {
+    row.appendChild(div);
+    row.appendChild(replyBtn);
+  }
+
+  box.appendChild(row);
   scrollChat();
   if(mine) applySeen();
 }
@@ -2521,11 +2692,28 @@ function markChatRead(){
 function sendChatMessage(text){
   const t = String(text || '').trim().slice(0, 300);
   if(!t || !chatRef) return;
-  if(chatContext === 'room' && onlineCode){
-    chatRef.push({ sender: myRole, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
-  } else if(chatContext === 'dm' && activeDmFriend){
-    chatRef.push({ senderId: profile.id, name: profile.name || 'আমি', text: t, time: Date.now() }).catch(() => {});
+
+  const payload = {
+    name: profile.name || 'আমি',
+    text: t,
+    time: Date.now()
+  };
+  if(replyingTo){
+    payload.replyTo = {
+      key: replyingTo.key,
+      name: replyingTo.name,
+      text: String(replyingTo.text || '').slice(0, 120)
+    };
   }
+
+  if(chatContext === 'room' && onlineCode){
+    payload.sender = myRole;
+    chatRef.push(payload).catch(() => {});
+  } else if(chatContext === 'dm' && activeDmFriend){
+    payload.senderId = profile.id;
+    chatRef.push(payload).catch(() => {});
+  }
+  cancelReply();
 }
 function sendText(){
   const inp = $('chatInput');
@@ -2547,6 +2735,7 @@ function openChat(){
 }
 function closeChat(){
   chatOpen = false;
+  cancelReply();
   $('chatDrawer').classList.remove('open');
   if(chatContext === 'dm'){
     detachChatListeners();
@@ -2586,6 +2775,11 @@ function onDocClick(e){
     handleCellClick(Number(cell.dataset.index));
     return;
   }
+  const jumpEl = e.target.closest && e.target.closest('[data-jump-key]');
+  if(jumpEl){
+    scrollToQuotedMsg(jumpEl.dataset.jumpKey);
+    return;
+  }
   const el = e.target.closest && e.target.closest('[data-action]');
   if(!el) return;
   const fn = ACTIONS[el.dataset.action];
@@ -2598,6 +2792,12 @@ function onDocClick(e){
   }
   fn(el);
 }
+function onDocDblClick(e){
+  const bubble = e.target.closest && e.target.closest('#chatMessages .chat-msg[data-msg-key]');
+  if(bubble){
+    setReplyTarget(bubble.dataset.msgKey);
+  }
+}
 const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
@@ -2606,7 +2806,9 @@ const ACTIONS = {
   startComputer, startLocal, createRoom, joinRoom, cancelRoom,
   copyRoomCode, copyRoomLink, shareRoomLink,
   updateProfileName, resetStats, exitGame, playAgain,
-  openChat, closeChat, toggleSound, sendEmoji, sendText, handleToastClick, hideErr
+  openChat, closeChat, toggleSound, sendEmoji, sendText,
+  replyMsg: el => setReplyTarget(el.dataset.key),
+  cancelReply, handleToastClick, hideErr
 };
 function bindKeys(){
   $('nameInput').addEventListener('keydown', e => {
@@ -2649,6 +2851,7 @@ function init(){
   soundOn = store.get('xo_sound') !== '0';
   updateSoundBtn();
   document.addEventListener('click', onDocClick);
+  document.addEventListener('dblclick', onDocDblClick);
   bindKeys();
   renderMenu();
   if(!profile.name){

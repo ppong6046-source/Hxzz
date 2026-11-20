@@ -24,12 +24,10 @@
 /* ================= PWA ICON & MANIFEST GENERATOR ================= */
 (function setupPWA(){
   try{
-    // Generate Custom High-Res App Icon (512x512 PNG via Canvas)
     const c = document.createElement('canvas');
     c.width = 512; c.height = 512;
     const ctx = c.getContext('2d');
 
-    // Background Gradient
     const grad = ctx.createLinearGradient(0, 0, 512, 512);
     grad.addColorStop(0, '#1b1040');
     grad.addColorStop(0.5, '#2d1b5e');
@@ -37,7 +35,6 @@
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, 512, 512);
 
-    // Glow blobs
     const g1 = ctx.createRadialGradient(140, 160, 10, 140, 160, 210);
     g1.addColorStop(0, 'rgba(255,93,122,0.45)');
     g1.addColorStop(1, 'rgba(255,93,122,0)');
@@ -50,7 +47,6 @@
     ctx.fillStyle = g2;
     ctx.fillRect(0, 0, 512, 512);
 
-    // Subtle Grid Lines
     ctx.strokeStyle = 'rgba(255,255,255,0.14)';
     ctx.lineWidth = 6;
     ctx.lineCap = 'round';
@@ -59,7 +55,6 @@
     ctx.moveTo(76, 256); ctx.lineTo(436, 256);
     ctx.stroke();
 
-    // Draw X (Top-Left)
     ctx.strokeStyle = '#ff5d7a';
     ctx.shadowColor = '#ff5d7a';
     ctx.shadowBlur = 22;
@@ -69,14 +64,12 @@
     ctx.moveTo(206, 118); ctx.lineTo(118, 206);
     ctx.stroke();
 
-    // Draw O (Bottom-Right)
     ctx.strokeStyle = '#4fd1ff';
     ctx.shadowColor = '#4fd1ff';
     ctx.beginPath();
     ctx.arc(350, 350, 48, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Draw Gold Mini O (Top-Right) & Mini X (Bottom-Left)
     ctx.strokeStyle = '#ffd166';
     ctx.shadowColor = '#ffd166';
     ctx.lineWidth = 18;
@@ -93,7 +86,6 @@
     const appleLink = document.getElementById('appleTouchIcon');
     if(appleLink) appleLink.href = iconUrl;
 
-    // Dynamic Web App Manifest
     const manifest = {
       name: 'XO Game - Tic Tac Toe',
       short_name: 'XO Game',
@@ -113,7 +105,6 @@
     const mLink = document.getElementById('appManifestLink');
     if(mLink) mLink.href = URL.createObjectURL(mBlob);
 
-    // Register Offline Service Worker (works on HTTPS / localhost)
     if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
       const swCode = `
         const CACHE = 'xo-pwa-v1';
@@ -146,33 +137,20 @@
   }catch(e){}
 })();
 
+/* Silently log errors to console without showing the red banner */
 function showErr(msg){
-  var bar = document.getElementById('errBar');
-  var txt = document.getElementById('errText');
-  if(!bar || !txt) return;
-  txt.textContent = '⚠️ ' + msg;
-  bar.style.display = 'block';
+  console.warn('[XO]', msg);
 }
-function hideErr(){
-  var bar = document.getElementById('errBar');
-  if(bar) bar.style.display = 'none';
-}
+function hideErr(){}
 window.addEventListener('error', function(e){
-  var msg = (e && e.message) ? e.message : '';
-  if(!msg || msg === 'Script error.'){
-    console.warn('[XO] opaque script error ignored');
-    return;
+  if(e && e.message && e.message.indexOf('ethereum') !== -1){
+    e.preventDefault();
+    return true;
   }
-  showErr(msg + (e.lineno ? ' (Line ' + e.lineno + ')' : ''));
+  console.warn('[XO]', e && e.message);
 });
 window.addEventListener('unhandledrejection', function(e){
-  var r = e.reason;
-  var m = (r && r.message) ? r.message : (r ? String(r) : '');
-  if(!m || m === 'Script error.'){
-    console.warn('[XO] opaque rejection ignored');
-    return;
-  }
-  showErr(m);
+  console.warn('[XO]', e && e.reason);
 });
 </script>
 
@@ -188,10 +166,6 @@ body{
   padding-top:env(safe-area-inset-top, 0px);
   padding-bottom:env(safe-area-inset-bottom, 0px);
 }
-
-/* error bar */
-#errBar{position:fixed;top:0;left:0;right:0;z-index:999;background:#b00020;color:#fff;font-size:13px;padding:9px 40px 9px 12px;display:none;text-align:center;line-height:1.4}
-#errBar button{position:absolute;right:6px;top:4px;background:none;border:none;color:#fff;font-size:16px;padding:4px 8px;cursor:pointer}
 
 /* Offline / Online Network Status Pill */
 .net-pill{
@@ -974,8 +948,6 @@ body{
 </head>
 <body>
 
-<div id="errBar"><span id="errText"></span><button data-action="hideErr" aria-label="Close">✕</button></div>
-
 <!-- Offline / Online Status Indicator -->
 <div class="net-pill offline" id="netPill" hidden>
   <span class="net-dot"></span>
@@ -1069,7 +1041,7 @@ body{
       <span class="btn-label" data-i18n="playCpu">কম্পিউটারের সাথে খেলুন</span>
     </button>
 
-    <!-- Play with Friend Local (Opens 2-Player Name Setup) -->
+    <!-- Play with Friend Local -->
     <button class="btn btn-primary btn-shine" data-action="goLocalSetup" data-tap-anim="1">
       <span class="btn-icon-box anim-duo">
         <svg viewBox="0 0 24 24">
@@ -1146,7 +1118,6 @@ body{
   <div class="card">
     <h2 class="title" data-i18n="friendsTitle">বন্ধু তালিকা</h2>
 
-    <!-- My Friend ID -->
     <div class="my-id-card">
       <div class="my-id-info">
         <small data-i18n="yourFriendId">আপনার ফ্রেন্ড আইডি</small>
@@ -1158,7 +1129,6 @@ body{
       </button>
     </div>
 
-    <!-- Send Friend Request -->
     <div class="friend-add-row">
       <input id="friendIdInput" class="input" maxlength="6" placeholder="বন্ধুর আইডি" autocomplete="off">
       <button class="btn btn-primary friend-add-btn" data-action="sendFriendRequest">
@@ -1167,7 +1137,6 @@ body{
     </div>
     <div class="hint" id="friendMsg"></div>
 
-    <!-- Tabs: Friends vs Requests -->
     <div class="friend-tabs">
       <button class="tab-btn active" id="tabFriendsBtn" data-action="switchFriendTab" data-tab="friends">
         <span data-i18n="tabFriends">বন্ধুরা</span>
@@ -1179,11 +1148,9 @@ body{
       </button>
     </div>
 
-    <!-- Lists -->
     <div class="friends-list" id="friendsListBox"></div>
     <div class="friends-list" id="requestsListBox" hidden></div>
 
-    <!-- Back -->
     <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
@@ -1201,7 +1168,6 @@ body{
   <div class="card">
     <h2 class="title" data-i18n="chooseLevel">লেভেল বেছে নিন</h2>
 
-    <!-- Easy -->
     <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="easy" data-tap-anim="1">
       <span class="btn-icon-box anim-smile">
         <svg class="smile-face" viewBox="0 0 24 24">
@@ -1214,7 +1180,6 @@ body{
       <span class="btn-label" data-i18n="levelEasy">সহজ</span>
     </button>
 
-    <!-- Medium -->
     <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="medium" data-tap-anim="1">
       <span class="btn-icon-box anim-brain">
         <svg viewBox="0 0 24 24">
@@ -1228,7 +1193,6 @@ body{
       <span class="btn-label" data-i18n="levelMedium">মাঝারি</span>
     </button>
 
-    <!-- Hard -->
     <button class="btn btn-primary btn-shine" data-action="startComputer" data-level="hard" data-tap-anim="1">
       <span class="btn-icon-box anim-fire">
         <svg viewBox="0 0 24 24">
@@ -1239,7 +1203,6 @@ body{
       <span class="btn-label" data-i18n="levelHard">কঠিন (অজয়)</span>
     </button>
 
-    <!-- Back -->
     <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
@@ -1257,7 +1220,6 @@ body{
   <div class="card">
     <h2 class="title" data-i18n="onlineTitle">অনলাইন খেলা</h2>
 
-    <!-- Create Room -->
     <button class="btn btn-primary btn-shine" data-action="createRoom" data-tap-anim="1">
       <span class="btn-icon-box anim-plus">
         <svg class="plus-cross" viewBox="0 0 24 24">
@@ -1271,7 +1233,6 @@ body{
     <div class="divider" data-i18n="orDivider">অথবা</div>
     <input id="joinCodeInput" class="input code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
 
-    <!-- Join Room -->
     <button class="btn btn-secondary btn-shine" data-action="joinRoom" data-tap-anim="1">
       <span class="btn-icon-box anim-door">
         <svg viewBox="0 0 24 24">
@@ -1287,7 +1248,6 @@ body{
 
     <p class="hint" id="onlineMsg"></p>
 
-    <!-- Back -->
     <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
@@ -1307,7 +1267,6 @@ body{
     <p class="sub" data-i18n="waitingSub">কোড বা লিংকটি বন্ধুকে পাঠান</p>
     <div class="room-code-box" id="roomCodeDisplay">----</div>
 
-    <!-- Animated Copy Code Button -->
     <button class="btn btn-secondary btn-shine" id="copyBtn" data-action="copyRoomCode">
       <span class="btn-icon-box anim-copy">
         <svg class="icon-main" viewBox="0 0 24 24">
@@ -1319,7 +1278,6 @@ body{
       <span class="btn-label" data-i18n="copyCode">কোড কপি করুন</span>
     </button>
 
-    <!-- Animated Copy Link Button -->
     <button class="btn btn-secondary btn-shine" id="linkBtn" data-action="copyRoomLink">
       <span class="btn-icon-box anim-link">
         <svg class="icon-main" viewBox="0 0 24 24">
@@ -1331,7 +1289,6 @@ body{
       <span class="btn-label" data-i18n="copyLink">লিংক কপি করুন</span>
     </button>
 
-    <!-- Animated Share Link Button -->
     <button class="btn btn-info btn-shine" id="shareBtn" data-action="shareRoomLink" hidden>
       <span class="btn-icon-box anim-share">
         <svg class="icon-main" viewBox="0 0 24 24">
@@ -1366,7 +1323,6 @@ body{
     <h2 class="title" data-i18n="profileTitle">প্রোফাইল</h2>
     <input id="profileNameInput" class="input" maxlength="15" placeholder="আপনার নাম">
 
-    <!-- Update Name -->
     <button class="btn btn-secondary btn-shine" data-action="updateProfileName" data-tap-anim="1">
       <span class="btn-icon-box anim-edit">
         <svg viewBox="0 0 24 24">
@@ -1386,7 +1342,6 @@ body{
     </div>
     <p class="sub" id="profileSummaryLine"></p>
 
-    <!-- Reset Stats -->
     <button class="btn btn-ghost" data-action="resetStats" data-tap-anim="1">
       <span class="btn-icon-box anim-trash">
         <svg viewBox="0 0 24 24">
@@ -1402,7 +1357,6 @@ body{
       <span class="btn-label" data-i18n="resetStats">পরিসংখ্যান রিসেট</span>
     </button>
 
-    <!-- Back -->
     <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
@@ -1552,7 +1506,6 @@ body{
       <button data-action="sendEmoji" data-emoji="❤️">❤️</button>
     </div>
 
-    <!-- Active Reply Preview Bar -->
     <div class="reply-preview-bar" id="replyPreviewBar" hidden>
       <div class="reply-preview-info">
         <div class="reply-preview-title">
@@ -1617,7 +1570,7 @@ body{
   </div>
 </div>
 
-<!-- PWA INSTALL GUIDE MODAL (iPhone & Android Instructions) -->
+<!-- PWA INSTALL GUIDE MODAL -->
 <div class="invite-overlay" id="installModalOverlay">
   <div class="invite-card">
     <div class="result-hero hero-win">
@@ -1650,7 +1603,7 @@ const firebaseConfig = {
 };
 
 /* ================= LANGUAGE / I18N ================= */
-let lang = 'bn'; // 'bn' | 'en'
+let lang = 'bn';
 const I18N = {
   bn: {
     installBtn: 'ইনস্টল',

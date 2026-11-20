@@ -3,7 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>❌⭕️</title>
+<title>XO Game</title>
+
+<!-- PWA & Full Screen App Meta Tags (iPhone & Android) -->
+<meta name="theme-color" content="#14102b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="XO Game">
+<link id="appleTouchIcon" rel="apple-touch-icon" href="">
+<link id="appManifestLink" rel="manifest" href="">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -11,6 +21,131 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
 <script>
+/* ================= PWA ICON & MANIFEST GENERATOR ================= */
+(function setupPWA(){
+  try{
+    // Generate Custom High-Res App Icon (512x512 PNG via Canvas)
+    const c = document.createElement('canvas');
+    c.width = 512; c.height = 512;
+    const ctx = c.getContext('2d');
+
+    // Background Gradient
+    const grad = ctx.createLinearGradient(0, 0, 512, 512);
+    grad.addColorStop(0, '#1b1040');
+    grad.addColorStop(0.5, '#2d1b5e');
+    grad.addColorStop(1, '#0f3b5c');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Glow blobs
+    const g1 = ctx.createRadialGradient(140, 160, 10, 140, 160, 210);
+    g1.addColorStop(0, 'rgba(255,93,122,0.45)');
+    g1.addColorStop(1, 'rgba(255,93,122,0)');
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, 512, 512);
+
+    const g2 = ctx.createRadialGradient(380, 360, 10, 380, 360, 210);
+    g2.addColorStop(0, 'rgba(79,209,255,0.45)');
+    g2.addColorStop(1, 'rgba(79,209,255,0)');
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, 512, 512);
+
+    // Subtle Grid Lines
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(256, 76); ctx.lineTo(256, 436);
+    ctx.moveTo(76, 256); ctx.lineTo(436, 256);
+    ctx.stroke();
+
+    // Draw X (Top-Left)
+    ctx.strokeStyle = '#ff5d7a';
+    ctx.shadowColor = '#ff5d7a';
+    ctx.shadowBlur = 22;
+    ctx.lineWidth = 26;
+    ctx.beginPath();
+    ctx.moveTo(118, 118); ctx.lineTo(206, 206);
+    ctx.moveTo(206, 118); ctx.lineTo(118, 206);
+    ctx.stroke();
+
+    // Draw O (Bottom-Right)
+    ctx.strokeStyle = '#4fd1ff';
+    ctx.shadowColor = '#4fd1ff';
+    ctx.beginPath();
+    ctx.arc(350, 350, 48, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Draw Gold Mini O (Top-Right) & Mini X (Bottom-Left)
+    ctx.strokeStyle = '#ffd166';
+    ctx.shadowColor = '#ffd166';
+    ctx.lineWidth = 18;
+    ctx.beginPath();
+    ctx.arc(350, 162, 34, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(132, 320); ctx.lineTo(192, 380);
+    ctx.moveTo(192, 320); ctx.lineTo(132, 380);
+    ctx.stroke();
+
+    const iconUrl = c.toDataURL('image/png');
+    const appleLink = document.getElementById('appleTouchIcon');
+    if(appleLink) appleLink.href = iconUrl;
+
+    // Dynamic Web App Manifest
+    const manifest = {
+      name: 'XO Game - Tic Tac Toe',
+      short_name: 'XO Game',
+      description: 'Play XO offline with friends or online with live chat.',
+      start_url: location.href.split('#')[0],
+      scope: './',
+      display: 'standalone',
+      orientation: 'portrait',
+      background_color: '#14102b',
+      theme_color: '#14102b',
+      icons: [
+        { src: iconUrl, sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+        { src: iconUrl, sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+      ]
+    };
+    const mBlob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+    const mLink = document.getElementById('appManifestLink');
+    if(mLink) mLink.href = URL.createObjectURL(mBlob);
+
+    // Register Offline Service Worker (works on HTTPS / localhost)
+    if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
+      const swCode = `
+        const CACHE = 'xo-pwa-v1';
+        self.addEventListener('install', e => {
+          self.skipWaiting();
+          e.waitUntil(
+            caches.open(CACHE).then(cache => cache.addAll(['./']).catch(() => {}))
+          );
+        });
+        self.addEventListener('activate', e => {
+          e.waitUntil(self.clients.claim());
+        });
+        self.addEventListener('fetch', e => {
+          if(e.request.method !== 'GET') return;
+          const url = new URL(e.request.url);
+          if(url.origin !== location.origin) return;
+          e.respondWith(
+            fetch(e.request).then(res => {
+              const copy = res.clone();
+              caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+              return res;
+            }).catch(() => caches.match(e.request).then(r => r || caches.match('./')))
+          );
+        });
+      `;
+      const swBlob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(swBlob);
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+  }catch(e){}
+})();
+
 function showErr(msg){
   var bar = document.getElementById('errBar');
   var txt = document.getElementById('errText');
@@ -45,12 +180,44 @@ window.addEventListener('unhandledrejection', function(e){
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none !important}
 :root{--x:#ff5d7a;--o:#4fd1ff;--gold:#ffd166}
-html,body{height:100%}
-body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;background:#14102b;overflow:hidden;min-height:100vh;min-height:100dvh}
+html,body{height:100%;overscroll-behavior:none}
+body{
+  font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;
+  color:#fff;background:#14102b;overflow:hidden;
+  min-height:100vh;min-height:100dvh;
+  padding-top:env(safe-area-inset-top, 0px);
+  padding-bottom:env(safe-area-inset-bottom, 0px);
+}
 
 /* error bar */
 #errBar{position:fixed;top:0;left:0;right:0;z-index:999;background:#b00020;color:#fff;font-size:13px;padding:9px 40px 9px 12px;display:none;text-align:center;line-height:1.4}
 #errBar button{position:absolute;right:6px;top:4px;background:none;border:none;color:#fff;font-size:16px;padding:4px 8px;cursor:pointer}
+
+/* Offline / Online Network Status Pill */
+.net-pill{
+  position:fixed;
+  top:max(14px, env(safe-area-inset-top, 14px));
+  left:50%;transform:translateX(-50%);
+  z-index:180;
+  padding:5px 12px;border-radius:999px;
+  font-size:11.5px;font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 6px 20px rgba(0,0,0,.35);
+  transition:all .3s ease;
+  pointer-events:none;
+}
+.net-pill.offline{
+  background:rgba(245,158,11,.24);
+  border:1px solid rgba(251,191,36,.55);
+  color:#fde68a;
+}
+.net-pill.online-flash{
+  background:rgba(34,197,94,.24);
+  border:1px solid rgba(74,222,128,.55);
+  color:#86efac;
+}
+.net-dot{width:7px;height:7px;border-radius:50%;background:currentColor}
 
 /* background */
 .bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,#1b1040,#2d1b5e,#0f3b5c,#3a1c52);background-size:300% 300%;animation:bgShift 16s ease infinite;overflow:hidden}
@@ -65,7 +232,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 .screen{display:none;position:fixed;inset:0;align-items:center;justify-content:center;padding:20px;overflow:hidden}
 .screen.active{display:flex}
 
-/* Menu Top Bar (Left: Profile, Right: Language + Friends) */
+/* Menu Top Bar (Left: Profile + Install, Right: Language + Friends) */
 .menu-top-bar{
   position:fixed;
   top:max(14px, env(safe-area-inset-top, 14px));
@@ -74,8 +241,8 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   display:flex;align-items:center;justify-content:space-between;
   pointer-events:none;
 }
-.menu-top-right{
-  display:flex;align-items:center;gap:10px;
+.menu-top-left,.menu-top-right{
+  display:flex;align-items:center;gap:8px;
   pointer-events:auto;
 }
 .top-pill-btn{
@@ -88,7 +255,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   backdrop-filter:blur(16px);
   -webkit-backdrop-filter:blur(16px);
   box-shadow:0 8px 24px rgba(0,0,0,.28), inset 0 1px 1px rgba(255,255,255,.32);
-  color:#fff;font:inherit;font-size:13.5px;font-weight:700;
+  color:#fff;font:inherit;font-size:13px;font-weight:700;
   cursor:pointer;
   display:inline-flex;align-items:center;justify-content:center;gap:6px;
   position:relative;
@@ -105,6 +272,19 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   padding:0;width:44px;
   background:linear-gradient(135deg,rgba(79,209,255,.26),rgba(74,139,255,.26));
   border-color:rgba(79,209,255,.45);
+}
+.top-pill-install{
+  padding:0 12px;
+  background:linear-gradient(135deg,rgba(255,93,122,.32),rgba(255,138,92,.32));
+  border-color:rgba(255,138,92,.55);
+  color:#fff;
+  box-shadow:0 8px 22px rgba(255,93,122,.28), inset 0 1px 1px rgba(255,255,255,.35);
+}
+.top-pill-install svg{width:17px;height:17px}
+.anim-install .install-arrow{animation:installBounce 1.8s ease-in-out infinite}
+@keyframes installBounce{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(2.5px)}
 }
 .top-pill-friends{
   padding:0;width:44px;
@@ -138,6 +318,30 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   display:grid;place-items:center;
   box-shadow:0 2px 10px rgba(255,59,92,.75);
   animation:pillPulse 1.8s ease-in-out infinite;
+}
+
+/* Install Guide Modal Steps */
+.install-steps{
+  display:flex;flex-direction:column;gap:9px;
+  text-align:left;margin:4px 0;
+}
+.install-step{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:15px;padding:10px 12px;
+  font-size:13px;line-height:1.4;
+}
+.step-num{
+  width:24px;height:24px;border-radius:8px;flex-shrink:0;
+  background:linear-gradient(135deg,#ff5d7a,#ff8a5c);
+  font-weight:800;font-size:12px;display:grid;place-items:center;
+}
+.step-badge-icon{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:2px 6px;border-radius:6px;
+  background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);
+  color:#7fd8ff;font-weight:700;font-size:12px;vertical-align:middle;
 }
 
 .card{width:min(92vw,410px);max-height:92dvh;overflow-y:auto;padding:26px 20px;border-radius:28px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 20px 60px rgba(0,0,0,.35);display:flex;flex-direction:column;gap:14px;text-align:center;animation:pop .5s ease}
@@ -330,7 +534,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   font-size:13px;opacity:.75;line-height:1.5;
 }
 
-/* Modals (Game Invite & Unfriend Confirmation) */
+/* Modals (Game Invite, Unfriend & Install Guide) */
 .invite-overlay{
   position:fixed;inset:0;z-index:260;
   background:rgba(6,4,20,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -339,7 +543,7 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 }
 .invite-overlay.show{opacity:1;pointer-events:auto}
 .invite-card{
-  width:min(88vw,350px);padding:24px 20px;border-radius:26px;
+  width:min(88vw,360px);padding:24px 20px;border-radius:26px;
   background:rgba(28,20,58,.96);border:1px solid rgba(79,209,255,.45);
   box-shadow:0 20px 50px rgba(0,0,0,.5);
   text-align:center;display:flex;flex-direction:column;gap:12px;
@@ -772,6 +976,12 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 
 <div id="errBar"><span id="errText"></span><button data-action="hideErr" aria-label="Close">✕</button></div>
 
+<!-- Offline / Online Status Indicator -->
+<div class="net-pill offline" id="netPill" hidden>
+  <span class="net-dot"></span>
+  <span id="netPillText">অফলাইন মোড</span>
+</div>
+
 <div class="bg">
   <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
 </div>
@@ -789,15 +999,28 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
 
 <!-- MENU -->
 <section id="screen-menu" class="screen">
-  <!-- Top Bar: Profile (Left) | Language + Friends (Right) -->
+  <!-- Top Bar: Profile + Install (Left) | Language + Friends (Right) -->
   <div class="menu-top-bar">
-    <!-- Left: Profile Icon -->
-    <button class="top-pill-btn top-pill-profile anim-user" data-action="goProfile" data-top-anim="1" aria-label="প্রোফাইল">
-      <svg viewBox="0 0 24 24">
-        <circle class="user-head" cx="12" cy="8" r="4"/>
-        <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
-      </svg>
-    </button>
+    <!-- Left: Profile Icon + Install App Button -->
+    <div class="menu-top-left">
+      <button class="top-pill-btn top-pill-profile anim-user" data-action="goProfile" data-top-anim="1" aria-label="প্রোফাইল">
+        <svg viewBox="0 0 24 24">
+          <circle class="user-head" cx="12" cy="8" r="4"/>
+          <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
+        </svg>
+      </button>
+
+      <button class="top-pill-btn top-pill-install anim-install" id="installAppBtn" data-action="triggerPwaInstall" data-top-anim="1" aria-label="Install App">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <g class="install-arrow">
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </g>
+        </svg>
+        <span data-i18n="installBtn">ইনস্টল</span>
+      </button>
+    </div>
 
     <!-- Right: Language (EN/BN) + Friends Icon -->
     <div class="menu-top-right">
@@ -1394,6 +1617,24 @@ body{font-family:'Poppins','Noto Sans Bengali',system-ui,sans-serif;color:#fff;b
   </div>
 </div>
 
+<!-- PWA INSTALL GUIDE MODAL (iPhone & Android Instructions) -->
+<div class="invite-overlay" id="installModalOverlay">
+  <div class="invite-card">
+    <div class="result-hero hero-win">
+      <svg viewBox="0 0 24 24">
+        <rect x="6" y="2" width="12" height="20" rx="3"/>
+        <line x1="12" y1="18" x2="12.01" y2="18"/>
+        <polyline points="9 10 12 13 15 10"/>
+        <line x1="12" y1="7" x2="12" y2="13"/>
+      </svg>
+    </div>
+    <h2 data-i18n="installModalTitle">অ্যাপ ইনস্টল করুন</h2>
+    <p class="sub" id="installModalSub" data-i18n="installModalSub">ফুল-স্ক্রিন ও অফলাইনে খেলার জন্য হোম স্ক্রিনে যোগ করুন</p>
+    <div class="install-steps" id="installStepsBox"></div>
+    <button class="btn btn-primary" data-action="closeInstallModal" data-i18n="gotItBtn">বুঝেছি</button>
+  </div>
+</div>
+
 <div class="chat-toast anim-chat" id="chatToast" data-action="handleToastClick"></div>
 
 <script>
@@ -1412,6 +1653,12 @@ const firebaseConfig = {
 let lang = 'bn'; // 'bn' | 'en'
 const I18N = {
   bn: {
+    installBtn: 'ইনস্টল',
+    installModalTitle: 'অ্যাপ ইনস্টল করুন',
+    installModalSub: 'ফুল-স্ক্রিন ও অফলাইনে খেলার জন্য হোম স্ক্রিনে যোগ করুন',
+    gotItBtn: 'বুঝেছি',
+    offlineMode: 'অফলাইন মোড (কম্পিউটার ও লোকাল খেলা চালু)',
+    onlineRestored: 'অনলাইন সংযোগ ফিরে এসেছে',
     enterName: 'আপনার নাম লিখুন',
     namePlaceholder: 'যেমন: রাহুল',
     startBtn: 'শুরু করুন',
@@ -1496,6 +1743,12 @@ const I18N = {
     opp: 'প্রতিপক্ষ'
   },
   en: {
+    installBtn: 'Install',
+    installModalTitle: 'Install App',
+    installModalSub: 'Add to Home Screen for full-screen & offline play',
+    gotItBtn: 'Got It',
+    offlineMode: 'Offline Mode (CPU & Local Ready)',
+    onlineRestored: 'Back Online',
     enterName: 'Enter your name',
     namePlaceholder: 'e.g. Alex',
     startBtn: 'Start',
@@ -1600,6 +1853,7 @@ function applyLanguage(){
   if($('friendIdInput')) $('friendIdInput').placeholder = t('friendIdPlaceholder');
   if($('profileNameInput')) $('profileNameInput').placeholder = t('profileNamePh');
   if($('chatInput')) $('chatInput').placeholder = t('chatPlaceholder');
+  if(!navigator.onLine && $('netPillText')) $('netPillText').textContent = t('offlineMode');
 
   renderMenu();
   renderStats();
@@ -1612,6 +1866,85 @@ function toggleLang(){
   store.set('xo_lang', lang);
   applyLanguage();
 }
+
+/* ================= PWA INSTALL & OFFLINE MONITOR ================= */
+let deferredInstallPrompt = null;
+function isStandaloneApp(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+}
+function updateInstallBtnVisibility(){
+  const btn = $('installAppBtn');
+  if(btn) btn.hidden = isStandaloneApp();
+}
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  updateInstallBtnVisibility();
+});
+window.addEventListener('appinstalled', () => {
+  deferredInstallPrompt = null;
+  updateInstallBtnVisibility();
+});
+async function triggerPwaInstall(){
+  if(deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    try{ await deferredInstallPrompt.userChoice; }catch(e){}
+    deferredInstallPrompt = null;
+    updateInstallBtnVisibility();
+    return;
+  }
+  showInstallGuideModal();
+}
+function showInstallGuideModal(){
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const box = $('installStepsBox');
+  if(isIOS){
+    box.innerHTML = lang === 'bn' ? `
+      <div class="install-step"><span class="step-num">১</span><span> নিচের ব্রাউজার বারে থাকা <span class="step-badge-icon">Share ⬆</span> বাটনে ট্যাপ করুন।</span></div>
+      <div class="install-step"><span class="step-num">২</span><span> নিচে স্ক্রল করে <span class="step-badge-icon">Add to Home Screen ⊞</span> অপশনটি বেছে নিন।</span></div>
+      <div class="install-step"><span class="step-num">৩</span><span> উপরে ডানপাশে <span class="step-badge-icon">Add</span> চাপলেই ফুল-স্ক্রিন অ্যাপ ইনস্টল হয়ে যাবে।</span></div>
+    ` : `
+      <div class="install-step"><span class="step-num">1</span><span>Tap the <span class="step-badge-icon">Share ⬆</span> button in Safari's bottom bar.</span></div>
+      <div class="install-step"><span class="step-num">2</span><span>Scroll down and select <span class="step-badge-icon">Add to Home Screen ⊞</span>.</span></div>
+      <div class="install-step"><span class="step-num">3</span><span>Tap <span class="step-badge-icon">Add</span> at the top right to launch full-screen.</span></div>
+    `;
+  } else {
+    box.innerHTML = lang === 'bn' ? `
+      <div class="install-step"><span class="step-num">১</span><span> ব্রাউজারের উপরে ডানপাশে থাকা <span class="step-badge-icon">⋮ মেনু</span> বাটনে ট্যাপ করুন।</span></div>
+      <div class="install-step"><span class="step-num">২</span><span> <span class="step-badge-icon">Install App</span> অথবা <span class="step-badge-icon">Add to Home Screen</span>-এ ট্যাপ করুন।</span></div>
+      <div class="install-step"><span class="step-num">৩</span><span> <span class="step-badge-icon">Install</span> নিশ্চিত করলে হোম স্ক্রিনে কাস্টম আইকনসহ অ্যাপ তৈরি হবে।</span></div>
+    ` : `
+      <div class="install-step"><span class="step-num">1</span><span>Tap the <span class="step-badge-icon">⋮ Menu</span> button at the top right of your browser.</span></div>
+      <div class="install-step"><span class="step-num">2</span><span>Select <span class="step-badge-icon">Install App</span> or <span class="step-badge-icon">Add to Home Screen</span>.</span></div>
+      <div class="install-step"><span class="step-num">3</span><span>Confirm <span class="step-badge-icon">Install</span> to add the full-screen app icon.</span></div>
+    `;
+  }
+  $('installModalOverlay').classList.add('show');
+}
+function closeInstallModal(){
+  $('installModalOverlay').classList.remove('show');
+}
+
+function updateNetworkUI(isInitial){
+  const pill = $('netPill');
+  const txt = $('netPillText');
+  if(!pill || !txt) return;
+  if(!navigator.onLine){
+    pill.className = 'net-pill offline';
+    txt.textContent = t('offlineMode');
+    pill.hidden = false;
+  } else if(!isInitial){
+    pill.className = 'net-pill online-flash';
+    txt.textContent = t('onlineRestored');
+    pill.hidden = false;
+    clearTimeout(pill._t);
+    pill._t = setTimeout(() => { pill.hidden = true; }, 2600);
+  } else {
+    pill.hidden = true;
+  }
+}
+window.addEventListener('online', () => updateNetworkUI(false));
+window.addEventListener('offline', () => updateNetworkUI(false));
 
 /* ================= CONSTANTS ================= */
 const WIN_COMBOS = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
@@ -3273,7 +3606,7 @@ function onDocClick(e){
 
   if(el.dataset.topAnim === '1'){
     triggerTapWiggle(el);
-    if(el.dataset.action === 'toggleLang'){
+    if(el.dataset.action === 'toggleLang' || el.dataset.action === 'triggerPwaInstall'){
       fn(el);
       return;
     }
@@ -3295,6 +3628,7 @@ function onDocDblClick(e){
 }
 const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
+  triggerPwaInstall, closeInstallModal,
   goLocalSetup, startLocalWithNames, editLocalNamesInGame,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
   acceptFriendRequest, declineFriendRequest,
@@ -3354,6 +3688,8 @@ function init(){
   lang = store.get('xo_lang') === 'en' ? 'en' : 'bn';
   soundOn = store.get('xo_sound') !== '0';
   updateSoundBtn();
+  updateInstallBtnVisibility();
+  updateNetworkUI(true);
   document.addEventListener('click', onDocClick);
   document.addEventListener('dblclick', onDocDblClick);
   bindKeys();

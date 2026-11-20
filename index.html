@@ -479,6 +479,16 @@ body{
 .friend-name{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .friend-sub{font-size:11px;opacity:.75;display:flex;align-items:center;gap:4px;white-space:nowrap}
 .friend-sub.on{color:#86efac;opacity:1}
+.friend-time-note{
+  font-size:10.5px;
+  color:rgba(226,232,240,.72);
+  margin-top:2px;
+  line-height:1.3;
+  white-space:normal;
+}
+.friend-time-note.on{
+  color:#a7f3d0;
+}
 
 .friend-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
 .f-act-btn{
@@ -944,9 +954,223 @@ body{
 /* confetti */
 .confetti-piece{position:fixed;top:-20px;width:10px;height:14px;z-index:300;pointer-events:none;animation:fall linear forwards}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg);opacity:.9}}
+
+/* splash screen */
+.splash-screen{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 25% 20%, rgba(255,93,122,.22), transparent 50%),
+             radial-gradient(circle at 75% 80%, rgba(79,209,255,.22), transparent 50%),
+             linear-gradient(135deg,#14102b,#25164f,#0f3250);
+  transition:opacity .7s cubic-bezier(.4,0,.2,1), transform .7s cubic-bezier(.4,0,.2,1), visibility .7s;
+}
+.splash-screen.hide{
+  opacity:0;
+  transform:scale(1.06);
+  visibility:hidden;
+  pointer-events:none;
+}
+.splash-inner{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;
+  animation:splashReveal .85s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes splashReveal{
+  0%{opacity:0;transform:scale(.82) translateY(16px)}
+  100%{opacity:1;transform:scale(1) translateY(0)}
+}
+.splash-logo-svg{
+  width:116px;height:auto;margin-bottom:14px;
+  filter:drop-shadow(0 0 18px rgba(255,93,122,.55));
+  animation:splashPulse 2s ease-in-out infinite;
+}
+@keyframes splashPulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+.splash-brand{
+  font-size:38px;font-weight:800;letter-spacing:.12em;line-height:1.1;
+  background:linear-gradient(135deg,#ff5d7a 0%,#ffd166 50%,#4fd1ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 4px 18px rgba(79,209,255,.35));
+}
+.splash-credit{
+  margin-top:6px;
+  font-size:12px;font-weight:600;letter-spacing:.26em;
+  color:rgba(255,255,255,.72);
+  opacity:0;
+  animation:splashCreditIn .7s ease forwards .35s;
+}
+@keyframes splashCreditIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.splash-bar{
+  width:120px;height:3px;border-radius:999px;margin-top:22px;
+  background:rgba(255,255,255,.14);overflow:hidden;
+}
+.splash-bar-fill{
+  width:100%;height:100%;border-radius:999px;
+  background:linear-gradient(90deg,#ff5d7a,#ffd166,#4fd1ff);
+  transform-origin:left;
+  transform:scaleX(0);
+  animation:splashLoad 1.75s cubic-bezier(.4,0,.2,1) forwards .15s;
+}
+@keyframes splashLoad{
+  to{transform:scaleX(1)}
+}
+
+/* premium animated welcome banner */
+.welcome-banner-wrap{
+  position:fixed;
+  top:max(68px, calc(env(safe-area-inset-top, 14px) + 56px));
+  left:50%;
+  transform:translate(-50%, -26px) scale(.88);
+  z-index:240;
+  width:min(90vw, 370px);
+  opacity:0;
+  pointer-events:none;
+  filter:blur(8px);
+  transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .65s cubic-bezier(.22,1.25,.36,1), filter .5s ease;
+}
+.welcome-banner-wrap.show{
+  opacity:1;
+  transform:translate(-50%, 0) scale(1);
+  filter:blur(0);
+  pointer-events:auto;
+}
+.welcome-banner-card{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:14px 16px 16px;
+  background:linear-gradient(135deg, rgba(28,18,62,.92), rgba(18,38,68,.92));
+  border:1px solid rgba(255,209,102,.42);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  box-shadow:0 18px 46px rgba(0,0,0,.48), 0 0 28px rgba(79,209,255,.22), inset 0 1px 1px rgba(255,255,255,.28);
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;
+}
+.welcome-banner-card::before{
+  content:'';
+  position:absolute;top:0;left:-120%;width:65%;height:100%;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
+  transform:skewX(-22deg);
+  pointer-events:none;
+}
+.welcome-banner-wrap.show .welcome-banner-card::before{
+  animation:welcomeShimmer 2.4s ease-in-out .35s 2;
+}
+@keyframes welcomeShimmer{
+  0%{left:-120%}
+  100%{left:155%}
+}
+.welcome-badge-icon{
+  width:46px;height:46px;border-radius:15px;flex-shrink:0;
+  display:grid;place-items:center;
+  background:radial-gradient(circle at 30% 25%, rgba(255,209,102,.35), rgba(255,93,122,.28));
+  border:1px solid rgba(255,209,102,.5);
+  box-shadow:0 6px 18px rgba(255,93,122,.32), inset 0 1px 1px rgba(255,255,255,.4);
+  position:relative;
+}
+.welcome-badge-icon svg{
+  width:24px;height:24px;fill:none;stroke:var(--gold);stroke-width:2.1;
+  stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 8px rgba(255,209,102,.7));
+}
+.welcome-banner-wrap.show .welcome-badge-icon{
+  animation:welcomeBadgePop .75s cubic-bezier(.34,1.56,.64,1) forwards;
+}
+.welcome-banner-wrap.show .welcome-star-spin{
+  animation:welcomeStarFloat 2.4s ease-in-out infinite;
+  transform-origin:center;
+}
+@keyframes welcomeBadgePop{
+  0%{transform:scale(.5) rotate(-18deg)}
+  60%{transform:scale(1.1) rotate(6deg)}
+  100%{transform:scale(1) rotate(0deg)}
+}
+@keyframes welcomeStarFloat{
+  0%,100%{transform:scale(1) rotate(0deg)}
+  50%{transform:scale(1.12) rotate(12deg)}
+}
+.welcome-text-col{
+  flex:1;min-width:0;text-align:left;
+  display:flex;flex-direction:column;gap:3px;
+}
+.welcome-greeting{
+  font-size:16.5px;font-weight:800;line-height:1.25;
+  background:linear-gradient(135deg,#fff 0%,#ffe9a8 52%,#7fd8ff 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.welcome-last-active{
+  font-size:11.5px;font-weight:500;
+  color:rgba(226,232,240,.85);
+  display:flex;align-items:center;gap:5px;
+  line-height:1.35;
+}
+.welcome-last-active svg{
+  width:13px;height:13px;flex-shrink:0;
+  fill:none;stroke:#7fd8ff;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.welcome-progress{
+  position:absolute;left:0;right:0;bottom:0;height:3px;
+  background:rgba(255,255,255,.10);
+}
+.welcome-progress-fill{
+  width:100%;height:100%;
+  background:linear-gradient(90deg,#ff5d7a,#ffd166,#4fd1ff);
+  transform-origin:left;
+  transform:scaleX(1);
+}
+.welcome-banner-wrap.show .welcome-progress-fill{
+  animation:welcomeTimerBar 4.8s linear forwards;
+}
+@keyframes welcomeTimerBar{
+  from{transform:scaleX(1)}
+  to{transform:scaleX(0)}
+}
 </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splashScreen" class="splash-screen" aria-label="Loading XO HXZZ">
+  <div class="splash-inner">
+    <svg class="splash-logo-svg" viewBox="0 0 150 60" aria-hidden="true">
+      <line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/>
+      <line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/>
+      <circle cx="110" cy="30" r="20" fill="none" stroke="#4fd1ff" stroke-width="9"/>
+    </svg>
+    <div class="splash-brand">XO HXZZ</div>
+    <div class="splash-credit">seawinee7</div>
+    <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+  </div>
+</div>
+
+<!-- PREMIUM WELCOME BANNER -->
+<div id="welcomeBannerWrap" class="welcome-banner-wrap" aria-live="polite">
+  <div class="welcome-banner-card" onclick="hideWelcomeMessage()">
+    <div class="welcome-badge-icon">
+      <svg class="welcome-star-spin" viewBox="0 0 24 24">
+        <path d="M12 2.5l2.6 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.2l-5.3 3 1.1-6.1-4.5-4.2 6.1-.8L12 2.5z"/>
+      </svg>
+    </div>
+    <div class="welcome-text-col">
+      <div class="welcome-greeting" id="welcomeBannerTitle"></div>
+      <div class="welcome-last-active">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12 7 12 12 15.5 14"/>
+        </svg>
+        <span id="welcomeBannerLastActive"></span>
+      </div>
+    </div>
+    <div class="welcome-progress"><div class="welcome-progress-fill" id="welcomeProgressFill"></div></div>
+  </div>
+</div>
 
 <!-- Offline / Online Status Indicator -->
 <div class="net-pill offline" id="netPill" hidden>
@@ -1965,11 +2189,20 @@ let activeFriendTab = 'friends';
 let friendsMap = {};
 let requestsMap = {};
 const friendOnlineState = {};
+const friendOnlineSince = {};
+const friendLastSeen = {};
 const friendStatusRefs = {};
+const friendOnlineSinceRefs = {};
+const friendLastSeenRefs = {};
 const friendDmUnread = {};
 const friendDmRefs = {};
+let friendTimeTicker = null;
 let incomingInvite = null;
 let pendingUnfriend = null;    // { id, name }
+
+// welcome banner & last active tracking
+let prevLastActiveTs = null;
+let welcomeTimer = null;
 
 /* ================= HELPERS ================= */
 const $ = id => document.getElementById(id);
@@ -2086,15 +2319,27 @@ function toggleSound(){
 }
 
 /* ================= GLOBAL PRESENCE & SOCIAL LISTENERS ================= */
+function syncMyLastSeenNow(){
+  if(!db || !profile.id || !profile.name) return;
+  db.ref(`users/${profile.id}/lastSeen`).set(firebase.database.ServerValue.TIMESTAMP).catch(() => {});
+}
+
 function initSocialSystem(){
   if(!db || !profile.id || !profile.name) return;
   syncUserDirectory();
 
   const myOnlineRef = db.ref(`users/${profile.id}/online`);
+  const myOnlineSinceRef = db.ref(`users/${profile.id}/onlineSince`);
+  const myLastSeenRef = db.ref(`users/${profile.id}/lastSeen`);
+  const serverNow = firebase.database.ServerValue.TIMESTAMP;
+
   db.ref('.info/connected').on('value', snap => {
     if(snap.val() !== true) return;
     myOnlineRef.onDisconnect().set(false);
+    myLastSeenRef.onDisconnect().set(serverNow);
     myOnlineRef.set(true);
+    myOnlineSinceRef.set(serverNow);
+    myLastSeenRef.set(serverNow);
   });
 
   db.ref(`users/${profile.id}/requests`).on('value', snap => {
@@ -2110,6 +2355,10 @@ function initSocialSystem(){
         friendStatusRefs[fid].off();
         delete friendStatusRefs[fid];
         delete friendOnlineState[fid];
+        if(friendOnlineSinceRefs[fid]){ friendOnlineSinceRefs[fid].off(); delete friendOnlineSinceRefs[fid]; }
+        if(friendLastSeenRefs[fid]){ friendLastSeenRefs[fid].off(); delete friendLastSeenRefs[fid]; }
+        delete friendOnlineSince[fid];
+        delete friendLastSeen[fid];
       }
     });
     Object.keys(friendDmRefs).forEach(fid => {
@@ -2153,6 +2402,13 @@ function initSocialSystem(){
     $('inviteOverlay').classList.add('show');
     playSound('chat');
   });
+
+  if(!friendTimeTicker){
+    friendTimeTicker = setInterval(() => {
+      const fScreen = $('screen-friends');
+      if(fScreen && fScreen.classList.contains('active')) renderFriendsUI();
+    }, 30000);
+  }
 }
 
 function watchFriendOnline(fid){
@@ -2163,6 +2419,83 @@ function watchFriendOnline(fid){
     friendOnlineState[fid] = snap.val() === true;
     renderFriendsUI();
   });
+
+  const rSince = db.ref(`users/${fid}/onlineSince`);
+  friendOnlineSinceRefs[fid] = rSince;
+  rSince.on('value', snap => {
+    const val = Number(snap.val());
+    friendOnlineSince[fid] = val && !isNaN(val) ? val : null;
+    renderFriendsUI();
+  });
+
+  const rLast = db.ref(`users/${fid}/lastSeen`);
+  friendLastSeenRefs[fid] = rLast;
+  rLast.on('value', snap => {
+    const val = Number(snap.val());
+    friendLastSeen[fid] = val && !isNaN(val) ? val : null;
+    renderFriendsUI();
+  });
+}
+
+function formatAgoDuration(ms){
+  const mins = Math.max(0, Math.floor(ms / 60000));
+  if(mins < 1){
+    return lang === 'bn' ? 'এইমাত্র' : 'just now';
+  }
+  if(mins < 60){
+    return lang === 'bn' ? `${mins} মিনিট আগে` : `${mins} min ago`;
+  }
+  const hrs = Math.floor(mins / 60);
+  const remMins = mins % 60;
+  if(hrs < 24){
+    if(lang === 'bn'){
+      return remMins > 0 ? `${hrs} ঘণ্টা ${remMins} মিনিট আগে` : `${hrs} ঘণ্টা আগে`;
+    }
+    return remMins > 0 ? `${hrs}h ${remMins}m ago` : `${hrs}h ago`;
+  }
+  const days = Math.floor(hrs / 24);
+  return lang === 'bn' ? `${days} দিন আগে` : `${days}d ago`;
+}
+
+function formatClockAndDay(ts){
+  const d = new Date(ts);
+  const now = new Date();
+  const locale = lang === 'bn' ? 'bn-BD' : 'en-US';
+  const timeStr = d.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit', hour12:true });
+  const isToday = d.toDateString() === now.toDateString();
+  const yesterday = new Date(now);
+  yesterday.setDate(now.getDate() - 1);
+  const isYesterday = d.toDateString() === yesterday.toDateString();
+
+  if(isToday){
+    return lang === 'bn' ? `আজ ${timeStr}` : `Today, ${timeStr}`;
+  }
+  if(isYesterday){
+    return lang === 'bn' ? `গতকাল ${timeStr}` : `Yesterday, ${timeStr}`;
+  }
+  const dateStr = d.toLocaleDateString(locale, { day:'numeric', month:'short' });
+  return `${dateStr}, ${timeStr}`;
+}
+
+function formatFriendActivityText(fid, isOnline){
+  const now = Date.now();
+  if(isOnline){
+    const since = friendOnlineSince[fid];
+    if(!since) return lang === 'bn' ? 'এখন অনলাইনে আছেন' : 'Active now';
+    const clock = formatClockAndDay(since);
+    const ago = formatAgoDuration(now - since);
+    return lang === 'bn'
+      ? `অনলাইন হয়েছেন: ${clock} (${ago})`
+      : `Online since ${clock} (${ago})`;
+  } else {
+    const last = friendLastSeen[fid];
+    if(!last) return lang === 'bn' ? 'শেষ অ্যাক্টিভ তথ্য নেই' : 'Last seen unavailable';
+    const clock = formatClockAndDay(last);
+    const ago = formatAgoDuration(now - last);
+    return lang === 'bn'
+      ? `অ্যাক্টিভ ছিলেন: ${ago} · ${clock}`
+      : `Last active ${ago} · ${clock}`;
+  }
 }
 
 function watchFriendDmUnread(fid){
@@ -2343,6 +2676,7 @@ function renderFriendsUI(){
       const isOnline = !!friendOnlineState[f.id];
       const uCount = friendDmUnread[f.id] || 0;
       const initial = escapeHtml((f.name || 'B').charAt(0).toUpperCase());
+      const activityDetail = escapeHtml(formatFriendActivityText(f.id, isOnline));
       return `
         <div class="friend-item">
           <div class="friend-left">
@@ -2353,6 +2687,7 @@ function renderFriendsUI(){
             <div class="friend-meta">
               <div class="friend-name">${escapeHtml(f.name || 'Friend')}</div>
               <div class="friend-sub ${isOnline ? 'on' : ''}">${isOnline ? t('onlineStatus') : t('offlineStatus')} · #${escapeHtml(f.id)}</div>
+              <div class="friend-time-note ${isOnline ? 'on' : ''}">${activityDetail}</div>
             </div>
           </div>
           <div class="friend-actions">
@@ -2845,6 +3180,7 @@ function saveName(){
   initSocialSystem();
   renderMenu();
   if(!applyPendingRoom()) showScreen('screen-menu');
+  showWelcomeMessage();
 }
 function goMenu(){
   if(mode === 'local' && $('screen-local-setup').classList.contains('active')){
@@ -3624,8 +3960,72 @@ function bindKeys(){
   });
 }
 
+/* ================= WELCOME BANNER & LAST ACTIVE ================= */
+function recordLastActive(){
+  store.set('xo_last_active', String(Date.now()));
+  syncMyLastSeenNow();
+}
+function formatLastActive(ts){
+  if(!ts || isNaN(ts)){
+    return lang === 'bn' ? 'প্রথমবার গেমে স্বাগতম!' : 'First time playing · Enjoy!';
+  }
+  const d = new Date(ts);
+  const locale = lang === 'bn' ? 'bn-BD' : 'en-US';
+  const dateStr = d.toLocaleDateString(locale, { day:'numeric', month:'short', year:'numeric' });
+  const timeStr = d.toLocaleTimeString(locale, { hour:'numeric', minute:'2-digit', hour12:true });
+  return lang === 'bn'
+    ? `শেষ অ্যাক্টিভ: ${dateStr}, ${timeStr}`
+    : `Last active: ${dateStr}, ${timeStr}`;
+}
+function showWelcomeMessage(){
+  const wrap = $('welcomeBannerWrap');
+  const titleEl = $('welcomeBannerTitle');
+  const lastEl = $('welcomeBannerLastActive');
+  const barFill = $('welcomeProgressFill');
+  if(!wrap || !titleEl || !lastEl || !profile.name) return;
+
+  titleEl.textContent = lang === 'bn' ? `স্বাগতম, ${profile.name}!` : `Welcome, ${profile.name}!`;
+  lastEl.textContent = formatLastActive(prevLastActiveTs);
+
+  wrap.classList.remove('show');
+  if(barFill){
+    barFill.style.animation = 'none';
+    void barFill.offsetWidth;
+    barFill.style.animation = '';
+  }
+  void wrap.offsetWidth;
+  wrap.classList.add('show');
+
+  clearTimeout(welcomeTimer);
+  welcomeTimer = setTimeout(hideWelcomeMessage, 4800);
+}
+function hideWelcomeMessage(){
+  const wrap = $('welcomeBannerWrap');
+  if(wrap) wrap.classList.remove('show');
+  clearTimeout(welcomeTimer);
+}
+
+/* ================= SPLASH SCREEN ================= */
+function runSplashScreen(){
+  const splash = $('splashScreen');
+  if(!splash) return;
+  setTimeout(() => {
+    splash.classList.add('hide');
+    setTimeout(() => splash.remove(), 750);
+  }, 1950);
+}
+
 /* ================= INIT ================= */
 function init(){
+  runSplashScreen();
+  const savedLastActive = Number(store.get('xo_last_active'));
+  if(savedLastActive && !isNaN(savedLastActive)) prevLastActiveTs = savedLastActive;
+  recordLastActive();
+  document.addEventListener('visibilitychange', () => {
+    if(document.visibilityState === 'hidden') recordLastActive();
+  });
+  window.addEventListener('pagehide', recordLastActive);
+
   try{
     if(typeof firebase !== 'undefined'){
       if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
@@ -3653,6 +4053,7 @@ function init(){
   }
   initSocialSystem();
   if(!applyPendingRoom()) showScreen('screen-menu');
+  setTimeout(showWelcomeMessage, 2200);
 }
 if(document.readyState === 'loading'){
   document.addEventListener('DOMContentLoaded', init);

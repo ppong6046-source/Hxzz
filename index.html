@@ -333,6 +333,7 @@ body{
 .btn-secondary{background:linear-gradient(135deg,#7c5cff,#4fd1ff)}
 .btn-info{background:linear-gradient(135deg,#4fd1ff,#4a8bff)}
 .btn-emerald{background:linear-gradient(135deg,#10b981,#06b6d4)}
+.btn-ludo{background:linear-gradient(135deg,#0ea5e9,#10b981)}
 .btn-danger{background:linear-gradient(135deg,#ef4444,#ec4899)}
 .btn-ghost{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);box-shadow:none}
 .btn-row{display:flex;gap:10px}
@@ -490,19 +491,20 @@ body{
   color:#a7f3d0;
 }
 
-.friend-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.friend-actions{display:flex;align-items:center;gap:4px;flex-shrink:0}
 .f-act-btn{
-  height:34px;padding:0 10px;border-radius:11px;border:none;
-  font:inherit;font-size:12px;font-weight:700;color:#fff;
-  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  height:32px;padding:0 8px;border-radius:10px;border:none;
+  font:inherit;font-size:11px;font-weight:700;color:#fff;
+  cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:3px;
   position:relative;transition:transform .15s,opacity .2s,background .2s;
 }
 .f-act-btn:active{transform:scale(.94)}
 .f-act-btn:disabled{opacity:.42;cursor:not-allowed}
-.f-act-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.f-btn-chat{background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);color:#bae6fd;padding:0 9px}
+.f-act-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.f-btn-chat{background:rgba(79,209,255,.22);border:1px solid rgba(79,209,255,.45);color:#bae6fd;padding:0 8px}
 .f-btn-invite{background:linear-gradient(135deg,#ff5d7a,#ff8a5c);box-shadow:0 4px 12px rgba(255,93,122,.35)}
-.f-btn-unfriend{background:rgba(239,68,68,.18);border:1px solid rgba(248,113,113,.4);color:#fca5a5;padding:0 8px}
+.f-btn-invite-ludo{background:linear-gradient(135deg,#0ea5e9,#10b981);box-shadow:0 4px 12px rgba(16,185,129,.35)}
+.f-btn-unfriend{background:rgba(239,68,68,.18);border:1px solid rgba(248,113,113,.4);color:#fca5a5;padding:0 7px}
 .f-btn-unfriend:hover{background:rgba(239,68,68,.32)}
 .f-btn-accept{background:linear-gradient(135deg,#10b981,#059669)}
 .f-btn-decline{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);padding:0 9px}
@@ -518,7 +520,7 @@ body{
   font-size:13px;opacity:.75;line-height:1.5;
 }
 
-/* Modals (Game Invite, Unfriend & Install Guide) */
+/* Modals (Game Invite, Unfriend, Ludo Invite Friends & Install Guide) */
 .invite-overlay{
   position:fixed;inset:0;z-index:260;
   background:rgba(6,4,20,.68);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
@@ -606,6 +608,9 @@ body{
 
 .anim-play .play-tri{animation:playNudge 2s ease-in-out infinite}
 @keyframes playNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(2px)}}
+
+.anim-dice .dice-box{animation:diceWobble 2.6s ease-in-out infinite;transform-origin:12px 12px}
+@keyframes diceWobble{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-10deg)}70%{transform:rotate(10deg)}}
 
 /* Status Pill Badge */
 .status-badge{
@@ -1132,6 +1137,362 @@ body{
   from{transform:scaleX(1)}
   to{transform:scaleX(0)}
 }
+
+/* ================= LUDO PASS & PLAY SETUP & GAME STYLES ================= */
+.ludo-local-list{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  text-align:left;
+}
+.ludo-p-row{
+  background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  padding:8px 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.ludo-p-num{
+  font-size:12px;
+  font-weight:800;
+  color:var(--gold);
+  width:24px;
+  text-align:center;
+  flex-shrink:0;
+}
+.ludo-p-row input{
+  flex:1;
+  min-width:0;
+  background:none;
+  border:none;
+  outline:none;
+  color:#fff;
+  font:inherit;
+  font-size:14.5px;
+  font-weight:600;
+}
+.ludo-p-row input::placeholder{
+  color:rgba(255,255,255,.42);
+  font-weight:400;
+}
+.ludo-color-swatches{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  flex-shrink:0;
+}
+.ludo-swatch{
+  width:24px;height:24px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,255,.35);
+  cursor:pointer;
+  transition:transform .15s, box-shadow .2s, border-color .2s;
+  padding:0;
+}
+.ludo-swatch.blue{background:#1e90ff}
+.ludo-swatch.red{background:#e11d2a}
+.ludo-swatch.green{background:#16a34a}
+.ludo-swatch.yellow{background:#eab308}
+.ludo-swatch.selected{
+  transform:scale(1.18);
+  border-color:#ffffff;
+  box-shadow:0 0 0 2px #0f172a, 0 0 10px #ffffff;
+}
+
+.ludo-seats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:4px 0;
+}
+.ludo-seat-card{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:16px;
+  padding:11px 10px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  text-align:left;
+  transition:border-color .25s, background .25s;
+}
+.ludo-seat-card.filled{
+  background:rgba(16,185,129,.18);
+  border-color:rgba(52,211,153,.55);
+}
+.ludo-seat-pin{
+  width:28px;height:34px;flex-shrink:0;
+}
+.ludo-seat-info{
+  min-width:0;flex:1;
+}
+.ludo-seat-color{
+  font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;opacity:.75;
+}
+.ludo-seat-player{
+  font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+#screen-ludo{
+  background:radial-gradient(circle at 50% 25%, #1d4e89 0%, #0b2545 55%, #07162b 100%);
+  padding:10px 12px;
+}
+.ludo-shell{
+  width:min(96vw, 420px);
+  height:100%;
+  max-height:97dvh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
+  position:relative;
+}
+.ludo-top-labels{
+  width:min(92vw, 390px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  padding:0 2px;
+  z-index:25;
+}
+.ludo-top-right-btns{
+  display:flex;align-items:center;gap:6px;flex-shrink:0;
+}
+.ludo-menu-btn{
+  position:relative;
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid #f59e0b;
+  background:linear-gradient(135deg,#1e3a8a,#0f172a);
+  color:#fbbf24;
+  display:grid;place-items:center;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.45);
+  transition:transform .15s;
+}
+.ludo-menu-btn:active{transform:scale(.92)}
+.ludo-menu-btn svg{width:17px;height:17px;fill:none;stroke:#fbbf24;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.ludo-top-status{
+  font-size:12px;font-weight:700;
+  color:#fde68a;
+  background:rgba(15,23,42,.68);
+  border:1px solid rgba(251,191,36,.35);
+  padding:4px 10px;
+  border-radius:999px;
+  text-align:center;
+  flex:1;
+  min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+/* Corner Dice Pods matching the reference screenshot (Top & Bottom of Board) */
+.ludo-corner-strip{
+  width:min(92vw, 390px);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:66px;
+  padding:0 2px;
+  z-index:20;
+}
+.ludo-pod{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:linear-gradient(180deg, #1d63b8 0%, #0b3a7a 100%);
+  border:2.5px solid #fbbf24;
+  border-radius:14px;
+  padding:5px 7px;
+  box-shadow:0 8px 20px rgba(0,0,0,.55), inset 0 1px 2px rgba(255,255,255,.35);
+  opacity:.55;
+  transition:opacity .25s, transform .25s, box-shadow .25s;
+  position:relative;
+}
+.ludo-pod.active{
+  opacity:1;
+  transform:scale(1.04);
+  box-shadow:0 0 20px rgba(251,191,36,.65), 0 8px 20px rgba(0,0,0,.55);
+}
+.ludo-pod.top-flipped{
+  transform:rotate(180deg);
+}
+.ludo-pod.top-flipped.active{
+  transform:rotate(180deg) scale(1.04);
+}
+.ludo-pod-pin{
+  width:28px;height:36px;flex-shrink:0;
+  display:grid;place-items:center;
+}
+.ludo-pod-dice-box{
+  width:52px;height:52px;
+  border-radius:12px;
+  background:linear-gradient(180deg,#fce7f3,#f9a8d4);
+  border:2px solid #cbd5e1;
+  box-shadow:inset 0 2px 3px rgba(255,255,255,.8), 0 3px 8px rgba(0,0,0,.35);
+  display:grid;place-items:center;
+  cursor:pointer;
+  padding:0;
+  position:relative;
+}
+.ludo-pod-dice{
+  width:42px;height:42px;
+  border-radius:10px;
+  background:linear-gradient(145deg, #f1f5f9, #cbd5e1);
+  border:1.5px solid #94a3b8;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  padding:6px;
+  gap:2px;
+  opacity:0;
+  transform:scale(.8);
+  transition:opacity .2s, transform .2s;
+}
+.ludo-pod.active .ludo-pod-dice{
+  opacity:1;
+  transform:scale(1);
+}
+.ludo-pod-dice.rolling{
+  animation:diceRollSpin .42s cubic-bezier(.34,1.56,.64,1);
+}
+.ludo-pod-dice .dice-pip{
+  background:#0f172a;
+  box-shadow:none;
+}
+/* Animated Golden Arrow pointing to active player's dice like the screenshot */
+.ludo-turn-arrow{
+  width:28px;height:28px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,.6));
+  animation:ludoArrowBounce .85s ease-in-out infinite;
+}
+.ludo-pod.can-roll .ludo-turn-arrow{
+  display:flex;
+}
+@keyframes ludoArrowBounce{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(-5px)}
+}
+
+.ludo-board-wrap{
+  position:relative;
+  width:min(90vw, 375px);
+  aspect-ratio:1;
+  background:#ffffff;
+  border:3px solid #1e293b;
+  border-radius:10px;
+  box-shadow:0 18px 45px rgba(0,0,0,.55), 0 0 0 3px rgba(255,255,255,.15);
+  overflow:visible;
+  flex-shrink:0;
+}
+.ludo-board-svg{
+  width:100%;height:100%;display:block;border-radius:7px;
+}
+.ludo-yard-tag{
+  position:absolute;
+  font-size:12.5px;
+  font-weight:800;
+  color:#fff;
+  text-shadow:0 1px 4px rgba(0,0,0,.95), 0 0 2px #000;
+  pointer-events:none;
+  z-index:6;
+  letter-spacing:.02em;
+  max-width:38%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.ludo-yard-tag.top-left{
+  top:-19px;
+  left:14px;
+}
+.ludo-yard-tag.top-right{
+  top:-19px;
+  right:14px;
+}
+.ludo-yard-tag.top-right.flipped{
+  transform:rotate(180deg);
+}
+.ludo-yard-tag.bottom-left{
+  bottom:-19px;
+  left:14px;
+}
+.ludo-yard-tag.bottom-right{
+  bottom:-19px;
+  right:14px;
+}
+.ludo-tokens-layer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+}
+/* 3D Pin-style Ludo Token matching reference image */
+.ludo-token{
+  position:absolute;
+  width:6.6%;
+  height:8.4%;
+  transform:translate(-50%, -68%);
+  transition:left .26s cubic-bezier(.25,.8,.25,1), top .26s cubic-bezier(.25,.8,.25,1), transform .18s ease;
+  pointer-events:auto;
+  cursor:default;
+  border:none;
+  background:transparent;
+  padding:0;
+  z-index:12;
+  filter:drop-shadow(0 3px 3px rgba(0,0,0,.48));
+}
+.ludo-token svg{
+  width:100%;height:100%;display:block;overflow:visible;
+}
+.ludo-token.movable{
+  cursor:pointer;
+  z-index:22;
+  animation:ludoPinHop .75s ease-in-out infinite;
+}
+.ludo-token.movable::after{
+  content:'';
+  position:absolute;
+  left:50%;bottom:2%;
+  width:125%;height:55%;
+  transform:translateX(-50%);
+  border-radius:50%;
+  border:2px solid #ffd166;
+  box-shadow:0 0 10px #ffd166;
+  animation:ludoRingPulse 1s ease-out infinite;
+  pointer-events:none;
+}
+@keyframes ludoPinHop{
+  0%,100%{transform:translate(-50%, -68%) scale(1.06)}
+  50%{transform:translate(-50%, -84%) scale(1.16)}
+}
+@keyframes ludoRingPulse{
+  0%{transform:translateX(-50%) scale(.75);opacity:1}
+  100%{transform:translateX(-50%) scale(1.45);opacity:0}
+}
+
+@keyframes diceRollSpin{
+  0%{transform:rotate(0deg) scale(.85)}
+  40%{transform:rotate(190deg) scale(1.16)}
+  80%{transform:rotate(330deg) scale(.96)}
+  100%{transform:rotate(360deg) scale(1)}
+}
+.dice-pip{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:#ffffff;
+  box-shadow:0 1px 2px rgba(0,0,0,.45);
+  opacity:0;
+  transform:scale(.4);
+  transition:opacity .15s, transform .15s;
+}
+.dice-pip.on{
+  opacity:1;
+  transform:scale(1);
+}
 </style>
 </head>
 <body>
@@ -1291,6 +1652,413 @@ body{
       </span>
       <span class="btn-label" data-i18n="playOnline">অনলাইনে বন্ধুর সাথে খেলুন</span>
     </button>
+
+    <!-- Play Ludo -->
+    <button class="btn btn-ludo btn-shine" data-action="goLudoSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-dice">
+        <svg class="dice-box" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <circle cx="8.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="15.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="8.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="15.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="playLudo">লুডু খেলুন (Ludo)</span>
+    </button>
+  </div>
+</section>
+
+<!-- LUDO MODE SETUP -->
+<section id="screen-ludo-setup" class="screen">
+  <div class="card">
+    <h2 class="title" data-i18n="ludoSetupTitle">লুডু গেম</h2>
+    <p class="sub" data-i18n="ludoSetupSub">খেলার মোড বেছে নিন</p>
+
+    <button class="btn btn-ludo btn-shine" data-action="startLudo" data-ludo-mode="cpu" data-tap-anim="1">
+      <span class="btn-icon-box anim-bot">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="8" width="18" height="12" rx="4"/>
+          <g class="bot-antenna">
+            <line x1="12" y1="8" x2="12" y2="4"/>
+            <circle cx="12" cy="3" r="1.3" fill="#fff"/>
+          </g>
+          <circle class="bot-eye" cx="9" cy="14" r="1.4" fill="#fff" stroke="none"/>
+          <circle class="bot-eye" cx="15" cy="14" r="1.4" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="ludoVsCpu">কম্পিউটারের সাথে (Blue vs Green)</span>
+    </button>
+
+    <button class="btn btn-primary btn-shine" data-action="goLudoLocalSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-duo">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="8" r="3.2"/>
+          <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
+          <g class="duo-back">
+            <circle cx="16.5" cy="8.5" r="2.6"/>
+            <path d="M17 13.5a4 4 0 0 1 4 4V19"/>
+          </g>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="ludoVsFriend">বন্ধুর সাথে (একই ডিভাইসে)</span>
+    </button>
+
+    <button class="btn btn-secondary btn-shine" data-action="goLudoOnline" data-tap-anim="1">
+      <span class="btn-icon-box anim-globe">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <ellipse class="globe-ring" cx="12" cy="12" rx="4" ry="9"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="ludoOnlineBtn">অনলাইনে খেলুন (২ বা ৪ জন + চ্যাট)</span>
+    </button>
+
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
+    </button>
+  </div>
+</section>
+
+<!-- LUDO SAME DEVICE CUSTOM NAME & COLOR SETUP -->
+<section id="screen-ludo-local-setup" class="screen">
+  <div class="card">
+    <h2 class="title" data-i18n="ludoLocalTitle">একই ডিভাইসে লুডু</h2>
+    <p class="sub" data-i18n="ludoLocalSub">খেলোয়াড়ের সংখ্যা, কাস্টম নাম ও গুটির রঙ বেছে নিন</p>
+
+    <div class="friend-tabs">
+      <button class="tab-btn active" id="ludoCount2Btn" data-action="setLudoLocalCount" data-count="2">
+        <span data-i18n="ludo2Players">২ জন খেলোয়াড়</span>
+      </button>
+      <button class="tab-btn" id="ludoCount4Btn" data-action="setLudoLocalCount" data-count="4">
+        <span data-i18n="ludo4Players">৪ জন খেলোয়াড়</span>
+      </button>
+    </div>
+
+    <div class="ludo-local-list" id="ludoLocalPlayersForm"></div>
+    <p class="hint" id="ludoLocalMsg"></p>
+
+    <button class="btn btn-ludo btn-shine" data-action="startLudoLocalCustom" data-tap-anim="1">
+      <span class="btn-icon-box anim-play">
+        <svg class="play-tri" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+      </span>
+      <span class="btn-label" data-i18n="startMatchBtn">খেলা শুরু করুন</span>
+    </button>
+
+    <button class="btn btn-ghost" data-action="goLudoSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
+    </button>
+  </div>
+</section>
+
+<!-- LUDO ONLINE CREATE / JOIN SCREEN -->
+<section id="screen-ludo-online" class="screen">
+  <div class="card">
+    <h2 class="title" data-i18n="ludoOnlineTitle">অনলাইন লুডু</h2>
+    <p class="sub" data-i18n="ludoOnlineSub">২ জন অথবা ৪ জনের রুম তৈরি করুন (আপনার গুটি Blue থাকবে)</p>
+
+    <div class="btn-row">
+      <button class="btn btn-ludo btn-shine" data-action="createLudoRoom" data-max="2" data-tap-anim="1">
+        <span class="btn-icon-box anim-plus">
+          <svg class="plus-cross" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </span>
+        <span class="btn-label" data-i18n="ludoCreate2">২ জন রুম</span>
+      </button>
+      <button class="btn btn-primary btn-shine" data-action="createLudoRoom" data-max="4" data-tap-anim="1">
+        <span class="btn-icon-box anim-plus">
+          <svg class="plus-cross" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </span>
+        <span class="btn-label" data-i18n="ludoCreate4">৪ জন রুম</span>
+      </button>
+    </div>
+
+    <div class="divider" data-i18n="orDivider">অথবা</div>
+    <input id="ludoJoinCodeInput" class="input code-input" maxlength="4" inputmode="numeric" placeholder="····" autocomplete="off">
+
+    <button class="btn btn-secondary btn-shine" data-action="joinLudoRoom" data-tap-anim="1">
+      <span class="btn-icon-box anim-door">
+        <svg viewBox="0 0 24 24">
+          <path d="M14 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+          <g class="door-arrow">
+            <polyline points="10 17 15 12 10 7"/>
+            <line x1="15" y1="12" x2="3" y2="12"/>
+          </g>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="joinRoom">রুমে যোগ দিন</span>
+    </button>
+
+    <p class="hint" id="ludoOnlineMsg"></p>
+
+    <button class="btn btn-ghost" data-action="goLudoSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
+    </button>
+  </div>
+</section>
+
+<!-- LUDO ONLINE LOBBY / WAITING -->
+<section id="screen-ludo-waiting" class="screen">
+  <div class="card">
+    <h2 class="title" id="ludoWaitTitle">লুডু রুম লবি</h2>
+    <p class="sub" id="ludoWaitSub">কোড বা লিংকটি বন্ধুদের পাঠান</p>
+    <div class="room-code-box" id="ludoRoomCodeDisplay">----</div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary btn-shine" id="ludoCopyBtn" data-action="copyLudoRoomCode">
+        <span class="btn-icon-box anim-copy">
+          <svg class="icon-main" viewBox="0 0 24 24">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect class="copy-front" x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+          </svg>
+          <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <span class="btn-label" data-i18n="copyCode">কোড কপি</span>
+      </button>
+
+      <button class="btn btn-secondary btn-shine" id="ludoLinkBtn" data-action="copyLudoRoomLink">
+        <span class="btn-icon-box anim-link">
+          <svg class="icon-main" viewBox="0 0 24 24">
+            <path class="link-part1" d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+            <path class="link-part2" d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+          </svg>
+          <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <span class="btn-label" data-i18n="copyLink">লিংক কপি</span>
+      </button>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-info btn-shine" id="ludoShareBtn" data-action="shareLudoRoomLink" hidden>
+        <span class="btn-icon-box anim-share">
+          <svg class="icon-main" viewBox="0 0 24 24">
+            <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+            <g class="share-arrow">
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </g>
+          </svg>
+          <svg class="icon-check" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+        </span>
+        <span class="btn-label" data-i18n="shareBtn">শেয়ার করুন</span>
+      </button>
+
+      <button class="btn btn-primary btn-shine" id="ludoLobbyInviteBtn" data-action="openLudoInviteModal" data-tap-anim="1">
+        <span class="btn-icon-box anim-friends">
+          <svg viewBox="0 0 24 24">
+            <circle cx="9" cy="8" r="3.2"/>
+            <path d="M3 19v-1.2a4.5 4.5 0 0 1 4.5-4.5h3A4.5 4.5 0 0 1 15 17.8V19"/>
+            <line x1="19" y1="8" x2="19" y2="14"/>
+            <line x1="16" y1="11" x2="22" y2="11"/>
+          </svg>
+        </span>
+        <span class="btn-label" data-i18n="inviteFriendBtn">বন্ধু ইনভাইট</span>
+      </button>
+    </div>
+
+    <div class="link-preview" id="ludoLinkPreview"></div>
+    <div class="ludo-seats-grid" id="ludoSeatsGrid"></div>
+
+    <button class="btn btn-emerald btn-shine" id="ludoHostStartBtn" data-action="hostStartLudoOnline" hidden>
+      <span class="btn-icon-box anim-play">
+        <svg class="play-tri" viewBox="0 0 24 24"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+      </span>
+      <span class="btn-label" data-i18n="startMatchBtn">খেলা শুরু করুন</span>
+    </button>
+
+    <button class="btn btn-ghost" data-action="cancelLudoRoom" data-tap-anim="1">
+      <span class="btn-icon-box anim-close">
+        <svg class="close-x" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="cancelBtn">বাতিল করুন</span>
+    </button>
+  </div>
+</section>
+
+<!-- LUDO GAME SCREEN -->
+<section id="screen-ludo" class="screen">
+  <div class="ludo-shell">
+    <div class="ludo-top-labels">
+      <button class="ludo-menu-btn" data-action="exitLudo" aria-label="Menu">
+        <svg viewBox="0 0 24 24">
+          <line x1="4" y1="7" x2="20" y2="7"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="17" x2="20" y2="17"/>
+        </svg>
+      </button>
+      <div class="ludo-top-status" id="ludoStatusText">আপনার পালা · ছক্কা চালুন</div>
+      <div class="ludo-top-right-btns">
+        <button class="ludo-menu-btn anim-chat" id="ludoChatBtn" data-action="openLudoChat" aria-label="Chat" hidden>
+          <svg class="chat-bubble" viewBox="0 0 24 24">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            <circle class="chat-dot d1" cx="9" cy="12" r="1.15"/>
+            <circle class="chat-dot d2" cx="12.5" cy="12" r="1.15"/>
+            <circle class="chat-dot d3" cx="16" cy="12" r="1.15"/>
+          </svg>
+          <span class="badge" id="ludoChatBadge" hidden>0</span>
+        </button>
+        <button class="ludo-menu-btn" id="ludoSoundBtn" data-action="toggleSound" aria-label="Sound">🔊</button>
+      </div>
+    </div>
+
+    <!-- Top Corner Dice Pods (Red Top-Left & Green Top-Right) -->
+    <div class="ludo-corner-strip top">
+      <div class="ludo-pod top-flipped" id="ludoPodRed" hidden>
+        <div class="ludo-pod-pin" id="ludoPodPinRed"></div>
+        <button type="button" class="ludo-pod-dice-box" data-action="rollLudoDice" data-seat="red" aria-label="Roll Red Dice">
+          <div class="ludo-pod-dice" id="ludoPodDiceRed">
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip on"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+          </div>
+        </button>
+        <span class="ludo-turn-arrow">
+          <svg viewBox="0 0 24 24"><polygon points="14 4 4 12 14 20 14 15 21 15 21 9 14 9 14 4" fill="#facc15" stroke="#78350f" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <div></div>
+      <div class="ludo-pod top-flipped" id="ludoPodGreen">
+        <div class="ludo-pod-pin" id="ludoPodPinGreen"></div>
+        <button type="button" class="ludo-pod-dice-box" data-action="rollLudoDice" data-seat="green" aria-label="Roll Green Dice">
+          <div class="ludo-pod-dice" id="ludoPodDiceGreen">
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip on"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+          </div>
+        </button>
+        <span class="ludo-turn-arrow">
+          <svg viewBox="0 0 24 24"><polygon points="14 4 4 12 14 20 14 15 21 15 21 9 14 9 14 4" fill="#facc15" stroke="#78350f" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+
+    <div class="ludo-board-wrap">
+      <div class="ludo-yard-tag top-left" id="ludoRedYardTag" hidden>Red</div>
+      <div class="ludo-yard-tag top-right flipped" id="ludoGreenYardTag">Player 2</div>
+      <svg id="ludoBoardSvg" class="ludo-board-svg" viewBox="0 0 150 150"></svg>
+      <div id="ludoTokensLayer" class="ludo-tokens-layer"></div>
+      <div class="ludo-yard-tag bottom-left" id="ludoBlueYardTag">Player 1</div>
+      <div class="ludo-yard-tag bottom-right" id="ludoYellowYardTag" hidden>Yellow</div>
+    </div>
+
+    <!-- Bottom Corner Dice Pods (Blue Bottom-Left & Yellow Bottom-Right) -->
+    <div class="ludo-corner-strip bottom">
+      <div class="ludo-pod active can-roll" id="ludoPodBlue">
+        <div class="ludo-pod-pin" id="ludoPodPinBlue"></div>
+        <button type="button" class="ludo-pod-dice-box" data-action="rollLudoDice" data-seat="blue" aria-label="Roll Blue Dice">
+          <div class="ludo-pod-dice" id="ludoPodDiceBlue">
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip on"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+          </div>
+        </button>
+        <span class="ludo-turn-arrow">
+          <svg viewBox="0 0 24 24"><polygon points="14 4 4 12 14 20 14 15 21 15 21 9 14 9 14 4" fill="#facc15" stroke="#78350f" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+      <div></div>
+      <div class="ludo-pod" id="ludoPodYellow" hidden>
+        <div class="ludo-pod-pin" id="ludoPodPinYellow"></div>
+        <button type="button" class="ludo-pod-dice-box" data-action="rollLudoDice" data-seat="yellow" aria-label="Roll Yellow Dice">
+          <div class="ludo-pod-dice" id="ludoPodDiceYellow">
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip on"></span><span class="dice-pip"></span>
+            <span class="dice-pip"></span><span class="dice-pip"></span><span class="dice-pip"></span>
+          </div>
+        </button>
+        <span class="ludo-turn-arrow">
+          <svg viewBox="0 0 24 24"><polygon points="14 4 4 12 14 20 14 15 21 15 21 9 14 9 14 4" fill="#facc15" stroke="#78350f" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ludo Win Overlay -->
+  <div class="result-overlay" id="ludoResultOverlay">
+    <div class="result-card">
+      <div class="result-hero hero-win" id="ludoResultHero"></div>
+      <h2 id="ludoResultTitle">আপনি জিতেছেন!</h2>
+      <p class="next-starter-note" id="ludoResultSub">সব ৪টি গুটি ঘরে পৌঁছেছে!</p>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-shine" data-action="restartLudo" data-tap-anim="1">
+          <span class="btn-icon-box anim-replay">
+            <svg class="replay-spin" viewBox="0 0 24 24">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+          </span>
+          <span class="btn-label" data-i18n="playAgain">আবার খেলো</span>
+        </button>
+        <button class="btn btn-ghost" data-action="exitLudo" data-tap-anim="1">
+          <span class="btn-icon-box anim-home">
+            <svg viewBox="0 0 24 24">
+              <path class="home-roof" d="M3 10.5L12 3l9 7.5"/>
+              <path d="M5 9.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V9.5"/>
+              <path d="M9.5 20.5v-5.5h5v5.5"/>
+            </svg>
+          </span>
+          <span class="btn-label" data-i18n="menuBtn">মেনু</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ludo Opponent Left Overlay (2-Player Online) -->
+  <div class="result-overlay left-overlay" id="ludoLeftOverlay">
+    <div class="result-card">
+      <div class="result-hero hero-win">
+        <svg viewBox="0 0 24 24">
+          <g class="trophy-body">
+            <path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/>
+            <path d="M8 6H5.5a1.5 1.5 0 0 0-1.5 1.5v.5A3 3 0 0 0 7 11h1"/>
+            <path d="M16 6h2.5A1.5 1.5 0 0 1 20 7.5v.5A3 3 0 0 1 17 11h-1"/>
+            <line x1="12" y1="13" x2="12" y2="17"/>
+            <path d="M8 20h8"/>
+            <path d="M9.5 17h5"/>
+          </g>
+        </svg>
+      </div>
+      <h2 id="ludoLeftTitle" data-i18n="oppLeftTitle">প্রতিপক্ষ গেম ছেড়ে চলে গেছে</h2>
+      <p class="next-starter-note" id="ludoLeftSub">আপনি জয়ী হয়েছেন!</p>
+      <button class="btn btn-primary btn-shine" data-action="exitLudo" data-tap-anim="1">
+        <span class="btn-icon-box anim-home">
+          <svg viewBox="0 0 24 24">
+            <path class="home-roof" d="M3 10.5L12 3l9 7.5"/>
+            <path d="M5 9.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19V9.5"/>
+            <path d="M9.5 20.5v-5.5h5v5.5"/>
+          </svg>
+        </span>
+        <span class="btn-label" data-i18n="backToMenu">মেনুতে ফিরুন</span>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -1753,7 +2521,7 @@ body{
   </div>
 </div>
 
-<!-- INCOMING GAME INVITE MODAL -->
+<!-- INCOMING GAME INVITE MODAL (XO & LUDO) -->
 <div class="invite-overlay" id="inviteOverlay">
   <div class="invite-card">
     <div class="result-hero hero-win">
@@ -1765,12 +2533,22 @@ body{
         <circle cx="17.5" cy="13" r="1" fill="currentColor" stroke="none"/>
       </svg>
     </div>
-    <h2 data-i18n="inviteTitle">খেলার আমন্ত্রণ!</h2>
+    <h2 id="inviteModalTitle" data-i18n="inviteTitle">খেলার আমন্ত্রণ!</h2>
     <p class="sub" id="inviteFromText">বন্ধু আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে</p>
     <div class="btn-row">
       <button class="btn btn-primary" data-action="acceptGameInvite" data-i18n="playBtn">খেলুন</button>
       <button class="btn btn-ghost" data-action="declineGameInvite" data-i18n="noBtn">না</button>
     </div>
+  </div>
+</div>
+
+<!-- LUDO LOBBY FRIEND INVITE MODAL -->
+<div class="invite-overlay" id="ludoInviteModalOverlay">
+  <div class="invite-card">
+    <h2 data-i18n="ludoInviteFriendsTitle">লুডুতে বন্ধু ইনভাইট করুন</h2>
+    <p class="sub" id="ludoInviteStatusText" data-i18n="ludoInviteFriendsSub">অনলাইনে থাকা বন্ধুকে ইনভাইট পাঠান</p>
+    <div class="friends-list" id="ludoInviteFriendsList"></div>
+    <button class="btn btn-ghost" data-action="closeLudoInviteModal" data-i18n="cancelBtn">বাতিল করুন</button>
   </div>
 </div>
 
@@ -1843,6 +2621,23 @@ const I18N = {
     playCpu: 'কম্পিউটারের সাথে খেলুন',
     playLocal: 'বন্ধুর সাথে (একই ডিভাইসে)',
     playOnline: 'অনলাইনে বন্ধুর সাথে খেলুন',
+    playLudo: 'লুডু খেলুন (Ludo)',
+    ludoSetupTitle: 'লুডু গেম',
+    ludoSetupSub: 'খেলার মোড বেছে নিন',
+    ludoVsCpu: 'কম্পিউটারের সাথে (Blue vs Green)',
+    ludoVsFriend: 'বন্ধুর সাথে (একই ডিভাইসে)',
+    ludoOnlineBtn: 'অনলাইনে খেলুন (২ বা ৪ জন + চ্যাট)',
+    ludoLocalTitle: 'একই ডিভাইসে লুডু',
+    ludoLocalSub: 'খেলোয়াড়ের সংখ্যা, কাস্টম নাম ও গুটির রঙ বেছে নিন',
+    ludo2Players: '২ জন খেলোয়াড়',
+    ludo4Players: '৪ জন খেলোয়াড়',
+    ludoOnlineTitle: 'অনলাইন লুডু',
+    ludoOnlineSub: '২ জন অথবা ৪ জনের রুম তৈরি করুন (আপনার গুটি Blue থাকবে)',
+    ludoCreate2: '২ জন রুম',
+    ludoCreate4: '৪ জন রুম',
+    inviteFriendBtn: 'বন্ধু ইনভাইট',
+    ludoInviteFriendsTitle: 'লুডুতে বন্ধু ইনভাইট করুন',
+    ludoInviteFriendsSub: 'অনলাইনে থাকা বন্ধুকে ইনভাইট পাঠান',
     localSetupTitle: 'দুই খেলোয়াড়ের নাম',
     localSetupSub: 'একই ডিভাইসে খেলার জন্য দুজনের নাম লিখুন',
     localP1Ph: 'প্রথম খেলোয়াড়ের নাম',
@@ -1904,7 +2699,8 @@ const I18N = {
     nextStarter: n => `পরের রাউন্ডে প্রথমে খেলবে: ${n}`,
     onlineStatus: '● অনলাইনে আছেন',
     offlineStatus: '○ অফলাইন',
-    inviteBtn: 'ইনভাইট',
+    inviteBtn: 'XO',
+    inviteLudoBtn: 'Ludo',
     acceptBtn: 'গ্রহণ',
     emptyFriends: 'এখনো কোনো বন্ধু নেই।<br>উপরে বন্ধুর ৬ অক্ষরের আইডি দিয়ে রিকোয়েস্ট পাঠান!',
     emptyRequests: 'কোনো নতুন ফ্রেন্ড রিকোয়েস্ট নেই।',
@@ -1933,6 +2729,23 @@ const I18N = {
     playCpu: 'Play vs Computer',
     playLocal: 'Pass & Play (Same Device)',
     playOnline: 'Play Online with Friend',
+    playLudo: 'Play Ludo',
+    ludoSetupTitle: 'Ludo Game',
+    ludoSetupSub: 'Choose Ludo Mode',
+    ludoVsCpu: 'Play vs Computer (Blue vs Green)',
+    ludoVsFriend: 'Pass & Play (Same Device)',
+    ludoOnlineBtn: 'Play Online (2 or 4 Players + Chat)',
+    ludoLocalTitle: 'Pass & Play Ludo',
+    ludoLocalSub: 'Choose player count, custom names & pin colors',
+    ludo2Players: '2 Players',
+    ludo4Players: '4 Players',
+    ludoOnlineTitle: 'Online Ludo',
+    ludoOnlineSub: 'Create a 2P or 4P Room (Your pins appear Blue on your phone)',
+    ludoCreate2: '2P Room',
+    ludoCreate4: '4P Room',
+    inviteFriendBtn: 'Invite Friend',
+    ludoInviteFriendsTitle: 'Invite Friend to Ludo',
+    ludoInviteFriendsSub: 'Send a direct Ludo invite to an online friend',
     localSetupTitle: 'Player Names',
     localSetupSub: 'Enter names for both players on this device',
     localP1Ph: 'Player 1 Name',
@@ -1994,7 +2807,8 @@ const I18N = {
     nextStarter: n => `Starts next round: ${n}`,
     onlineStatus: '● Online',
     offlineStatus: '○ Offline',
-    inviteBtn: 'Invite',
+    inviteBtn: 'XO',
+    inviteLudoBtn: 'Ludo',
     acceptBtn: 'Accept',
     emptyFriends: 'No friends yet.<br>Enter a friend’s 6-character ID above to send a request!',
     emptyRequests: 'No new friend requests.',
@@ -2168,8 +2982,8 @@ let curRound = 0;
 let oppGraceTimer = null;
 let presRef = null, connRef = null, connFn = null;
 
-// chat (supports both 'room' and 'dm' with friends)
-let chatContext = null;        // 'room' | 'dm'
+// chat (supports 'room', 'dm', and 'ludo_room')
+let chatContext = null;        // 'room' | 'dm' | 'ludo_room'
 let activeDmFriend = null;     // { id, name }
 let chatRef = null, readRef = null;
 let chatInitDone = false;
@@ -2183,6 +2997,7 @@ let replyingTo = null;         // { key, name, text }
 const renderedKeys = new Set();
 const chatCache = new Map();
 let pendingRoomCode = null;
+let pendingLudoRoomCode = null;
 
 // friends system
 let activeFriendTab = 'friends';
@@ -2282,7 +3097,15 @@ function renderStats(){
   if(sumEl) sumEl.innerHTML = t('statsSummary', total, rate);
 }
 
-/* ================= SOUND ================= */
+/* ================= SOUND & HAPTIC FEEDBACK ================= */
+function triggerHaptic(pattern){
+  if(!soundOn) return;
+  try{
+    if(navigator && typeof navigator.vibrate === 'function'){
+      navigator.vibrate(pattern || 30);
+    }
+  }catch(e){}
+}
 function beep(freq, dur, type){
   if(!soundOn) return;
   try{
@@ -2301,21 +3124,30 @@ function beep(freq, dur, type){
 function playSound(type){
   const s = SOUNDS[type];
   if(s) beep(s[0], s[1], s[2]);
+  if(type === 'move') triggerHaptic(30);
+  else if(type === 'chat') triggerHaptic([18, 30, 18]);
 }
 function playMelody(name){
   const notes = MELODIES[name];
   if(!notes || !soundOn) return;
+  if(name === 'win') triggerHaptic([45, 55, 45, 55, 90]);
+  else if(name === 'lose') triggerHaptic([70, 50, 70]);
+  else if(name === 'draw') triggerHaptic([35, 40, 35]);
   let t = 0;
   notes.forEach(([f, d]) => {
     setTimeout(() => beep(f, d + 0.05, 'triangle'), t * 1000);
     t += d;
   });
 }
-function updateSoundBtn(){ $('soundBtn').textContent = soundOn ? '🔊' : '🔇'; }
+function updateSoundBtn(){
+  $('soundBtn').textContent = soundOn ? '🔊' : '🔇';
+  if($('ludoSoundBtn')) $('ludoSoundBtn').textContent = soundOn ? '🔊' : '🔇';
+}
 function toggleSound(){
   soundOn = !soundOn;
   store.set('xo_sound', soundOn ? '1' : '0');
   updateSoundBtn();
+  if(soundOn) triggerHaptic(25);
 }
 
 /* ================= GLOBAL PRESENCE & SOCIAL LISTENERS ================= */
@@ -2394,11 +3226,19 @@ function initSocialSystem(){
       db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
       return;
     }
-    if(inOnlineGame) return;
+    if(inOnlineGame || inLudoOnline) return;
     incomingInvite = inv;
-    $('inviteFromText').textContent = lang === 'bn'
-      ? `${inv.fromName || 'বন্ধু'} আপনাকে খেলার জন্য আমন্ত্রণ জানিয়েছে!`
-      : `${inv.fromName || 'A friend'} invited you to play!`;
+    const isLudoInv = inv.game === 'ludo';
+    $('inviteModalTitle').textContent = isLudoInv
+      ? (lang === 'bn' ? 'লুডু খেলার আমন্ত্রণ!' : 'Ludo Game Invite!')
+      : t('inviteTitle');
+    $('inviteFromText').textContent = isLudoInv
+      ? (lang === 'bn'
+          ? `${inv.fromName || 'বন্ধু'} আপনাকে লুডু খেলার জন্য আমন্ত্রণ জানিয়েছে!`
+          : `${inv.fromName || 'A friend'} invited you to play Ludo!`)
+      : (lang === 'bn'
+          ? `${inv.fromName || 'বন্ধু'} আপনাকে XO খেলার জন্য আমন্ত্রণ জানিয়েছে!`
+          : `${inv.fromName || 'A friend'} invited you to play XO!`);
     $('inviteOverlay').classList.add('show');
     playSound('chat');
   });
@@ -2699,6 +3539,10 @@ function renderFriendsUI(){
               <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
               <span>${t('inviteBtn')}</span>
             </button>
+            <button class="f-act-btn f-btn-invite-ludo" data-action="inviteFriendToLudo" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" ${isOnline ? '' : 'disabled'}>
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="2" fill="currentColor" stroke="none"/></svg>
+              <span>${t('inviteLudoBtn')}</span>
+            </button>
             <button class="f-act-btn f-btn-unfriend" data-action="askUnfriend" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" aria-label="Unfriend">
               <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="18" y1="8" x2="23" y2="13"/><line x1="23" y1="8" x2="18" y2="13"/></svg>
             </button>
@@ -2733,7 +3577,7 @@ function renderFriendsUI(){
   }
 }
 
-/* ================= FRIEND GAME INVITE ================= */
+/* ================= FRIEND GAME INVITE (XO & LUDO) ================= */
 async function inviteFriendToGame(el){
   if(!db) return;
   const fid = el && el.dataset.fid;
@@ -2743,7 +3587,7 @@ async function inviteFriendToGame(el){
     setFriendStatus('warn', lang === 'bn' ? `${fname} এখন অফলাইনে আছেন` : `${fname} is offline`);
     return;
   }
-  setFriendStatus('ok', lang === 'bn' ? `${fname}-কে আমন্ত্রণ পাঠানো হচ্ছে...` : `Sending invite to ${fname}...`);
+  setFriendStatus('ok', lang === 'bn' ? `${fname}-কে XO আমন্ত্রণ পাঠানো হচ্ছে...` : `Sending XO invite to ${fname}...`);
   try{
     let code = null;
     for(let t=0; t<10 && !code; t++){
@@ -2766,6 +3610,7 @@ async function inviteFriendToGame(el){
     });
 
     await db.ref(`users/${fid}/invite`).set({
+      game: 'xo',
       fromId: profile.id,
       fromName: profile.name || 'Friend',
       roomCode: code,
@@ -2786,6 +3631,79 @@ async function inviteFriendToGame(el){
   }
 }
 
+async function inviteFriendToLudo(el){
+  if(!db) return;
+  const fid = el && el.dataset.fid;
+  const fname = (el && el.dataset.fname) || 'Friend';
+  if(!fid) return;
+  if(!friendOnlineState[fid]){
+    setFriendStatus('warn', lang === 'bn' ? `${fname} এখন অফলাইনে আছেন` : `${fname} is offline`);
+    return;
+  }
+  setFriendStatus('ok', lang === 'bn' ? `${fname}-কে লুডু আমন্ত্রণ পাঠানো হচ্ছে...` : `Sending Ludo invite to ${fname}...`);
+  try{
+    let code = null;
+    for(let attempt=0; attempt<10 && !code; attempt++){
+      const c = String(1000 + Math.floor(Math.random() * 9000));
+      const s = await db.ref('ludoRooms/' + c).once('value');
+      if(!s.exists()) code = c;
+    }
+    if(!code){ setFriendStatus('warn', lang === 'bn' ? 'লুডু রুম তৈরি করা যাচ্ছে না' : 'Could not create Ludo room'); return; }
+
+    const order = getLudoColorOrder(2);
+    const seats = {};
+    const presence = {};
+    order.forEach((col, i) => {
+      seats[col] = i === 0 ? { id: profile.id, name: profile.name || 'Host', left: false } : false;
+      presence[col] = i === 0;
+    });
+
+    await db.ref('ludoRooms/' + code).set({
+      maxPlayers: 2,
+      hostId: profile.id,
+      status: 'waiting',
+      seats,
+      presence,
+      turn: 'blue',
+      dice: 1,
+      phase: 'roll',
+      tokens: {
+        blue: [-1,-1,-1,-1],
+        red: [-1,-1,-1,-1],
+        green: [-1,-1,-1,-1],
+        yellow: [-1,-1,-1,-1]
+      },
+      winner: '',
+      animEvent: null,
+      createdAt: Date.now()
+    });
+
+    await db.ref(`users/${fid}/invite`).set({
+      game: 'ludo',
+      fromId: profile.id,
+      fromName: profile.name || 'Friend',
+      roomCode: code,
+      time: Date.now()
+    });
+
+    ludoRoomCode = code;
+    ludoMaxPlayers = 2;
+    myLudoColor = 'blue';
+    inLudoOnline = false;
+    ludoOnlineEnded = false;
+    ludoAnnouncedLeft.clear();
+    $('ludoOnlineMsg').textContent = '';
+    $('ludoRoomCodeDisplay').textContent = code;
+    $('ludoLinkPreview').textContent = buildLudoRoomLink(code);
+    $('ludoShareBtn').hidden = !navigator.share;
+    showScreen('screen-ludo-waiting');
+    attachLudoRoomListener(code);
+    setupLudoPresence();
+  }catch(e){
+    setFriendStatus('warn', lang === 'bn' ? 'লুডু আমন্ত্রণ পাঠানো যায়নি' : 'Failed to send Ludo invite');
+  }
+}
+
 async function acceptGameInvite(){
   if(!incomingInvite || !db) return;
   const inv = incomingInvite;
@@ -2794,6 +3712,11 @@ async function acceptGameInvite(){
   await db.ref(`users/${profile.id}/invite`).remove().catch(() => {});
 
   const code = inv.roomCode;
+  if(inv.game === 'ludo'){
+    await joinLudoRoomByCode(code);
+    return;
+  }
+
   try{
     const ref = db.ref('rooms/' + code);
     const snap = await ref.once('value');
@@ -3279,12 +4202,25 @@ function shareRoomLink(){
 }
 function readRoomParam(){
   try{
-    const p = new URLSearchParams(location.search).get('room');
+    const sp = new URLSearchParams(location.search);
+    const p = sp.get('room');
+    const lp = sp.get('ludoRoom');
     if(p && /^\d{4}$/.test(p)) pendingRoomCode = p;
-    if(p && window.history && history.replaceState) history.replaceState(null, '', location.pathname);
+    if(lp && /^\d{4}$/.test(lp)) pendingLudoRoomCode = lp;
+    if((p || lp) && window.history && history.replaceState) history.replaceState(null, '', location.pathname);
   }catch(e){}
 }
 function applyPendingRoom(){
+  if(pendingLudoRoomCode){
+    const code = pendingLudoRoomCode;
+    pendingLudoRoomCode = null;
+    $('ludoJoinCodeInput').value = code;
+    $('ludoOnlineMsg').textContent = lang === 'bn'
+      ? 'লিংক থেকে লুডু রুম কোড এসেছে। "রুমে যোগ দিন" চাপুন।'
+      : 'Ludo room code loaded from link. Tap Join Room.';
+    showScreen('screen-ludo-online');
+    return true;
+  }
   if(!pendingRoomCode) return false;
   $('joinCodeInput').value = pendingRoomCode;
   pendingRoomCode = null;
@@ -3680,6 +4616,56 @@ function attachRoomChat(code){
   });
 }
 
+function attachLudoRoomChat(code){
+  chatContext = 'ludo_room';
+  activeDmFriend = null;
+  resetChatUI(lang === 'bn' ? 'লুডু চ্যাট' : 'Ludo Chat');
+  chatRef = db.ref(`ludoRooms/${code}/chat`);
+  readRef = db.ref(`ludoRooms/${code}/read`);
+
+  chatRef.on('child_added', snap => {
+    const key = snap.key, msg = snap.val();
+    if(!msg || renderedKeys.has(key)) return;
+    renderedKeys.add(key);
+    lastChatKey = key;
+    const mine = msg.senderId === profile.id;
+    appendChatBubble(key, msg, mine);
+    if(!mine && chatInitDone){
+      playSound('chat');
+      if(chatOpen && chatContext === 'ludo_room'){
+        markChatRead();
+      } else {
+        ludoUnread++;
+        $('ludoChatBadge').textContent = ludoUnread;
+        $('ludoChatBadge').hidden = false;
+        showChatToast(msg.name || 'Player', msg.text || '', { type:'ludo_room' });
+      }
+    }
+  });
+  chatRef.once('value', () => { chatInitDone = true; });
+  readRef.on('value', snap => {
+    const d = snap.val() || {};
+    let maxK = '';
+    Object.keys(d).forEach(pid => {
+      if(pid !== profile.id && d[pid] && d[pid] > maxK) maxK = d[pid];
+    });
+    oppReadKey = maxK;
+    applySeen();
+  });
+}
+
+function openLudoChat(){
+  if(!inLudoOnline || !ludoRoomCode) return;
+  if(chatContext !== 'ludo_room') attachLudoRoomChat(ludoRoomCode);
+  chatOpen = true;
+  ludoUnread = 0;
+  $('ludoChatBadge').hidden = true;
+  $('chatToast').classList.remove('show');
+  $('chatDrawer').classList.add('open');
+  markChatRead();
+  scrollChat();
+}
+
 function openFriendChat(el){
   if(!db) return;
   const fid = el && el.dataset.fid;
@@ -3792,6 +4778,8 @@ function markChatRead(){
   if(!lastChatKey || !db) return;
   if(chatContext === 'room' && onlineCode){
     db.ref(`rooms/${onlineCode}/read/${myRole}`).set(lastChatKey).catch(() => {});
+  } else if(chatContext === 'ludo_room' && ludoRoomCode){
+    db.ref(`ludoRooms/${ludoRoomCode}/read/${profile.id}`).set(lastChatKey).catch(() => {});
   } else if(chatContext === 'dm' && activeDmFriend){
     const tid = dmThreadId(profile.id, activeDmFriend.id);
     db.ref(`dms/${tid}/read/${profile.id}`).set(lastChatKey).catch(() => {});
@@ -3816,6 +4804,9 @@ function sendChatMessage(text){
 
   if(chatContext === 'room' && onlineCode){
     payload.sender = myRole;
+    chatRef.push(payload).catch(() => {});
+  } else if(chatContext === 'ludo_room' && ludoRoomCode){
+    payload.senderId = profile.id;
     chatRef.push(payload).catch(() => {});
   } else if(chatContext === 'dm' && activeDmFriend){
     payload.senderId = profile.id;
@@ -3864,9 +4855,1495 @@ function handleToastClick(){
   if(!pendingToastAction) return;
   if(pendingToastAction.type === 'room'){
     openChat();
+  } else if(pendingToastAction.type === 'ludo_room'){
+    openLudoChat();
   } else if(pendingToastAction.type === 'dm'){
     openFriendChat({ dataset: { fid: pendingToastAction.friendId, fname: pendingToastAction.friendName } });
   }
+}
+
+/* ================= LUDO GAME ENGINE (2P, 4P, CUSTOM COLORS & ONLINE PERSPECTIVE) ================= */
+const LUDO_MAIN_PATH = [
+  [13,6],[12,6],[11,6],[10,6],[9,6],
+  [8,5],[8,4],[8,3],[8,2],[8,1],[8,0],
+  [7,0],[6,0],
+  [6,1],[6,2],[6,3],[6,4],[6,5],
+  [5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
+  [0,7],[0,8],
+  [1,8],[2,8],[3,8],[4,8],[5,8],
+  [6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
+  [7,14],[8,14],
+  [8,13],[8,12],[8,11],[8,10],[8,9],
+  [9,8],[10,8],[11,8],[12,8],[13,8],[14,8],
+  [14,7],[14,6]
+];
+const LUDO_START_OFFSETS = {
+  blue: 0,
+  red: 13,
+  green: 26,
+  yellow: 39
+};
+const LUDO_HOME_STRETCH = {
+  blue:   [[13,7],[12,7],[11,7],[10,7],[9,7],[8,7]],
+  red:    [[7,1],[7,2],[7,3],[7,4],[7,5],[7,6]],
+  green:  [[1,7],[2,7],[3,7],[4,7],[5,7],[6,7]],
+  yellow: [[7,13],[7,12],[7,11],[7,10],[7,9],[7,8]]
+};
+const LUDO_YARD_SPOTS = {
+  blue:   [[10.6, 1.6], [10.6, 3.6], [12.6, 1.6], [12.6, 3.6]],
+  red:    [[1.6, 1.6], [1.6, 3.6], [3.6, 1.6], [3.6, 3.6]],
+  green:  [[1.6, 10.6], [1.6, 12.6], [3.6, 10.6], [3.6, 12.6]],
+  yellow: [[10.6, 10.6], [10.6, 12.6], [12.6, 10.6], [12.6, 12.6]]
+};
+const LUDO_SAFE_INDICES = new Set([0, 8, 13, 21, 26, 34, 39, 47]);
+const DICE_PIP_PATTERNS = {
+  1: [4],
+  2: [0, 8],
+  3: [0, 4, 8],
+  4: [0, 2, 6, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8]
+};
+const LUDO_CLOCKWISE = ['blue', 'red', 'green', 'yellow'];
+
+let ludoMode = 'cpu'; // 'cpu' | 'local' | 'online'
+let ludoActiveColors = ['blue', 'green'];
+let ludoPlayerNames = { blue:'Player 1', red:'Red', green:'Player 2', yellow:'Yellow' };
+let ludoTurn = 'blue';
+let ludoDiceVal = 1;
+let ludoPhase = 'roll'; // 'roll' | 'move' | 'anim' | 'over'
+let ludoTokens = {
+  blue: [-1, -1, -1, -1],
+  red: [-1, -1, -1, -1],
+  green: [-1, -1, -1, -1],
+  yellow: [-1, -1, -1, -1]
+};
+let ludoMovable = [];
+let ludoAiTimer = null;
+let ludoBoardDrawn = false;
+
+// Same-device custom setup state
+let ludoLocalCount = 2;
+let ludoLocalSlots = [
+  { name: '', color: 'blue' },
+  { name: '', color: 'green' },
+  { name: '', color: 'red' },
+  { name: '', color: 'yellow' }
+];
+
+// Online Ludo state & Presence/Leave detection
+let ludoRoomCode = null;
+let ludoRoomRef = null;
+let ludoRoomData = null;
+let myLudoColor = 'blue';
+let inLudoOnline = false;
+let ludoOnlineEnded = false;
+let ludoMaxPlayers = 2;
+let ludoBusy = false;
+let ludoUnread = 0;
+let ludoLastAnimKey = '';
+let ludoPresRef = null, ludoConnRef = null, ludoConnFn = null;
+const ludoOppGraceTimers = {};
+const ludoAnnouncedLeft = new Set();
+
+/* Map any real seat color to the viewer's visual seat color so in Online mode the current player's phone ALWAYS renders their own pins as Blue at the bottom-left! */
+function toVisualLudoColor(realColor){
+  if(ludoMode !== 'online' || !myLudoColor) return realColor;
+  const myIdx = LUDO_CLOCKWISE.indexOf(myLudoColor);
+  const realIdx = LUDO_CLOCKWISE.indexOf(realColor);
+  if(myIdx === -1 || realIdx === -1) return realColor;
+  return LUDO_CLOCKWISE[(realIdx - myIdx + 4) % 4];
+}
+function fromVisualLudoColor(visColor){
+  if(ludoMode !== 'online' || !myLudoColor) return visColor;
+  const myIdx = LUDO_CLOCKWISE.indexOf(myLudoColor);
+  const visIdx = LUDO_CLOCKWISE.indexOf(visColor);
+  if(myIdx === -1 || visIdx === -1) return visColor;
+  return LUDO_CLOCKWISE[(visIdx + myIdx) % 4];
+}
+
+function ludoPinSVG(color){
+  const palette = {
+    blue:   { main:'#1e90ff', dark:'#0c4a6e', light:'#7dd3fc' },
+    red:    { main:'#e11d2a', dark:'#7f1d1d', light:'#fda4af' },
+    green:  { main:'#16a34a', dark:'#14532d', light:'#86efac' },
+    yellow: { main:'#eab308', dark:'#713f12', light:'#fef08a' }
+  };
+  const { main, dark, light } = palette[color] || palette.blue;
+  return `
+    <svg viewBox="0 0 40 52" aria-hidden="true">
+      <ellipse cx="20" cy="48.5" rx="9" ry="2.6" fill="rgba(0,0,0,0.32)"/>
+      <path d="M20 3 C10.6 3 3 10.6 3 20 C3 31.8 20 48 20 48 C20 48 37 31.8 37 20 C37 10.6 29.4 3 20 3 Z"
+            fill="${main}" stroke="#ffffff" stroke-width="2.6"/>
+      <path d="M20 4.5 C11.5 4.5 4.5 11.5 4.5 20 C4.5 30.2 20 45.8 20 45.8"
+            fill="none" stroke="${light}" stroke-width="1.3" opacity="0.65"/>
+      <circle cx="20" cy="19.5" r="8.2" fill="#ffffff" stroke="${dark}" stroke-width="1.2"/>
+      <ellipse cx="17.5" cy="17" rx="2.5" ry="1.6" fill="${light}" opacity="0.45"/>
+    </svg>
+  `;
+}
+
+function buildLudoBoardSVG(){
+  if(ludoBoardDrawn) return;
+  const svg = $('ludoBoardSvg');
+  if(!svg) return;
+  const C = {
+    red: '#e11d2a',
+    green: '#159947',
+    blue: '#1e90ff',
+    yellow: '#facc15',
+    line: '#475569'
+  };
+  let out = '';
+
+  out += `<rect x="0" y="0" width="150" height="150" fill="#ffffff"/>`;
+
+  out += `<rect x="0" y="0" width="60" height="60" fill="${C.red}"/>`;
+  out += `<rect x="90" y="0" width="60" height="60" fill="${C.green}"/>`;
+  out += `<rect x="0" y="90" width="60" height="60" fill="${C.blue}"/>`;
+  out += `<rect x="90" y="90" width="60" height="60" fill="${C.yellow}"/>`;
+
+  out += `<rect x="10" y="10" width="40" height="40" rx="2" fill="#ffffff"/>`;
+  out += `<rect x="100" y="10" width="40" height="40" rx="2" fill="#ffffff"/>`;
+  out += `<rect x="10" y="100" width="40" height="40" rx="2" fill="#ffffff"/>`;
+  out += `<rect x="100" y="100" width="40" height="40" rx="2" fill="#ffffff"/>`;
+
+  const drawCircles = (ox, oy, col) => {
+    [[11,11],[29,11],[11,29],[29,29]].forEach(([dx,dy]) => {
+      out += `<circle cx="${ox+dx}" cy="${oy+dy}" r="5.2" fill="${col}"/>`;
+    });
+  };
+  drawCircles(10, 10, C.red);
+  drawCircles(100, 10, C.green);
+  drawCircles(10, 100, C.blue);
+  drawCircles(100, 100, C.yellow);
+
+  const fillCell = (r, c, col) => {
+    out += `<rect x="${c*10}" y="${r*10}" width="10" height="10" fill="${col}"/>`;
+  };
+  fillCell(6, 1, C.red);
+  for(let c=1; c<=5; c++) fillCell(7, c, C.red);
+  fillCell(1, 8, C.green);
+  for(let r=1; r<=5; r++) fillCell(r, 7, C.green);
+  fillCell(8, 13, C.yellow);
+  for(let c=9; c<=13; c++) fillCell(7, c, C.yellow);
+  fillCell(13, 6, C.blue);
+  for(let r=9; r<=13; r++) fillCell(r, 7, C.blue);
+
+  for(let r=0; r<15; r++){
+    for(let c=0; c<15; c++){
+      const inCorner = (r<6 && c<6) || (r<6 && c>8) || (r>8 && c<6) || (r>8 && c>8);
+      const inCenter = (r>=6 && r<=8 && c>=6 && c<=8);
+      if(inCorner || inCenter) continue;
+      out += `<rect x="${c*10}" y="${r*10}" width="10" height="10" fill="none" stroke="${C.line}" stroke-width="0.45"/>`;
+    }
+  }
+
+  out += `<polygon points="60,60 90,60 75,75" fill="${C.green}" stroke="${C.line}" stroke-width="0.45"/>`;
+  out += `<polygon points="90,60 90,90 75,75" fill="${C.yellow}" stroke="${C.line}" stroke-width="0.45"/>`;
+  out += `<polygon points="60,90 90,90 75,75" fill="${C.blue}" stroke="${C.line}" stroke-width="0.45"/>`;
+  out += `<polygon points="60,60 60,90 75,75" fill="${C.red}" stroke="${C.line}" stroke-width="0.45"/>`;
+
+  const starCells = [[2,6],[6,12],[8,2],[12,8]];
+  starCells.forEach(([r,c]) => {
+    const cx = c*10 + 5, cy = r*10 + 5;
+    out += `<polygon points="${cx},${cy-3.5} ${cx+1.1},${cy-1.1} ${cx+3.6},${cy-0.8} ${cx+1.7},${cy+1} ${cx+2.2},${cy+3.5} ${cx},${cy+2.2} ${cx-2.2},${cy+3.5} ${cx-1.7},${cy+1} ${cx-3.6},${cy-0.8} ${cx-1.1},${cy-1.1}" fill="none" stroke="#334155" stroke-width="0.55"/>`;
+  });
+
+  out += `<path d="M2.5 75 H7.5 M5.5 73 L7.5 75 L5.5 77" fill="none" stroke="${C.red}" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  out += `<path d="M75 2.5 V7.5 M73 5.5 L75 7.5 L77 5.5" fill="none" stroke="${C.green}" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  out += `<path d="M147.5 75 H142.5 M144.5 73 L142.5 75 L144.5 77" fill="none" stroke="${C.yellow}" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>`;
+  out += `<path d="M75 147.5 V142.5 M73 144.5 L75 142.5 L77 144.5" fill="none" stroke="${C.blue}" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>`;
+
+  out += `<rect x="0" y="0" width="60" height="60" fill="none" stroke="#1e293b" stroke-width="0.8"/>`;
+  out += `<rect x="90" y="0" width="60" height="60" fill="none" stroke="#1e293b" stroke-width="0.8"/>`;
+  out += `<rect x="0" y="90" width="60" height="60" fill="none" stroke="#1e293b" stroke-width="0.8"/>`;
+  out += `<rect x="90" y="90" width="60" height="60" fill="none" stroke="#1e293b" stroke-width="0.8"/>`;
+  out += `<rect x="60" y="60" width="30" height="30" fill="none" stroke="#1e293b" stroke-width="0.8"/>`;
+
+  svg.innerHTML = out;
+  ludoBoardDrawn = true;
+}
+
+function ludoStepToCoord(visColor, step, idx){
+  if(step === -1){
+    const [r, c] = LUDO_YARD_SPOTS[visColor][idx];
+    return { x: ((c + 0.5) / 15) * 100, y: ((r + 0.5) / 15) * 100 };
+  }
+  if(step >= 56){
+    const homeOffsets = {
+      blue:   [[-0.45, 0.55], [0.45, 0.55], [-0.22, 0.25], [0.22, 0.25]],
+      green:  [[-0.45, -0.55], [0.45, -0.55], [-0.22, -0.25], [0.22, -0.25]],
+      red:    [[-0.55, -0.45], [-0.55, 0.45], [-0.25, -0.22], [-0.25, 0.22]],
+      yellow: [[0.55, -0.45], [0.55, 0.45], [0.25, -0.22], [0.25, 0.22]]
+    };
+    const offset = homeOffsets[visColor][idx];
+    return {
+      x: ((7.5 + offset[0]) / 15) * 100,
+      y: ((7.5 + offset[1]) / 15) * 100
+    };
+  }
+  if(step <= 50){
+    const startOffset = LUDO_START_OFFSETS[visColor];
+    const pathIdx = (startOffset + step) % 52;
+    const [r, c] = LUDO_MAIN_PATH[pathIdx];
+    return { x: ((c + 0.5) / 15) * 100, y: ((r + 0.5) / 15) * 100 };
+  }
+  const stretchIdx = step - 51;
+  const [r, c] = LUDO_HOME_STRETCH[visColor][stretchIdx];
+  return { x: ((c + 0.5) / 15) * 100, y: ((r + 0.5) / 15) * 100 };
+}
+
+function ludoGlobalSquare(realColor, step){
+  if(step < 0 || step > 50) return -1;
+  const startOffset = LUDO_START_OFFSETS[realColor];
+  return (startOffset + step) % 52;
+}
+
+function isMyLudoTurn(){
+  if(ludoMode === 'cpu') return ludoTurn === 'blue';
+  if(ludoMode === 'local') return true;
+  if(ludoMode === 'online') return ludoTurn === myLudoColor && !ludoOnlineEnded;
+  return false;
+}
+
+function renderLudoTokens(){
+  const layer = $('ludoTokensLayer');
+  if(!layer) return;
+
+  const groups = {};
+  ludoActiveColors.forEach(realColor => {
+    const visColor = toVisualLudoColor(realColor);
+    const arr = ludoTokens[realColor] || [-1,-1,-1,-1];
+    arr.forEach((step, idx) => {
+      const base = ludoStepToCoord(visColor, step, idx);
+      const key = step >= 0 && step < 56 ? `${base.x.toFixed(1)}_${base.y.toFixed(1)}` : `${visColor}_${step}_${idx}`;
+      if(!groups[key]) groups[key] = [];
+      groups[key].push({ realColor, visColor, idx, step, base });
+    });
+  });
+
+  const activeVisSet = new Set(ludoActiveColors.map(c => toVisualLudoColor(c)));
+  layer.querySelectorAll('.ludo-token').forEach(btn => {
+    if(!activeVisSet.has(btn.dataset.visColor)) btn.remove();
+  });
+
+  const existing = {};
+  layer.querySelectorAll('.ludo-token').forEach(btn => {
+    existing[btn.dataset.tid] = btn;
+  });
+
+  Object.values(groups).forEach(list => {
+    const spread = [
+      [0, 0], [-1.3, -0.7], [1.3, -0.7], [-1.3, 0.7], [1.3, 0.7], [0, -1.2], [0, 1.2], [-1.6, 0]
+    ];
+    list.forEach((item, gIdx) => {
+      const tid = `${item.visColor}_${item.idx}`;
+      let btn = existing[tid];
+      if(!btn){
+        btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'ludo-token';
+        btn.dataset.tid = tid;
+        btn.dataset.action = 'pickLudoToken';
+        btn.dataset.visColor = item.visColor;
+        btn.dataset.idx = String(item.idx);
+        layer.appendChild(btn);
+      }
+      if(btn.dataset.renderedPinColor !== item.visColor){
+        btn.dataset.renderedPinColor = item.visColor;
+        btn.innerHTML = ludoPinSVG(item.visColor);
+      }
+      btn.dataset.color = item.realColor;
+      const [dx, dy] = list.length > 1 ? (spread[gIdx] || [0, 0]) : [0, 0];
+      btn.style.left = (item.base.x + dx) + '%';
+      btn.style.top = (item.base.y + dy) + '%';
+      const canMove = ludoPhase === 'move' && isMyLudoTurn() && item.realColor === ludoTurn && ludoMovable.includes(item.idx);
+      btn.classList.toggle('movable', canMove);
+    });
+  });
+}
+
+function updateLudoDiceUI(val, rolling){
+  const visTurn = toVisualLudoColor(ludoTurn);
+  const activeSet = new Set(DICE_PIP_PATTERNS[val] || [4]);
+  const visActiveColors = new Set(ludoActiveColors.map(c => toVisualLudoColor(c)));
+
+  ['blue', 'red', 'green', 'yellow'].forEach(visCol => {
+    const cap = visCol.charAt(0).toUpperCase() + visCol.slice(1);
+    const pod = $('ludoPod' + cap);
+    const diceEl = $('ludoPodDice' + cap);
+    if(!pod || !diceEl) return;
+
+    pod.hidden = !visActiveColors.has(visCol);
+    const isTurnPod = visCol === visTurn;
+    pod.classList.toggle('active', isTurnPod);
+    pod.classList.toggle('can-roll', isTurnPod && ludoPhase === 'roll' && isMyLudoTurn());
+
+    if(isTurnPod){
+      diceEl.querySelectorAll('.dice-pip').forEach((pip, i) => {
+        pip.classList.toggle('on', activeSet.has(i));
+      });
+      if(rolling){
+        diceEl.classList.remove('rolling');
+        void diceEl.offsetWidth;
+        diceEl.classList.add('rolling');
+      }
+    }
+  });
+}
+
+function updateLudoStatusUI(customMsg){
+  const visActiveColors = new Set(ludoActiveColors.map(c => toVisualLudoColor(c)));
+  $('ludoChatBtn').hidden = ludoMode !== 'online';
+
+  const tagMap = {
+    blue:   $('ludoBlueYardTag'),
+    red:    $('ludoRedYardTag'),
+    green:  $('ludoGreenYardTag'),
+    yellow: $('ludoYellowYardTag')
+  };
+
+  ['blue', 'red', 'green', 'yellow'].forEach(visCol => {
+    const tagEl = tagMap[visCol];
+    if(!tagEl) return;
+    if(!visActiveColors.has(visCol)){
+      tagEl.hidden = true;
+      return;
+    }
+    tagEl.hidden = false;
+    const realCol = fromVisualLudoColor(visCol);
+    tagEl.textContent = ludoPlayerNames[realCol] || visCol.toUpperCase();
+  });
+
+  if(customMsg){
+    $('ludoStatusText').textContent = customMsg;
+    return;
+  }
+  const actor = ludoPlayerNames[ludoTurn] || ludoTurn;
+  if(ludoPhase === 'roll'){
+    if(ludoMode === 'cpu' && ludoTurn === 'green'){
+      $('ludoStatusText').textContent = lang === 'bn' ? 'কম্পিউটার ছক্কা চালছে...' : 'Computer rolling...';
+    } else if(ludoMode === 'online' && ludoTurn !== myLudoColor){
+      $('ludoStatusText').textContent = lang === 'bn' ? `${actor} ছক্কা চালছে...` : `${actor} is rolling...`;
+    } else {
+      $('ludoStatusText').textContent = lang === 'bn' ? `${actor} · ছক্কা চালুন` : `${actor} · Tap Dice`;
+    }
+  } else if(ludoPhase === 'move'){
+    if(ludoMode === 'online' && ludoTurn !== myLudoColor){
+      $('ludoStatusText').textContent = lang === 'bn' ? `${actor} (${ludoDiceVal}) গুটি চালছে...` : `${actor} (${ludoDiceVal}) moving...`;
+    } else {
+      $('ludoStatusText').textContent = lang === 'bn'
+        ? `${actor} (${ludoDiceVal}) · গুটি চালুন`
+        : `${actor} (${ludoDiceVal}) · Move Pin`;
+    }
+  }
+}
+
+function getValidLudoMoves(color, dice){
+  const res = [];
+  const arr = ludoTokens[color] || [-1,-1,-1,-1];
+  arr.forEach((step, idx) => {
+    if(step === -1){
+      if(dice === 6) res.push(idx);
+    } else if(step + dice <= 56){
+      res.push(idx);
+    }
+  });
+  return res;
+}
+
+function goLudoSetup(){
+  showScreen('screen-ludo-setup');
+}
+
+/* Same-device Pass & Play Custom Name + Color Setup */
+function goLudoLocalSetup(){
+  ludoLocalSlots[0].name = ludoLocalSlots[0].name || profile.name || 'Player 1';
+  ludoLocalSlots[1].name = ludoLocalSlots[1].name || 'Player 2';
+  ludoLocalSlots[2].name = ludoLocalSlots[2].name || 'Player 3';
+  ludoLocalSlots[3].name = ludoLocalSlots[3].name || 'Player 4';
+  $('ludoLocalMsg').textContent = '';
+  renderLudoLocalForm();
+  showScreen('screen-ludo-local-setup');
+}
+
+function setLudoLocalCount(el){
+  const cnt = Number(el && el.dataset.count) === 4 ? 4 : 2;
+  ludoLocalCount = cnt;
+  $('ludoCount2Btn').classList.toggle('active', cnt === 2);
+  $('ludoCount4Btn').classList.toggle('active', cnt === 4);
+  $('ludoLocalMsg').textContent = '';
+  renderLudoLocalForm();
+}
+
+function renderLudoLocalForm(){
+  const box = $('ludoLocalPlayersForm');
+  if(!box) return;
+  const colors = ['blue', 'green', 'red', 'yellow'];
+  let html = '';
+  for(let i=0; i<ludoLocalCount; i++){
+    const slot = ludoLocalSlots[i];
+    const swatches = colors.map(c => `
+      <button type="button"
+              class="ludo-swatch ${c} ${slot.color === c ? 'selected' : ''}"
+              data-action="pickLudoSlotColor"
+              data-slot="${i}"
+              data-color="${c}"
+              aria-label="${c}"></button>
+    `).join('');
+    html += `
+      <div class="ludo-p-row">
+        <span class="ludo-p-num">P${i+1}</span>
+        <input type="text" maxlength="12" value="${escapeHtml(slot.name)}"
+               placeholder="Player ${i+1}"
+               oninput="ludoLocalSlots[${i}].name = this.value">
+        <div class="ludo-color-swatches">${swatches}</div>
+      </div>
+    `;
+  }
+  box.innerHTML = html;
+}
+
+function pickLudoSlotColor(el){
+  const slotIdx = Number(el && el.dataset.slot);
+  const newCol = el && el.dataset.color;
+  if(isNaN(slotIdx) || !newCol || !ludoLocalSlots[slotIdx]) return;
+  const oldCol = ludoLocalSlots[slotIdx].color;
+  if(oldCol === newCol) return;
+
+  for(let i=0; i<ludoLocalCount; i++){
+    if(i !== slotIdx && ludoLocalSlots[i].color === newCol){
+      ludoLocalSlots[i].color = oldCol;
+    }
+  }
+  ludoLocalSlots[slotIdx].color = newCol;
+  renderLudoLocalForm();
+}
+
+function startLudoLocalCustom(){
+  const chosenColors = [];
+  const namesMap = { blue:'Blue', red:'Red', green:'Green', yellow:'Yellow' };
+
+  for(let i=0; i<ludoLocalCount; i++){
+    const col = ludoLocalSlots[i].color;
+    if(chosenColors.includes(col)){
+      $('ludoLocalMsg').textContent = lang === 'bn'
+        ? 'প্রত্যেক খেলোয়াড়ের জন্য আলাদা রঙ বেছে নিন'
+        : 'Please pick a unique color for each player';
+      return;
+    }
+    chosenColors.push(col);
+    const nm = (ludoLocalSlots[i].name || '').trim() || `Player ${i+1}`;
+    namesMap[col] = nm;
+  }
+
+  const p1Col = ludoLocalSlots[0].color;
+  const startIdx = LUDO_CLOCKWISE.indexOf(p1Col);
+  const ordered = [];
+  for(let step=0; step<4; step++){
+    const c = LUDO_CLOCKWISE[(startIdx + step) % 4];
+    if(chosenColors.includes(c)) ordered.push(c);
+  }
+
+  ludoMode = 'local';
+  inLudoOnline = false;
+  ludoOnlineEnded = false;
+  ludoActiveColors = ordered;
+  ludoPlayerNames = namesMap;
+  initLudoPinsDOM();
+  resetLudoMatch();
+  showScreen('screen-ludo');
+}
+
+function goLudoOnline(){
+  $('ludoOnlineMsg').textContent = '';
+  showScreen('screen-ludo-online');
+}
+
+function initLudoPinsDOM(){
+  buildLudoBoardSVG();
+  $('ludoPodPinBlue').innerHTML = ludoPinSVG('blue');
+  $('ludoPodPinRed').innerHTML = ludoPinSVG('red');
+  $('ludoPodPinGreen').innerHTML = ludoPinSVG('green');
+  $('ludoPodPinYellow').innerHTML = ludoPinSVG('yellow');
+}
+
+function startLudo(el){
+  ludoMode = (el && el.dataset.ludoMode) || 'cpu';
+  inLudoOnline = false;
+  ludoOnlineEnded = false;
+  ludoActiveColors = ['blue', 'green'];
+  ludoPlayerNames = {
+    blue: 'You',
+    red: 'Red',
+    green: 'Computer',
+    yellow: 'Yellow'
+  };
+  initLudoPinsDOM();
+  resetLudoMatch();
+  showScreen('screen-ludo');
+}
+
+function restartLudo(){
+  if(ludoMode === 'online'){
+    restartLudoOnline();
+    return;
+  }
+  $('ludoResultOverlay').classList.remove('show');
+  resetLudoMatch();
+}
+
+function resetLudoMatch(){
+  clearTimeout(ludoAiTimer);
+  ludoAiTimer = null;
+  ludoTurn = ludoActiveColors[0] || 'blue';
+  ludoDiceVal = 1;
+  ludoPhase = 'roll';
+  ludoMovable = [];
+  ludoTokens = {
+    blue: [-1, -1, -1, -1],
+    red: [-1, -1, -1, -1],
+    green: [-1, -1, -1, -1],
+    yellow: [-1, -1, -1, -1]
+  };
+  $('ludoTokensLayer').innerHTML = '';
+  $('ludoResultOverlay').classList.remove('show');
+  $('ludoLeftOverlay').classList.remove('show');
+  updateLudoDiceUI(1, false);
+  renderLudoTokens();
+  updateLudoStatusUI();
+}
+
+function exitLudo(){
+  clearTimeout(ludoAiTimer);
+  ludoAiTimer = null;
+  if(ludoMode === 'online'){
+    leaveLudoOnlineRoom();
+  }
+  closeChat();
+  $('ludoResultOverlay').classList.remove('show');
+  $('ludoLeftOverlay').classList.remove('show');
+  renderMenu();
+  showScreen('screen-menu');
+}
+
+function rollLudoDice(el){
+  const clickedSeat = el && el.dataset.seat;
+  if(clickedSeat && clickedSeat !== toVisualLudoColor(ludoTurn)) return;
+  if(ludoPhase !== 'roll') return;
+  if(!isMyLudoTurn()) return;
+  if(ludoMode === 'online'){
+    rollLudoOnlineDice();
+    return;
+  }
+  performLudoRoll();
+}
+
+function performLudoRoll(){
+  ludoPhase = 'anim';
+  playSound('move');
+  triggerHaptic([20, 35, 25]);
+  const val = 1 + Math.floor(Math.random() * 6);
+  ludoDiceVal = val;
+  updateLudoDiceUI(val, true);
+
+  setTimeout(() => {
+    if(val === 6) triggerHaptic([35, 50, 35]);
+    const valid = getValidLudoMoves(ludoTurn, val);
+    ludoMovable = valid;
+    if(!valid.length){
+      updateLudoStatusUI(lang === 'bn' ? `${val} উঠেছে · কোনো চাল নেই` : `Rolled ${val} · No moves`);
+      renderLudoTokens();
+      setTimeout(() => {
+        switchLudoTurn();
+      }, 750);
+      return;
+    }
+
+    if(ludoMode === 'cpu' && ludoTurn === 'green'){
+      ludoPhase = 'move';
+      updateLudoStatusUI();
+      renderLudoTokens();
+      ludoAiTimer = setTimeout(() => {
+        const chosen = pickAiLudoToken(valid, val);
+        executeLudoMove('green', chosen);
+      }, 550);
+    } else if(valid.length === 1){
+      ludoPhase = 'move';
+      updateLudoStatusUI();
+      renderLudoTokens();
+      setTimeout(() => {
+        if(ludoPhase === 'move') executeLudoMove(ludoTurn, valid[0]);
+      }, 360);
+    } else {
+      ludoPhase = 'move';
+      updateLudoStatusUI();
+      renderLudoTokens();
+    }
+  }, 430);
+}
+
+function pickAiLudoToken(valid, dice){
+  let bestIdx = valid[0];
+  let bestScore = -999;
+  valid.forEach(idx => {
+    const cur = ludoTokens.green[idx];
+    let score = 0;
+    if(cur === -1 && dice === 6){
+      score = 90;
+    } else {
+      const next = cur + dice;
+      if(next === 56) score += 120;
+      const targetSq = ludoGlobalSquare('green', next);
+      if(targetSq >= 0 && !LUDO_SAFE_INDICES.has(targetSq)){
+        const hitsBlue = ludoTokens.blue.some(bStep => ludoGlobalSquare('blue', bStep) === targetSq);
+        if(hitsBlue) score += 150;
+      }
+      if(LUDO_SAFE_INDICES.has(targetSq)) score += 35;
+      score += next;
+    }
+    if(score > bestScore){
+      bestScore = score;
+      bestIdx = idx;
+    }
+  });
+  return bestIdx;
+}
+
+function pickLudoToken(el){
+  if(ludoPhase !== 'move') return;
+  const color = el && el.dataset.color;
+  const idx = Number(el && el.dataset.idx);
+  if(color !== ludoTurn || !ludoMovable.includes(idx)) return;
+  if(!isMyLudoTurn()) return;
+  if(ludoMode === 'online'){
+    moveLudoOnlineToken(color, idx);
+    return;
+  }
+  executeLudoMove(color, idx);
+}
+
+function executeLudoMove(color, idx){
+  ludoPhase = 'anim';
+  ludoMovable = [];
+  const startStep = ludoTokens[color][idx];
+  const stepsToWalk = startStep === -1 ? 1 : ludoDiceVal;
+  let walked = 0;
+
+  const stepTimer = setInterval(() => {
+    walked++;
+    ludoTokens[color][idx] = startStep === -1 ? 0 : startStep + walked;
+    playSound('move');
+    renderLudoTokens();
+
+    if(walked >= stepsToWalk){
+      clearInterval(stepTimer);
+      finishLudoMove(color, idx);
+    }
+  }, 145);
+}
+
+function finishLudoMove(color, idx){
+  const finalStep = ludoTokens[color][idx];
+  let captured = false;
+
+  const mySq = ludoGlobalSquare(color, finalStep);
+  if(mySq >= 0 && !LUDO_SAFE_INDICES.has(mySq)){
+    ludoActiveColors.forEach(opp => {
+      if(opp === color) return;
+      ludoTokens[opp].forEach((oppStep, oppIdx) => {
+        if(ludoGlobalSquare(opp, oppStep) === mySq){
+          ludoTokens[opp][oppIdx] = -1;
+          captured = true;
+        }
+      });
+    });
+  }
+
+  if(captured){
+    playMelody('win');
+    renderLudoTokens();
+  }
+
+  if(ludoTokens[color].every(s => s >= 56)){
+    ludoPhase = 'over';
+    showLudoWinnerModal(color);
+    return;
+  }
+
+  const bonusTurn = ludoDiceVal === 6 || captured || finalStep === 56;
+  if(bonusTurn){
+    ludoPhase = 'roll';
+    updateLudoDiceUI(ludoDiceVal, false);
+    updateLudoStatusUI(lang === 'bn' ? 'বোনাস চাল! আবার ছক্কা চালুন' : 'Bonus Turn! Roll again');
+    if(ludoMode === 'cpu' && ludoTurn === 'green'){
+      ludoAiTimer = setTimeout(performLudoRoll, 650);
+    }
+  } else {
+    switchLudoTurn();
+  }
+}
+
+function showLudoWinnerModal(winnerColor){
+  const isMe = ludoMode === 'cpu' ? winnerColor === 'blue' : (ludoMode === 'online' ? winnerColor === myLudoColor : true);
+  const hero = $('ludoResultHero');
+  hero.className = 'result-hero ' + (isMe ? 'hero-win' : 'hero-lose');
+  hero.innerHTML = RESULT_HERO_ICONS[isMe ? 'win' : 'lose'];
+
+  if(ludoMode === 'cpu'){
+    $('ludoResultTitle').textContent = isMe
+      ? (lang === 'bn' ? 'আপনি লুডু জিতেছেন!' : 'You Won Ludo!')
+      : (lang === 'bn' ? 'কম্পিউটার জিতেছে!' : 'Computer Won!');
+  } else {
+    const winnerLabel = ludoPlayerNames[winnerColor] || winnerColor.toUpperCase();
+    $('ludoResultTitle').textContent = lang === 'bn' ? `${winnerLabel} জিতেছে!` : `${winnerLabel} Won!`;
+  }
+  $('ludoResultSub').textContent = lang === 'bn' ? 'সব ৪টি গুটি ঘরে পৌঁছেছে!' : 'All 4 tokens reached home!';
+  if(isMe){
+    playMelody('win');
+    launchConfetti();
+  } else {
+    playMelody('lose');
+  }
+  $('ludoResultOverlay').classList.add('show');
+}
+
+function nextLudoColor(cur){
+  const idx = ludoActiveColors.indexOf(cur);
+  if(idx === -1) return ludoActiveColors[0];
+  return ludoActiveColors[(idx + 1) % ludoActiveColors.length];
+}
+
+function switchLudoTurn(){
+  ludoTurn = nextLudoColor(ludoTurn);
+  ludoPhase = 'roll';
+  ludoMovable = [];
+  updateLudoDiceUI(ludoDiceVal, false);
+  renderLudoTokens();
+  updateLudoStatusUI();
+
+  if(ludoMode === 'cpu' && ludoTurn === 'green'){
+    ludoAiTimer = setTimeout(performLudoRoll, 650);
+  }
+}
+
+/* ================= ONLINE LUDO MULTIPLAYER (2P & 4P + SHARE LINK + FRIEND INVITE + LEAVE DETECTION + CHAT) ================= */
+function getLudoColorOrder(maxP){
+  return maxP === 4 ? ['blue', 'red', 'green', 'yellow'] : ['blue', 'green'];
+}
+
+function buildLudoRoomLink(code){
+  const base = location.href.split('#')[0].split('?')[0];
+  return `${base}?ludoRoom=${code}`;
+}
+
+function copyLudoRoomCode(){
+  if(!ludoRoomCode) return;
+  const btn = $('ludoCopyBtn');
+  copyText(ludoRoomCode, ok => flashBtn(btn, t('copiedBang'), ok, t('copyCode')));
+}
+
+function copyLudoRoomLink(){
+  if(!ludoRoomCode) return;
+  const btn = $('ludoLinkBtn');
+  const link = buildLudoRoomLink(ludoRoomCode);
+  $('ludoLinkPreview').textContent = link;
+  copyText(link, ok => flashBtn(btn, t('linkCopied'), ok, t('copyLink')));
+}
+
+function shareLudoRoomLink(){
+  if(!ludoRoomCode) return;
+  const btn = $('ludoShareBtn');
+  const link = buildLudoRoomLink(ludoRoomCode);
+  if(navigator.share){
+    navigator.share({
+      title: 'Ludo Game - XO HXZZ',
+      text: lang === 'bn'
+        ? `আমার সাথে লুডু খেলুন! রুম কোড: ${ludoRoomCode}`
+        : `Play Ludo with me! Room code: ${ludoRoomCode}`,
+      url: link
+    }).then(() => {
+      flashBtn(btn, t('sharedBang'), true, t('shareBtn'));
+    }).catch(() => {});
+  } else {
+    copyLudoRoomLink();
+  }
+}
+
+function openLudoInviteModal(){
+  if(!ludoRoomCode || !ludoRoomData) return;
+  const listBox = $('ludoInviteFriendsList');
+  const statusEl = $('ludoInviteStatusText');
+  statusEl.textContent = t('ludoInviteFriendsSub');
+
+  const fList = Object.values(friendsMap);
+  if(!fList.length){
+    listBox.innerHTML = `<div class="empty-box">${t('emptyFriends')}</div>`;
+  } else {
+    fList.sort((a, b) => (friendOnlineState[b.id] ? 1 : 0) - (friendOnlineState[a.id] ? 1 : 0));
+    listBox.innerHTML = fList.map(f => {
+      const isOnline = !!friendOnlineState[f.id];
+      const initial = escapeHtml((f.name || 'F').charAt(0).toUpperCase());
+      return `
+        <div class="friend-item">
+          <div class="friend-left">
+            <div class="friend-avatar">
+              ${initial}
+              <span class="presence-dot ${isOnline ? 'online' : ''}"></span>
+            </div>
+            <div class="friend-meta">
+              <div class="friend-name">${escapeHtml(f.name || 'Friend')}</div>
+              <div class="friend-sub ${isOnline ? 'on' : ''}">${isOnline ? t('onlineStatus') : t('offlineStatus')}</div>
+            </div>
+          </div>
+          <div class="friend-actions">
+            <button class="f-act-btn f-btn-invite-ludo" data-action="sendLobbyLudoInvite" data-fid="${escapeHtml(f.id)}" data-fname="${escapeHtml(f.name || 'Friend')}" ${isOnline ? '' : 'disabled'}>
+              <span>${lang === 'bn' ? 'ইনভাইট' : 'Invite'}</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+  $('ludoInviteModalOverlay').classList.add('show');
+}
+
+function closeLudoInviteModal(){
+  $('ludoInviteModalOverlay').classList.remove('show');
+}
+
+async function sendLobbyLudoInvite(el){
+  if(!db || !ludoRoomCode) return;
+  const fid = el && el.dataset.fid;
+  const fname = (el && el.dataset.fname) || 'Friend';
+  if(!fid) return;
+  try{
+    await db.ref(`users/${fid}/invite`).set({
+      game: 'ludo',
+      fromId: profile.id,
+      fromName: profile.name || 'Friend',
+      roomCode: ludoRoomCode,
+      time: Date.now()
+    });
+    if(el){
+      el.disabled = true;
+      el.innerHTML = `<span>${lang === 'bn' ? 'পাঠানো হয়েছে' : 'Sent'}</span>`;
+    }
+    $('ludoInviteStatusText').textContent = lang === 'bn'
+      ? `${fname}-কে লুডু ইনভাইট পাঠানো হয়েছে!`
+      : `Ludo invite sent to ${fname}!`;
+  }catch(e){}
+}
+
+function setupLudoPresence(){
+  if(!ludoRoomCode || !myLudoColor || !db) return;
+  if(ludoConnRef && ludoConnFn) ludoConnRef.off('value', ludoConnFn);
+  if(ludoPresRef) ludoPresRef.onDisconnect().cancel();
+
+  ludoPresRef = db.ref(`ludoRooms/${ludoRoomCode}/presence/${myLudoColor}`);
+  ludoConnRef = db.ref('.info/connected');
+  ludoConnFn = snap => {
+    if(snap.val() !== true) return;
+    ludoPresRef.onDisconnect().set(false);
+    ludoPresRef.set(true);
+  };
+  ludoConnRef.on('value', ludoConnFn);
+}
+
+function clearAllLudoGraceTimers(){
+  Object.keys(ludoOppGraceTimers).forEach(col => {
+    clearTimeout(ludoOppGraceTimers[col]);
+    delete ludoOppGraceTimers[col];
+  });
+}
+
+function checkLudoOpponentsPresence(room){
+  if(!inLudoOnline || ludoOnlineEnded || room.status !== 'playing') return;
+  const maxP = room.maxPlayers === 4 ? 4 : 2;
+  const order = getLudoColorOrder(maxP);
+  const seats = room.seats || {};
+  const pres = room.presence || {};
+
+  order.forEach(col => {
+    if(col === myLudoColor) return;
+    const seat = seats[col];
+    if(!seat || !seat.name) return;
+
+    if(seat.left === true || pres[col] === false){
+      if(seat.left === true){
+        clearTimeout(ludoOppGraceTimers[col]);
+        delete ludoOppGraceTimers[col];
+        handleLudoPlayerLeft(col, seat.name);
+      } else if(!ludoOppGraceTimers[col]){
+        ludoOppGraceTimers[col] = setTimeout(() => {
+          delete ludoOppGraceTimers[col];
+          const latestSeat = ludoRoomData && ludoRoomData.seats && ludoRoomData.seats[col];
+          const latestPres = ludoRoomData && ludoRoomData.presence && ludoRoomData.presence[col];
+          if(latestSeat && latestSeat.name && latestPres === false){
+            handleLudoPlayerLeft(col, latestSeat.name);
+          }
+        }, 6500);
+      }
+    } else if(pres[col] === true){
+      clearTimeout(ludoOppGraceTimers[col]);
+      delete ludoOppGraceTimers[col];
+    }
+  });
+}
+
+function handleLudoPlayerLeft(leftColor, leftName){
+  if(!inLudoOnline || ludoOnlineEnded || !ludoRoomRef || !ludoRoomData) return;
+
+  const maxP = ludoRoomData.maxPlayers === 4 ? 4 : 2;
+  const order = getLudoColorOrder(maxP);
+  const seats = ludoRoomData.seats || {};
+  const remaining = order.filter(c => {
+    const s = seats[c];
+    return s && s.name && !s.left && c !== leftColor;
+  });
+
+  if(remaining.length <= 1){
+    ludoOnlineEnded = true;
+    clearAllLudoGraceTimers();
+    const displayLeftName = leftName || (lang === 'bn' ? 'প্রতিপক্ষ' : 'Opponent');
+    appendSystemMessage(`⚠️ ${displayLeftName} ${lang === 'bn' ? 'গেম ছেড়ে চলে গেছে' : 'left the game'}`);
+    $('ludoLeftTitle').textContent = lang === 'bn'
+      ? `${displayLeftName} গেম ছেড়ে চলে গেছে`
+      : `${displayLeftName} left the game`;
+    $('ludoLeftSub').textContent = lang === 'bn'
+      ? 'আপনি জয়ী হয়েছেন!'
+      : 'You won the match!';
+    $('ludoLeftOverlay').classList.add('show');
+    playMelody('win');
+    launchConfetti();
+
+    ludoRoomRef.transaction(room => {
+      if(!room || room.status === 'finished') return;
+      if(room.seats && room.seats[leftColor]){
+        room.seats[leftColor].left = true;
+      }
+      room.status = 'finished';
+      room.winner = myLudoColor;
+      room.phase = 'over';
+      return room;
+    }).catch(() => {});
+    return;
+  }
+
+  if(!ludoAnnouncedLeft.has(leftColor)){
+    ludoAnnouncedLeft.add(leftColor);
+    const msg = lang === 'bn'
+      ? `${leftName} গেম ছেড়ে চলে গেছে`
+      : `${leftName} left the game`;
+    appendSystemMessage(`⚠️ ${msg}`);
+    showChatToast('Ludo', msg, { type:'ludo_room' });
+    playSound('chat');
+  }
+
+  ludoRoomRef.transaction(room => {
+    if(!room || room.status !== 'playing') return;
+    if(room.seats && room.seats[leftColor]){
+      room.seats[leftColor].left = true;
+    }
+    if(room.turn === leftColor){
+      const activeList = order.filter(c => {
+        const s = room.seats && room.seats[c];
+        return s && s.name && !s.left;
+      });
+      if(activeList.length >= 1){
+        const curIdx = order.indexOf(leftColor);
+        let nextCol = activeList[0];
+        for(let step=1; step<=4; step++){
+          const cand = order[(curIdx + step) % 4];
+          if(activeList.includes(cand)){ nextCol = cand; break; }
+        }
+        room.turn = nextCol;
+        room.phase = 'roll';
+        room.statusNote = lang === 'bn'
+          ? `${leftName} চলে গেছেন · পরের দান`
+          : `${leftName} left · Next turn`;
+      }
+    }
+    return room;
+  }).catch(() => {});
+}
+
+async function createLudoRoom(el){
+  if(!db){
+    $('ludoOnlineMsg').textContent = lang === 'bn' ? 'ইন্টারনেট সংযোগ নেই' : 'No internet connection';
+    return;
+  }
+  const maxP = Number(el && el.dataset.max) === 4 ? 4 : 2;
+  $('ludoOnlineMsg').textContent = lang === 'bn' ? 'রুম তৈরি হচ্ছে...' : 'Creating room...';
+  try{
+    let code = null;
+    for(let attempt=0; attempt<10 && !code; attempt++){
+      const c = String(1000 + Math.floor(Math.random() * 9000));
+      const s = await db.ref('ludoRooms/' + c).once('value');
+      if(!s.exists()) code = c;
+    }
+    if(!code){
+      $('ludoOnlineMsg').textContent = lang === 'bn' ? 'রুম তৈরি করা যাচ্ছে না' : 'Could not create room';
+      return;
+    }
+
+    const order = getLudoColorOrder(maxP);
+    const seats = {};
+    const presence = {};
+    order.forEach((col, i) => {
+      seats[col] = i === 0 ? { id: profile.id, name: profile.name || 'Host', left: false } : false;
+      presence[col] = i === 0;
+    });
+
+    await db.ref('ludoRooms/' + code).set({
+      maxPlayers: maxP,
+      hostId: profile.id,
+      status: 'waiting',
+      seats,
+      presence,
+      turn: 'blue',
+      dice: 1,
+      phase: 'roll',
+      tokens: {
+        blue: [-1,-1,-1,-1],
+        red: [-1,-1,-1,-1],
+        green: [-1,-1,-1,-1],
+        yellow: [-1,-1,-1,-1]
+      },
+      winner: '',
+      animEvent: null,
+      createdAt: Date.now()
+    });
+
+    ludoRoomCode = code;
+    ludoMaxPlayers = maxP;
+    myLudoColor = 'blue';
+    inLudoOnline = false;
+    ludoOnlineEnded = false;
+    ludoAnnouncedLeft.clear();
+    $('ludoOnlineMsg').textContent = '';
+    $('ludoRoomCodeDisplay').textContent = code;
+    $('ludoLinkPreview').textContent = buildLudoRoomLink(code);
+    $('ludoShareBtn').hidden = !navigator.share;
+    showScreen('screen-ludo-waiting');
+    attachLudoRoomListener(code);
+    setupLudoPresence();
+  }catch(e){
+    $('ludoOnlineMsg').textContent = e.message || 'Error';
+  }
+}
+
+async function joinLudoRoom(){
+  const code = $('ludoJoinCodeInput').value.trim();
+  await joinLudoRoomByCode(code);
+}
+
+/* Fixed Smooth Join Logic matching XO Room Join */
+async function joinLudoRoomByCode(code){
+  if(!db){
+    $('ludoOnlineMsg').textContent = lang === 'bn' ? 'ইন্টারনেট সংযোগ নেই' : 'No internet connection';
+    return;
+  }
+  if(!/^\d{4}$/.test(code)){
+    $('ludoOnlineMsg').textContent = lang === 'bn' ? '৪ সংখ্যার সঠিক কোড লিখুন' : 'Enter a valid 4-digit code';
+    return;
+  }
+  $('ludoOnlineMsg').textContent = lang === 'bn' ? 'রুমে যোগ দেওয়া হচ্ছে...' : 'Joining room...';
+  try{
+    const ref = db.ref('ludoRooms/' + code);
+    const snap = await ref.once('value');
+    const room = snap.val();
+
+    if(!room){
+      $('ludoOnlineMsg').textContent = lang === 'bn' ? 'এই কোডে কোনো লুডু রুম নেই' : 'Ludo room not found';
+      return;
+    }
+    if(room.status !== 'waiting'){
+      $('ludoOnlineMsg').textContent = lang === 'bn' ? 'খেলা ইতিমধ্যে শুরু হয়ে গেছে বা রুম বন্ধ' : 'Match already started or closed';
+      return;
+    }
+
+    const maxP = room.maxPlayers === 4 ? 4 : 2;
+    const order = getLudoColorOrder(maxP);
+    const seats = Object.assign({}, room.seats || {});
+
+    if(room.presence && room.presence.blue === false){
+      $('ludoOnlineMsg').textContent = lang === 'bn' ? 'রুমের হোস্ট এখন অফলাইনে আছেন' : 'Room host is offline';
+      return;
+    }
+
+    // Check if this player is already seated or find first open seat
+    let assignedColor = null;
+    for(const col of order){
+      if(seats[col] && seats[col].id === profile.id){
+        assignedColor = col;
+        break;
+      }
+    }
+    if(!assignedColor){
+      for(const col of order){
+        if(!seats[col]){
+          assignedColor = col;
+          break;
+        }
+      }
+    }
+
+    if(!assignedColor){
+      $('ludoOnlineMsg').textContent = lang === 'bn' ? 'রুমটি পূর্ণ হয়ে গেছে' : 'Room is already full';
+      return;
+    }
+
+    seats[assignedColor] = { id: profile.id, name: profile.name || 'Player', left: false };
+    const filledCount = order.filter(c => !!seats[c]).length;
+    const nextStatus = filledCount >= maxP ? 'playing' : 'waiting';
+
+    await ref.update({
+      [`seats/${assignedColor}`]: seats[assignedColor],
+      [`presence/${assignedColor}`]: true,
+      status: nextStatus
+    });
+
+    ludoRoomCode = code;
+    ludoMaxPlayers = maxP;
+    myLudoColor = assignedColor;
+    inLudoOnline = false;
+    ludoOnlineEnded = false;
+    ludoAnnouncedLeft.clear();
+    $('ludoOnlineMsg').textContent = '';
+    $('ludoRoomCodeDisplay').textContent = code;
+    $('ludoLinkPreview').textContent = buildLudoRoomLink(code);
+    $('ludoShareBtn').hidden = !navigator.share;
+    showScreen('screen-ludo-waiting');
+    attachLudoRoomListener(code);
+    setupLudoPresence();
+  }catch(e){
+    $('ludoOnlineMsg').textContent = e.message || 'Error';
+  }
+}
+
+function attachLudoRoomListener(code){
+  if(ludoRoomRef) ludoRoomRef.off();
+  ludoRoomRef = db.ref('ludoRooms/' + code);
+  ludoRoomRef.on('value', snap => onLudoRoomUpdate(snap.val()), err => showErr(err.message));
+}
+
+function hostStartLudoOnline(){
+  if(!ludoRoomRef || !ludoRoomData) return;
+  if(ludoRoomData.hostId !== profile.id) return;
+  const order = getLudoColorOrder(ludoRoomData.maxPlayers === 4 ? 4 : 2);
+  const seats = ludoRoomData.seats || {};
+  const active = order.filter(c => !!seats[c]);
+  if(active.length < 2) return;
+  ludoRoomRef.update({ status: 'playing' }).catch(() => {});
+}
+
+function cancelLudoRoom(){
+  leaveLudoOnlineRoom();
+  showScreen('screen-ludo-setup');
+}
+
+function leaveLudoOnlineRoom(){
+  closeLudoInviteModal();
+  clearAllLudoGraceTimers();
+  if(ludoConnRef && ludoConnFn) ludoConnRef.off('value', ludoConnFn);
+  if(ludoPresRef){ ludoPresRef.onDisconnect().cancel(); ludoPresRef = null; }
+  ludoConnRef = null; ludoConnFn = null;
+
+  if(ludoRoomRef && ludoRoomData && ludoRoomCode){
+    const code = ludoRoomCode;
+    const isHost = ludoRoomData.hostId === profile.id;
+    const myCol = myLudoColor;
+    const status = ludoRoomData.status;
+    ludoRoomRef.off();
+    ludoRoomRef = null;
+
+    if(isHost && status === 'waiting'){
+      db.ref('ludoRooms/' + code).remove().catch(() => {});
+    } else if(myCol){
+      const updates = {
+        [`presence/${myCol}`]: false
+      };
+      if(status === 'waiting'){
+        updates[`seats/${myCol}`] = false;
+      } else {
+        updates[`seats/${myCol}/left`] = true;
+      }
+      db.ref('ludoRooms/' + code).update(updates).catch(() => {});
+    }
+  } else if(ludoRoomRef){
+    ludoRoomRef.off();
+    ludoRoomRef = null;
+  }
+  ludoRoomCode = null;
+  ludoRoomData = null;
+  inLudoOnline = false;
+  ludoOnlineEnded = false;
+  ludoBusy = false;
+  ludoUnread = 0;
+  ludoLastAnimKey = '';
+  ludoAnnouncedLeft.clear();
+  $('ludoChatBadge').hidden = true;
+  $('ludoLinkPreview').textContent = '';
+}
+
+function renderLudoLobbySeats(room){
+  const maxP = room.maxPlayers === 4 ? 4 : 2;
+  const order = getLudoColorOrder(maxP);
+  const seats = room.seats || {};
+  const grid = $('ludoSeatsGrid');
+  if(!grid) return;
+
+  let filledCount = 0;
+  grid.innerHTML = order.map((col, idx) => {
+    const p = seats[col];
+    if(p && p.name) filledCount++;
+    const label = p && p.name
+      ? escapeHtml(p.name)
+      : (lang === 'bn' ? 'অপেক্ষমান...' : 'Waiting...');
+    const isMe = p && p.id === profile.id;
+    const displayPinColor = isMe ? 'blue' : (idx === 0 ? 'green' : col);
+    return `
+      <div class="ludo-seat-card ${p && p.name ? 'filled' : ''}">
+        <div class="ludo-seat-pin">${ludoPinSVG(displayPinColor)}</div>
+        <div class="ludo-seat-info">
+          <div class="ludo-seat-color">${isMe ? (lang === 'bn' ? 'আপনি (Blue)' : 'You (Blue)') : `Slot ${idx + 1}`}</div>
+          <div class="ludo-seat-player">${label}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  $('ludoWaitTitle').textContent = lang === 'bn'
+    ? `লুডু লবি (${filledCount}/${maxP})`
+    : `Ludo Lobby (${filledCount}/${maxP})`;
+  $('ludoWaitSub').textContent = lang === 'bn'
+    ? 'কোড বা লিংকটি বন্ধুদের পাঠান (আপনার ফোনে আপনার গুটি Blue দেখাবে)'
+    : 'Share code or link with friends (Your pins appear Blue on your phone)';
+
+  const startBtn = $('ludoHostStartBtn');
+  if(startBtn){
+    startBtn.hidden = !(room.hostId === profile.id && filledCount >= 2);
+  }
+}
+
+function onLudoRoomUpdate(room){
+  if(!ludoRoomCode) return;
+  if(!room){
+    if(inLudoOnline && !ludoOnlineEnded){
+      ludoOnlineEnded = true;
+      $('ludoLeftTitle').textContent = t('oppLeftTitle');
+      $('ludoLeftSub').textContent = lang === 'bn' ? 'রুমটি বন্ধ হয়ে গেছে।' : 'Room has been closed.';
+      $('ludoLeftOverlay').classList.add('show');
+    } else {
+      leaveLudoOnlineRoom();
+      showScreen('screen-menu');
+    }
+    return;
+  }
+  ludoRoomData = room;
+  ludoBusy = false;
+
+  const maxP = room.maxPlayers === 4 ? 4 : 2;
+  const order = getLudoColorOrder(maxP);
+  const seats = room.seats || {};
+  order.forEach(c => {
+    if(seats[c] && seats[c].id === profile.id) myLudoColor = c;
+  });
+
+  if(room.status === 'waiting'){
+    renderLudoLobbySeats(room);
+    return;
+  }
+
+  closeLudoInviteModal();
+  const activeCols = order.filter(c => seats[c] && seats[c].name && !seats[c].left);
+  ludoActiveColors = activeCols.length >= 2 ? activeCols : order.filter(c => seats[c] && seats[c].name);
+  if(!ludoActiveColors.length) ludoActiveColors = order;
+
+  ludoPlayerNames = { blue:'Blue', red:'Red', green:'Green', yellow:'Yellow' };
+  order.forEach(c => {
+    if(seats[c] && seats[c].name) ludoPlayerNames[c] = seats[c].name;
+  });
+
+  if(!inLudoOnline){
+    inLudoOnline = true;
+    ludoMode = 'online';
+    initLudoPinsDOM();
+    $('ludoTokensLayer').innerHTML = '';
+    $('ludoResultOverlay').classList.remove('show');
+    $('ludoLeftOverlay').classList.remove('show');
+    attachLudoRoomChat(ludoRoomCode);
+    showScreen('screen-ludo');
+  }
+
+  checkLudoOpponentsPresence(room);
+
+  ludoTurn = room.turn || ludoActiveColors[0];
+  ludoDiceVal = Number(room.dice) || 1;
+  ludoPhase = room.phase || 'roll';
+
+  const rawT = room.tokens || {};
+  ['blue','red','green','yellow'].forEach(c => {
+    const arr = Array.isArray(rawT[c]) ? rawT[c] : [-1,-1,-1,-1];
+    ludoTokens[c] = [0,1,2,3].map(i => typeof arr[i] === 'number' ? arr[i] : -1);
+  });
+
+  const isRollingAnim = room.animEvent && room.animEvent.key !== ludoLastAnimKey && room.animEvent.type === 'roll';
+  if(room.animEvent && room.animEvent.key !== ludoLastAnimKey){
+    ludoLastAnimKey = room.animEvent.key;
+    playSound('move');
+    if(isRollingAnim){
+      triggerHaptic(ludoDiceVal === 6 ? [35, 50, 35] : [20, 35, 25]);
+    }
+  }
+
+  if(ludoPhase === 'move' && ludoTurn === myLudoColor && !ludoOnlineEnded){
+    ludoMovable = getValidLudoMoves(myLudoColor, ludoDiceVal);
+  } else {
+    ludoMovable = [];
+  }
+
+  updateLudoDiceUI(ludoDiceVal, isRollingAnim);
+  renderLudoTokens();
+  updateLudoStatusUI(room.statusNote || '');
+
+  if(room.status === 'finished' && room.winner){
+    if(!$('ludoResultOverlay').classList.contains('show') && !$('ludoLeftOverlay').classList.contains('show')){
+      ludoPhase = 'over';
+      showLudoWinnerModal(room.winner);
+    }
+  } else {
+    $('ludoResultOverlay').classList.remove('show');
+  }
+}
+
+function rollLudoOnlineDice(){
+  if(!ludoRoomRef || ludoBusy || ludoOnlineEnded || ludoPhase !== 'roll' || ludoTurn !== myLudoColor) return;
+  ludoBusy = true;
+  triggerHaptic([20, 35, 25]);
+  const val = 1 + Math.floor(Math.random() * 6);
+  const myCol = myLudoColor;
+  const actorName = ludoPlayerNames[myCol] || myCol;
+
+  ludoRoomRef.transaction(room => {
+    if(!room || room.status !== 'playing' || room.phase !== 'roll' || room.turn !== myCol) return;
+    const rawT = room.tokens || {};
+    const arr = Array.isArray(rawT[myCol]) ? rawT[myCol] : [-1,-1,-1,-1];
+    const valid = [];
+    arr.forEach((step, idx) => {
+      if(step === -1){ if(val === 6) valid.push(idx); }
+      else if(step + val <= 56) valid.push(idx);
+    });
+
+    room.dice = val;
+    room.animEvent = { type:'roll', key: Date.now() + '_' + Math.random() };
+
+    if(!valid.length){
+      const order = getLudoColorOrder(room.maxPlayers === 4 ? 4 : 2);
+      const seats = room.seats || {};
+      const active = order.filter(c => seats[c] && seats[c].name && !seats[c].left);
+      const list = active.length >= 2 ? active : order;
+      const nextIdx = (list.indexOf(myCol) + 1) % list.length;
+      room.turn = list[nextIdx];
+      room.phase = 'roll';
+      room.statusNote = lang === 'bn' ? `${actorName} (${val}) · কোনো চাল নেই` : `${actorName} (${val}) · No moves`;
+    } else {
+      room.phase = 'move';
+      room.statusNote = '';
+    }
+    return room;
+  }).then(() => { ludoBusy = false; }).catch(() => { ludoBusy = false; });
+}
+
+function moveLudoOnlineToken(color, idx){
+  if(!ludoRoomRef || ludoBusy || ludoOnlineEnded || ludoPhase !== 'move' || color !== myLudoColor || ludoTurn !== myLudoColor) return;
+  ludoBusy = true;
+  const myCol = myLudoColor;
+
+  ludoRoomRef.transaction(room => {
+    if(!room || room.status !== 'playing' || room.phase !== 'move' || room.turn !== myCol) return;
+    const dice = Number(room.dice) || 1;
+    const tokens = Object.assign({ blue:[-1,-1,-1,-1], red:[-1,-1,-1,-1], green:[-1,-1,-1,-1], yellow:[-1,-1,-1,-1] }, room.tokens || {});
+    const myArr = (Array.isArray(tokens[myCol]) ? tokens[myCol] : [-1,-1,-1,-1]).slice();
+    const curStep = myArr[idx];
+
+    if(curStep === -1 && dice !== 6) return;
+    if(curStep !== -1 && curStep + dice > 56) return;
+
+    const nextStep = curStep === -1 ? 0 : curStep + dice;
+    myArr[idx] = nextStep;
+    tokens[myCol] = myArr;
+
+    const order = getLudoColorOrder(room.maxPlayers === 4 ? 4 : 2);
+    const seats = room.seats || {};
+    const active = order.filter(c => seats[c] && seats[c].name && !seats[c].left);
+    const list = active.length >= 2 ? active : order;
+
+    let captured = false;
+    const mySq = ludoGlobalSquare(myCol, nextStep);
+    if(mySq >= 0 && !LUDO_SAFE_INDICES.has(mySq)){
+      list.forEach(opp => {
+        if(opp === myCol) return;
+        const oppArr = (Array.isArray(tokens[opp]) ? tokens[opp] : [-1,-1,-1,-1]).slice();
+        let changed = false;
+        oppArr.forEach((oStep, oIdx) => {
+          if(ludoGlobalSquare(opp, oStep) === mySq){
+            oppArr[oIdx] = -1;
+            captured = true;
+            changed = true;
+          }
+        });
+        if(changed) tokens[opp] = oppArr;
+      });
+    }
+
+    room.tokens = tokens;
+    room.animEvent = { type:'move', key: Date.now() + '_' + Math.random() };
+
+    if(myArr.every(s => s >= 56)){
+      room.status = 'finished';
+      room.winner = myCol;
+      room.phase = 'over';
+      room.statusNote = '';
+      return room;
+    }
+
+    const bonus = dice === 6 || captured || nextStep === 56;
+    if(bonus){
+      room.phase = 'roll';
+      room.statusNote = lang === 'bn' ? 'বোনাস চাল! আবার ছক্কা চালুন' : 'Bonus Turn! Roll again';
+    } else {
+      const nextIdx = (list.indexOf(myCol) + 1) % list.length;
+      room.turn = list[nextIdx];
+      room.phase = 'roll';
+      room.statusNote = '';
+    }
+    return room;
+  }).then(() => { ludoBusy = false; }).catch(() => { ludoBusy = false; });
+}
+
+function restartLudoOnline(){
+  if(!ludoRoomRef) return;
+  ludoOnlineEnded = false;
+  ludoRoomRef.transaction(room => {
+    if(!room) return;
+    return Object.assign({}, room, {
+      status: 'playing',
+      turn: 'blue',
+      dice: 1,
+      phase: 'roll',
+      winner: '',
+      statusNote: '',
+      tokens: {
+        blue: [-1,-1,-1,-1],
+        red: [-1,-1,-1,-1],
+        green: [-1,-1,-1,-1],
+        yellow: [-1,-1,-1,-1]
+      }
+    });
+  }).catch(() => {});
 }
 
 /* ================= ACTIONS / EVENTS ================= */
@@ -3895,6 +6372,7 @@ function onDocClick(e){
 
   if(el.dataset.topAnim === '1'){
     triggerTapWiggle(el);
+    triggerHaptic(18);
     if(el.dataset.action === 'toggleLang' || el.dataset.action === 'triggerPwaInstall'){
       fn(el);
       return;
@@ -3904,6 +6382,7 @@ function onDocClick(e){
   }
   if(el.dataset.tapAnim === '1'){
     triggerTapWiggle(el);
+    triggerHaptic(22);
     setTimeout(() => fn(el), 240);
     return;
   }
@@ -3919,10 +6398,15 @@ const ACTIONS = {
   saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
   triggerPwaInstall, closeInstallModal,
   goLocalSetup, startLocalWithNames, editLocalNamesInGame,
+  goLudoSetup, goLudoLocalSetup, setLudoLocalCount, pickLudoSlotColor, startLudoLocalCustom,
+  goLudoOnline, createLudoRoom, joinLudoRoom, copyLudoRoomCode, copyLudoRoomLink, shareLudoRoomLink,
+  openLudoInviteModal, closeLudoInviteModal, sendLobbyLudoInvite,
+  hostStartLudoOnline, cancelLudoRoom, openLudoChat,
+  startLudo, restartLudo, exitLudo, rollLudoDice, pickLudoToken,
   copyMyFriendId, switchFriendTab, sendFriendRequest,
   acceptFriendRequest, declineFriendRequest,
   askUnfriend, closeUnfriendModal, confirmUnfriend,
-  openFriendChat, inviteFriendToGame, acceptGameInvite, declineGameInvite,
+  openFriendChat, inviteFriendToGame, inviteFriendToLudo, acceptGameInvite, declineGameInvite,
   startComputer, createRoom, joinRoom, cancelRoom,
   copyRoomCode, copyRoomLink, shareRoomLink,
   updateProfileName, resetStats, exitGame, playAgain,
@@ -3944,6 +6428,12 @@ function bindKeys(){
     if(e.key === 'Enter' && !e.isComposing) joinRoom();
   });
   $('joinCodeInput').addEventListener('input', e => {
+    e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+  });
+  $('ludoJoinCodeInput').addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.isComposing) joinLudoRoom();
+  });
+  $('ludoJoinCodeInput').addEventListener('input', e => {
     e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
   });
   $('friendIdInput').addEventListener('keydown', e => {

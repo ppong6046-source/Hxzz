@@ -1356,7 +1356,7 @@ body{
   transform:scale(1);
 }
 .ludo-pod-dice.rolling{
-  animation:diceRollSpin .42s cubic-bezier(.34,1.56,.64,1);
+  animation:diceRollSpin .45s cubic-bezier(.34,1.56,.64,1);
 }
 .ludo-pod-dice .dice-pip{
   background:#0f172a;
@@ -1436,7 +1436,7 @@ body{
   width:6.6%;
   height:8.4%;
   transform:translate(-50%, -68%);
-  transition:left .26s cubic-bezier(.25,.8,.25,1), top .26s cubic-bezier(.25,.8,.25,1), transform .18s ease;
+  transition:left .14s cubic-bezier(.25,.8,.25,1), top .14s cubic-bezier(.25,.8,.25,1), transform .14s ease;
   pointer-events:auto;
   cursor:default;
   border:none;
@@ -1476,8 +1476,8 @@ body{
 
 @keyframes diceRollSpin{
   0%{transform:rotate(0deg) scale(.85)}
-  40%{transform:rotate(190deg) scale(1.16)}
-  80%{transform:rotate(330deg) scale(.96)}
+  35%{transform:rotate(180deg) scale(1.18)}
+  70%{transform:rotate(320deg) scale(.94)}
   100%{transform:rotate(360deg) scale(1)}
 }
 .dice-pip{
@@ -1487,7 +1487,7 @@ body{
   box-shadow:0 1px 2px rgba(0,0,0,.45);
   opacity:0;
   transform:scale(.4);
-  transition:opacity .15s, transform .15s;
+  transition:opacity .12s, transform .12s;
 }
 .dice-pip.on{
   opacity:1;
@@ -2945,7 +2945,8 @@ const SOUNDS = {
 const MELODIES = {
   win:[[523,0.12],[659,0.12],[784,0.12],[1047,0.35]],
   lose:[[392,0.22],[330,0.22],[262,0.5]],
-  draw:[[440,0.18],[440,0.3]]
+  draw:[[440,0.18],[440,0.3]],
+  turn:[[784,0.09],[1047,0.14]]
 };
 const PAIR = { HUMAN:'CPU', CPU:'HUMAN', P1:'P2', P2:'P1', HOST:'GUEST', GUEST:'HOST' };
 
@@ -3133,6 +3134,7 @@ function playMelody(name){
   if(name === 'win') triggerHaptic([45, 55, 45, 55, 90]);
   else if(name === 'lose') triggerHaptic([70, 50, 70]);
   else if(name === 'draw') triggerHaptic([35, 40, 35]);
+  else if(name === 'turn') triggerHaptic(22);
   let t = 0;
   notes.forEach(([f, d]) => {
     setTimeout(() => beep(f, d + 0.05, 'triangle'), t * 1000);
@@ -3666,6 +3668,7 @@ async function inviteFriendToLudo(el){
       presence,
       turn: 'blue',
       dice: 1,
+      sixStreak: 0,
       phase: 'roll',
       tokens: {
         blue: [-1,-1,-1,-1],
@@ -4911,6 +4914,7 @@ let ludoActiveColors = ['blue', 'green'];
 let ludoPlayerNames = { blue:'Player 1', red:'Red', green:'Player 2', yellow:'Yellow' };
 let ludoTurn = 'blue';
 let ludoDiceVal = 1;
+let ludoSixStreak = 0; // Consecutive 6s counter (max 2 allowed; 3rd 6 forfeits turn)
 let ludoPhase = 'roll'; // 'roll' | 'move' | 'anim' | 'over'
 let ludoTokens = {
   blue: [-1, -1, -1, -1],
@@ -4921,6 +4925,8 @@ let ludoTokens = {
 let ludoMovable = [];
 let ludoAiTimer = null;
 let ludoBoardDrawn = false;
+let ludoStepWalkTimer = null;
+let ludoDiceSpinTimer = null;
 
 // Same-device custom setup state
 let ludoLocalCount = 2;
@@ -4942,6 +4948,7 @@ let ludoMaxPlayers = 2;
 let ludoBusy = false;
 let ludoUnread = 0;
 let ludoLastAnimKey = '';
+let ludoPrevTurnForSound = '';
 let ludoPresRef = null, ludoConnRef = null, ludoConnFn = null;
 const ludoOppGraceTimers = {};
 const ludoAnnouncedLeft = new Set();
@@ -5164,6 +5171,41 @@ function renderLudoTokens(){
   });
 }
 
+/* Smooth rotating dice spin animation before settling on final number */
+function playDiceSpinVisual(finalVal, turnColor, onComplete){
+  clearInterval(ludoDiceSpinTimer);
+  const visTurn = toVisualLudoColor(turnColor);
+  const cap = visTurn.charAt(0).toUpperCase() + visTurn.slice(1);
+  const pod = $('ludoPod' + cap);
+  const diceEl = $('ludoPodDice' + cap);
+  if(!pod || !diceEl){
+    updateLudoDiceUI(finalVal, false);
+    if(onComplete) onComplete();
+    return;
+  }
+
+  pod.classList.add('active');
+  diceEl.classList.remove('rolling');
+  void diceEl.offsetWidth;
+  diceEl.classList.add('rolling');
+
+  let ticks = 0;
+  ludoDiceSpinTimer = setInterval(() => {
+    ticks++;
+    const tempVal = 1 + Math.floor(Math.random() * 6);
+    const activeSet = new Set(DICE_PIP_PATTERNS[tempVal] || [4]);
+    diceEl.querySelectorAll('.dice-pip').forEach((pip, i) => {
+      pip.classList.toggle('on', activeSet.has(i));
+    });
+    if(ticks >= 6){
+      clearInterval(ludoDiceSpinTimer);
+      ludoDiceSpinTimer = null;
+      updateLudoDiceUI(finalVal, false);
+      if(onComplete) onComplete();
+    }
+  }, 68);
+}
+
 function updateLudoDiceUI(val, rolling){
   const visTurn = toVisualLudoColor(ludoTurn);
   const activeSet = new Set(DICE_PIP_PATTERNS[val] || [4]);
@@ -5191,6 +5233,26 @@ function updateLudoDiceUI(val, rolling){
       }
     }
   });
+}
+
+function notifyTurnArrivalIfMine(turnColor){
+  if(ludoPhase !== 'roll') return;
+  if(ludoMode === 'online'){
+    if(turnColor === myLudoColor && ludoPrevTurnForSound !== turnColor){
+      playMelody('turn');
+    }
+    ludoPrevTurnForSound = turnColor;
+  } else if(ludoMode === 'local'){
+    if(ludoPrevTurnForSound !== turnColor){
+      playMelody('turn');
+      ludoPrevTurnForSound = turnColor;
+    }
+  } else if(ludoMode === 'cpu'){
+    if(turnColor === 'blue' && ludoPrevTurnForSound !== 'blue'){
+      playMelody('turn');
+    }
+    ludoPrevTurnForSound = turnColor;
+  }
 }
 
 function updateLudoStatusUI(customMsg){
@@ -5396,11 +5458,15 @@ function restartLudo(){
 
 function resetLudoMatch(){
   clearTimeout(ludoAiTimer);
+  clearInterval(ludoStepWalkTimer);
+  clearInterval(ludoDiceSpinTimer);
   ludoAiTimer = null;
   ludoTurn = ludoActiveColors[0] || 'blue';
   ludoDiceVal = 1;
+  ludoSixStreak = 0;
   ludoPhase = 'roll';
   ludoMovable = [];
+  ludoPrevTurnForSound = ludoTurn;
   ludoTokens = {
     blue: [-1, -1, -1, -1],
     red: [-1, -1, -1, -1],
@@ -5413,10 +5479,13 @@ function resetLudoMatch(){
   updateLudoDiceUI(1, false);
   renderLudoTokens();
   updateLudoStatusUI();
+  playMelody('turn');
 }
 
 function exitLudo(){
   clearTimeout(ludoAiTimer);
+  clearInterval(ludoStepWalkTimer);
+  clearInterval(ludoDiceSpinTimer);
   ludoAiTimer = null;
   if(ludoMode === 'online'){
     leaveLudoOnlineRoom();
@@ -5446,10 +5515,29 @@ function performLudoRoll(){
   triggerHaptic([20, 35, 25]);
   const val = 1 + Math.floor(Math.random() * 6);
   ludoDiceVal = val;
-  updateLudoDiceUI(val, true);
 
-  setTimeout(() => {
-    if(val === 6) triggerHaptic([35, 50, 35]);
+  playDiceSpinVisual(val, ludoTurn, () => {
+    if(val === 6){
+      ludoSixStreak++;
+      triggerHaptic([35, 50, 35]);
+      // 3rd consecutive 6 is forfeited!
+      if(ludoSixStreak >= 3){
+        ludoSixStreak = 0;
+        ludoMovable = [];
+        renderLudoTokens();
+        updateLudoStatusUI(lang === 'bn'
+          ? 'টানা তিনবার ৬! চাল বাতিল'
+          : 'Three 6s in a row! Turn forfeited');
+        playMelody('lose');
+        setTimeout(() => {
+          switchLudoTurn();
+        }, 950);
+        return;
+      }
+    } else {
+      ludoSixStreak = 0;
+    }
+
     const valid = getValidLudoMoves(ludoTurn, val);
     ludoMovable = valid;
     if(!valid.length){
@@ -5468,20 +5556,20 @@ function performLudoRoll(){
       ludoAiTimer = setTimeout(() => {
         const chosen = pickAiLudoToken(valid, val);
         executeLudoMove('green', chosen);
-      }, 550);
+      }, 520);
     } else if(valid.length === 1){
       ludoPhase = 'move';
       updateLudoStatusUI();
       renderLudoTokens();
       setTimeout(() => {
         if(ludoPhase === 'move') executeLudoMove(ludoTurn, valid[0]);
-      }, 360);
+      }, 340);
     } else {
       ludoPhase = 'move';
       updateLudoStatusUI();
       renderLudoTokens();
     }
-  }, 430);
+  });
 }
 
 function pickAiLudoToken(valid, dice){
@@ -5524,24 +5612,39 @@ function pickLudoToken(el){
   executeLudoMove(color, idx);
 }
 
+/* Step-by-step cell-by-cell walking animation */
+function walkLudoTokenStepByStep(color, idx, fromStep, toStep, onDone){
+  clearInterval(ludoStepWalkTimer);
+  if(fromStep === -1 || toStep <= fromStep){
+    ludoTokens[color][idx] = toStep;
+    playSound('move');
+    renderLudoTokens();
+    if(onDone) onDone();
+    return;
+  }
+  let cur = fromStep;
+  ludoStepWalkTimer = setInterval(() => {
+    cur++;
+    ludoTokens[color][idx] = cur;
+    playSound('move');
+    renderLudoTokens();
+    if(cur >= toStep){
+      clearInterval(ludoStepWalkTimer);
+      ludoStepWalkTimer = null;
+      if(onDone) onDone();
+    }
+  }, 155);
+}
+
 function executeLudoMove(color, idx){
   ludoPhase = 'anim';
   ludoMovable = [];
   const startStep = ludoTokens[color][idx];
-  const stepsToWalk = startStep === -1 ? 1 : ludoDiceVal;
-  let walked = 0;
+  const targetStep = startStep === -1 ? 0 : startStep + ludoDiceVal;
 
-  const stepTimer = setInterval(() => {
-    walked++;
-    ludoTokens[color][idx] = startStep === -1 ? 0 : startStep + walked;
-    playSound('move');
-    renderLudoTokens();
-
-    if(walked >= stepsToWalk){
-      clearInterval(stepTimer);
-      finishLudoMove(color, idx);
-    }
-  }, 145);
+  walkLudoTokenStepByStep(color, idx, startStep, targetStep, () => {
+    finishLudoMove(color, idx);
+  });
 }
 
 function finishLudoMove(color, idx){
@@ -5574,6 +5677,7 @@ function finishLudoMove(color, idx){
 
   const bonusTurn = ludoDiceVal === 6 || captured || finalStep === 56;
   if(bonusTurn){
+    if(ludoDiceVal !== 6) ludoSixStreak = 0;
     ludoPhase = 'roll';
     updateLudoDiceUI(ludoDiceVal, false);
     updateLudoStatusUI(lang === 'bn' ? 'বোনাস চাল! আবার ছক্কা চালুন' : 'Bonus Turn! Roll again');
@@ -5616,12 +5720,14 @@ function nextLudoColor(cur){
 }
 
 function switchLudoTurn(){
+  ludoSixStreak = 0;
   ludoTurn = nextLudoColor(ludoTurn);
   ludoPhase = 'roll';
   ludoMovable = [];
   updateLudoDiceUI(ludoDiceVal, false);
   renderLudoTokens();
   updateLudoStatusUI();
+  notifyTurnArrivalIfMine(ludoTurn);
 
   if(ludoMode === 'cpu' && ludoTurn === 'green'){
     ludoAiTimer = setTimeout(performLudoRoll, 650);
@@ -5860,6 +5966,7 @@ function handleLudoPlayerLeft(leftColor, leftName){
         }
         room.turn = nextCol;
         room.phase = 'roll';
+        room.sixStreak = 0;
         room.statusNote = lang === 'bn'
           ? `${leftName} চলে গেছেন · পরের দান`
           : `${leftName} left · Next turn`;
@@ -5904,6 +6011,7 @@ async function createLudoRoom(el){
       presence,
       turn: 'blue',
       dice: 1,
+      sixStreak: 0,
       phase: 'roll',
       tokens: {
         blue: [-1,-1,-1,-1],
@@ -5939,7 +6047,7 @@ async function joinLudoRoom(){
   await joinLudoRoomByCode(code);
 }
 
-/* Fixed Smooth Join Logic matching XO Room Join */
+/* Smooth Join Logic matching XO Room Join */
 async function joinLudoRoomByCode(code){
   if(!db){
     $('ludoOnlineMsg').textContent = lang === 'bn' ? 'ইন্টারনেট সংযোগ নেই' : 'No internet connection';
@@ -5973,7 +6081,6 @@ async function joinLudoRoomByCode(code){
       return;
     }
 
-    // Check if this player is already seated or find first open seat
     let assignedColor = null;
     for(const col of order){
       if(seats[col] && seats[col].id === profile.id){
@@ -6047,6 +6154,8 @@ function cancelLudoRoom(){
 function leaveLudoOnlineRoom(){
   closeLudoInviteModal();
   clearAllLudoGraceTimers();
+  clearInterval(ludoStepWalkTimer);
+  clearInterval(ludoDiceSpinTimer);
   if(ludoConnRef && ludoConnFn) ludoConnRef.off('value', ludoConnFn);
   if(ludoPresRef){ ludoPresRef.onDisconnect().cancel(); ludoPresRef = null; }
   ludoConnRef = null; ludoConnFn = null;
@@ -6083,6 +6192,7 @@ function leaveLudoOnlineRoom(){
   ludoBusy = false;
   ludoUnread = 0;
   ludoLastAnimKey = '';
+  ludoPrevTurnForSound = '';
   ludoAnnouncedLeft.clear();
   $('ludoChatBadge').hidden = true;
   $('ludoLinkPreview').textContent = '';
@@ -6170,6 +6280,7 @@ function onLudoRoomUpdate(room){
   if(!inLudoOnline){
     inLudoOnline = true;
     ludoMode = 'online';
+    ludoPrevTurnForSound = '';
     initLudoPinsDOM();
     $('ludoTokensLayer').innerHTML = '';
     $('ludoResultOverlay').classList.remove('show');
@@ -6180,24 +6291,27 @@ function onLudoRoomUpdate(room){
 
   checkLudoOpponentsPresence(room);
 
-  ludoTurn = room.turn || ludoActiveColors[0];
-  ludoDiceVal = Number(room.dice) || 1;
-  ludoPhase = room.phase || 'roll';
+  const nextTurn = room.turn || ludoActiveColors[0];
+  const nextDice = Number(room.dice) || 1;
+  const nextPhase = room.phase || 'roll';
+  ludoSixStreak = Number(room.sixStreak) || 0;
 
   const rawT = room.tokens || {};
+  const newTokens = {};
   ['blue','red','green','yellow'].forEach(c => {
     const arr = Array.isArray(rawT[c]) ? rawT[c] : [-1,-1,-1,-1];
-    ludoTokens[c] = [0,1,2,3].map(i => typeof arr[i] === 'number' ? arr[i] : -1);
+    newTokens[c] = [0,1,2,3].map(i => typeof arr[i] === 'number' ? arr[i] : -1);
   });
 
-  const isRollingAnim = room.animEvent && room.animEvent.key !== ludoLastAnimKey && room.animEvent.type === 'roll';
-  if(room.animEvent && room.animEvent.key !== ludoLastAnimKey){
-    ludoLastAnimKey = room.animEvent.key;
-    playSound('move');
-    if(isRollingAnim){
-      triggerHaptic(ludoDiceVal === 6 ? [35, 50, 35] : [20, 35, 25]);
-    }
+  const animEv = room.animEvent;
+  const isNewAnim = animEv && animEv.key !== ludoLastAnimKey;
+  if(isNewAnim){
+    ludoLastAnimKey = animEv.key;
   }
+
+  ludoTurn = nextTurn;
+  ludoDiceVal = nextDice;
+  ludoPhase = nextPhase;
 
   if(ludoPhase === 'move' && ludoTurn === myLudoColor && !ludoOnlineEnded){
     ludoMovable = getValidLudoMoves(myLudoColor, ludoDiceVal);
@@ -6205,9 +6319,49 @@ function onLudoRoomUpdate(room){
     ludoMovable = [];
   }
 
-  updateLudoDiceUI(ludoDiceVal, isRollingAnim);
-  renderLudoTokens();
-  updateLudoStatusUI(room.statusNote || '');
+  // 1) If dice rolled, spin dice first then settle on number
+  if(isNewAnim && animEv.type === 'roll'){
+    const rollerCol = animEv.color || nextTurn;
+    ludoTokens = newTokens;
+    playSound('move');
+    triggerHaptic(nextDice === 6 ? [35, 50, 35] : [20, 35, 25]);
+    playDiceSpinVisual(nextDice, rollerCol, () => {
+      updateLudoDiceUI(ludoDiceVal, false);
+      renderLudoTokens();
+      updateLudoStatusUI(room.statusNote || '');
+      notifyTurnArrivalIfMine(ludoTurn);
+    });
+  }
+  // 2) If a token moved, walk it cell by cell from fromStep to toStep!
+  else if(isNewAnim && animEv.type === 'move' && animEv.color && typeof animEv.idx === 'number'){
+    const mCol = animEv.color;
+    const mIdx = animEv.idx;
+    const fromStep = typeof animEv.fromStep === 'number' ? animEv.fromStep : ludoTokens[mCol][mIdx];
+    const toStep = typeof animEv.toStep === 'number' ? animEv.toStep : newTokens[mCol][mIdx];
+
+    // Update all other tokens immediately, then walk the moved token step-by-step
+    ['blue','red','green','yellow'].forEach(c => {
+      if(c !== mCol) ludoTokens[c] = newTokens[c].slice();
+      else {
+        ludoTokens[c] = newTokens[c].slice();
+        ludoTokens[c][mIdx] = fromStep;
+      }
+    });
+
+    updateLudoDiceUI(ludoDiceVal, false);
+    walkLudoTokenStepByStep(mCol, mIdx, fromStep, toStep, () => {
+      ludoTokens = newTokens;
+      renderLudoTokens();
+      updateLudoStatusUI(room.statusNote || '');
+      notifyTurnArrivalIfMine(ludoTurn);
+    });
+  } else {
+    ludoTokens = newTokens;
+    updateLudoDiceUI(ludoDiceVal, false);
+    renderLudoTokens();
+    updateLudoStatusUI(room.statusNote || '');
+    notifyTurnArrivalIfMine(ludoTurn);
+  }
 
   if(room.status === 'finished' && room.winner){
     if(!$('ludoResultOverlay').classList.contains('show') && !$('ludoLeftOverlay').classList.contains('show')){
@@ -6229,6 +6383,31 @@ function rollLudoOnlineDice(){
 
   ludoRoomRef.transaction(room => {
     if(!room || room.status !== 'playing' || room.phase !== 'roll' || room.turn !== myCol) return;
+    const order = getLudoColorOrder(room.maxPlayers === 4 ? 4 : 2);
+    const seats = room.seats || {};
+    const active = order.filter(c => seats[c] && seats[c].name && !seats[c].left);
+    const list = active.length >= 2 ? active : order;
+    const nextTurnCol = list[(list.indexOf(myCol) + 1) % list.length];
+
+    let streak = Number(room.sixStreak) || 0;
+    if(val === 6){
+      streak++;
+      // 3rd consecutive 6 forfeits turn!
+      if(streak >= 3){
+        room.dice = val;
+        room.sixStreak = 0;
+        room.animEvent = { type:'roll', color: myCol, key: Date.now() + '_' + Math.random() };
+        room.turn = nextTurnCol;
+        room.phase = 'roll';
+        room.statusNote = lang === 'bn'
+          ? `${actorName} টানা তিনবার ৬! চাল বাতিল`
+          : `${actorName} rolled three 6s! Forfeited`;
+        return room;
+      }
+    } else {
+      streak = 0;
+    }
+
     const rawT = room.tokens || {};
     const arr = Array.isArray(rawT[myCol]) ? rawT[myCol] : [-1,-1,-1,-1];
     const valid = [];
@@ -6238,16 +6417,13 @@ function rollLudoOnlineDice(){
     });
 
     room.dice = val;
-    room.animEvent = { type:'roll', key: Date.now() + '_' + Math.random() };
+    room.sixStreak = streak;
+    room.animEvent = { type:'roll', color: myCol, key: Date.now() + '_' + Math.random() };
 
     if(!valid.length){
-      const order = getLudoColorOrder(room.maxPlayers === 4 ? 4 : 2);
-      const seats = room.seats || {};
-      const active = order.filter(c => seats[c] && seats[c].name && !seats[c].left);
-      const list = active.length >= 2 ? active : order;
-      const nextIdx = (list.indexOf(myCol) + 1) % list.length;
-      room.turn = list[nextIdx];
+      room.turn = nextTurnCol;
       room.phase = 'roll';
+      room.sixStreak = 0;
       room.statusNote = lang === 'bn' ? `${actorName} (${val}) · কোনো চাল নেই` : `${actorName} (${val}) · No moves`;
     } else {
       room.phase = 'move';
@@ -6300,24 +6476,34 @@ function moveLudoOnlineToken(color, idx){
     }
 
     room.tokens = tokens;
-    room.animEvent = { type:'move', key: Date.now() + '_' + Math.random() };
+    room.animEvent = {
+      type: 'move',
+      color: myCol,
+      idx: idx,
+      fromStep: curStep,
+      toStep: nextStep,
+      key: Date.now() + '_' + Math.random()
+    };
 
     if(myArr.every(s => s >= 56)){
       room.status = 'finished';
       room.winner = myCol;
       room.phase = 'over';
+      room.sixStreak = 0;
       room.statusNote = '';
       return room;
     }
 
     const bonus = dice === 6 || captured || nextStep === 56;
     if(bonus){
+      if(dice !== 6) room.sixStreak = 0;
       room.phase = 'roll';
       room.statusNote = lang === 'bn' ? 'বোনাস চাল! আবার ছক্কা চালুন' : 'Bonus Turn! Roll again';
     } else {
       const nextIdx = (list.indexOf(myCol) + 1) % list.length;
       room.turn = list[nextIdx];
       room.phase = 'roll';
+      room.sixStreak = 0;
       room.statusNote = '';
     }
     return room;
@@ -6333,6 +6519,7 @@ function restartLudoOnline(){
       status: 'playing',
       turn: 'blue',
       dice: 1,
+      sixStreak: 0,
       phase: 'roll',
       winner: '',
       statusNote: '',

@@ -4865,6 +4865,37 @@ function handleToastClick(){
   }
 }
 
+/* ================= FAIR DICE SHUFFLE BAG (BALANCED & ANTI-STREAK RNG) ================= */
+const ludoDiceBags = {};
+function cryptoRandInt(max){
+  if(window.crypto && window.crypto.getRandomValues){
+    const arr = new Uint32Array(1);
+    window.crypto.getRandomValues(arr);
+    return arr[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+function getFairLudoDice(playerKey, currentStreak){
+  const key = String(playerKey || 'default');
+  if(!ludoDiceBags[key] || ludoDiceBags[key].length === 0){
+    // Balanced 12-dice deck: two of each face [1..6] so no player gets flooded with 6s or starved of 6s
+    const deck = [1,2,3,4,5,6, 1,2,3,4,5,6];
+    for(let i = deck.length - 1; i > 0; i--){
+      const j = cryptoRandInt(i + 1);
+      const tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
+    }
+    ludoDiceBags[key] = deck;
+  }
+  // Never allow a 3rd consecutive 6; pick a non-6 face from the bag if streak is already 2
+  if((currentStreak || 0) >= 2){
+    const nonSixIdx = ludoDiceBags[key].findIndex(v => v !== 6);
+    if(nonSixIdx !== -1){
+      return ludoDiceBags[key].splice(nonSixIdx, 1)[0];
+    }
+  }
+  return ludoDiceBags[key].pop();
+}
+
 /* ================= LUDO GAME ENGINE (2P, 4P, CUSTOM COLORS & ONLINE PERSPECTIVE) ================= */
 const LUDO_MAIN_PATH = [
   [13,6],[12,6],[11,6],[10,6],[9,6],
@@ -5467,6 +5498,7 @@ function resetLudoMatch(){
   ludoPhase = 'roll';
   ludoMovable = [];
   ludoPrevTurnForSound = ludoTurn;
+  ['blue', 'red', 'green', 'yellow'].forEach(c => { delete ludoDiceBags['local_' + c]; });
   ludoTokens = {
     blue: [-1, -1, -1, -1],
     red: [-1, -1, -1, -1],
@@ -5513,7 +5545,7 @@ function performLudoRoll(){
   ludoPhase = 'anim';
   playSound('move');
   triggerHaptic([20, 35, 25]);
-  const val = 1 + Math.floor(Math.random() * 6);
+  const val = getFairLudoDice('local_' + ludoTurn, ludoSixStreak);
   ludoDiceVal = val;
 
   playDiceSpinVisual(val, ludoTurn, () => {
@@ -5572,25 +5604,69 @@ function performLudoRoll(){
   });
 }
 
+/* Strategic IQ AI: evaluates captures, escaping danger, landing on safe stars, and home stretch progress */
+function isSquareThreatenedByBlue(sq){
+  if(sq < 0 || LUDO_SAFE_INDICES.has(sq)) return false;
+  return ludoTokens.blue.some(bStep => {
+    if(bStep < 0 || bStep > 50) return false;
+    const bSq = ludoGlobalSquare('blue', bStep);
+    if(bSq < 0) return false;
+    const dist = (sq - bSq + 52) % 52;
+    return dist >= 1 && dist <= 6;
+  });
+}
+
 function pickAiLudoToken(valid, dice){
   let bestIdx = valid[0];
-  let bestScore = -999;
+  let bestScore = -9999;
+
   valid.forEach(idx => {
     const cur = ludoTokens.green[idx];
     let score = 0;
+
     if(cur === -1 && dice === 6){
-      score = 90;
+      const startSq = ludoGlobalSquare('green', 0);
+      const outTokensCount = ludoTokens.green.filter(s => s >= 0 && s < 56).length;
+      score = outTokensCount === 0 ? 180 : 115;
+      const hitsAtStart = ludoTokens.blue.some(bStep => ludoGlobalSquare('blue', bStep) === startSq);
+      if(hitsAtStart) score += 140;
     } else {
       const next = cur + dice;
-      if(next === 56) score += 120;
+      const curSq = ludoGlobalSquare('green', cur);
       const targetSq = ludoGlobalSquare('green', next);
+
+      // 1. Reaching final home triangle
+      if(next === 56) score += 160;
+
+      // 2. Capturing opponent pin on non-safe square
       if(targetSq >= 0 && !LUDO_SAFE_INDICES.has(targetSq)){
         const hitsBlue = ludoTokens.blue.some(bStep => ludoGlobalSquare('blue', bStep) === targetSq);
-        if(hitsBlue) score += 150;
+        if(hitsBlue) score += 210;
       }
-      if(LUDO_SAFE_INDICES.has(targetSq)) score += 35;
-      score += next;
+
+      // 3. Escaping immediate danger if opponent is 1..6 steps behind current square
+      if(isSquareThreatenedByBlue(curSq)){
+        score += 110;
+      }
+
+      // 4. Penalty for moving into danger, bonus for landing on star safe zone or private home stretch
+      if(next > 50 && cur <= 50){
+        score += 95;
+      } else if(LUDO_SAFE_INDICES.has(targetSq)){
+        score += 75;
+      } else if(isSquareThreatenedByBlue(targetSq)){
+        score -= 85;
+      }
+
+      // 5. Avoid leaving a safe star square unless capturing or entering home stretch
+      if(LUDO_SAFE_INDICES.has(curSq) && !LUDO_SAFE_INDICES.has(targetSq) && next <= 50){
+        score -= 30;
+      }
+
+      // 6. Prefer advancing the leading token closer to home
+      score += next * 1.4;
     }
+
     if(score > bestScore){
       bestScore = score;
       bestIdx = idx;
@@ -6339,7 +6415,6 @@ function onLudoRoomUpdate(room){
     const fromStep = typeof animEv.fromStep === 'number' ? animEv.fromStep : ludoTokens[mCol][mIdx];
     const toStep = typeof animEv.toStep === 'number' ? animEv.toStep : newTokens[mCol][mIdx];
 
-    // Update all other tokens immediately, then walk the moved token step-by-step
     ['blue','red','green','yellow'].forEach(c => {
       if(c !== mCol) ludoTokens[c] = newTokens[c].slice();
       else {
@@ -6377,7 +6452,7 @@ function rollLudoOnlineDice(){
   if(!ludoRoomRef || ludoBusy || ludoOnlineEnded || ludoPhase !== 'roll' || ludoTurn !== myLudoColor) return;
   ludoBusy = true;
   triggerHaptic([20, 35, 25]);
-  const val = 1 + Math.floor(Math.random() * 6);
+  const val = getFairLudoDice('online_' + ludoRoomCode + '_' + myLudoColor, ludoSixStreak);
   const myCol = myLudoColor;
   const actorName = ludoPlayerNames[myCol] || myCol;
 

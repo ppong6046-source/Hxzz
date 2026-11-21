@@ -3141,14 +3141,12 @@ function pulseBassThump(freq, dur){
 }
 function triggerHaptic(pattern){
   if(!soundOn) return;
-  // 1. Standard Android / Chromium Vibration API
   try{
     if(navigator && typeof navigator.vibrate === 'function'){
       navigator.vibrate(pattern || 30);
     }
   }catch(e){}
 
-  // 2. iOS Safari / WebKit Haptic Switch + Low-Frequency Tactile Thump
   if(Array.isArray(pattern)){
     let delay = 0;
     pattern.forEach((ms, i) => {
@@ -5298,6 +5296,8 @@ function updateLudoDiceUI(val, rolling){
   const visTurn = toVisualLudoColor(ludoTurn);
   const activeSet = new Set(DICE_PIP_PATTERNS[val] || [4]);
   const visActiveColors = new Set(ludoActiveColors.map(c => toVisualLudoColor(c)));
+  // Only flip top pods upside down in same-device Pass & Play mode (when two people sit face-to-face)
+  const shouldFlipTop = ludoMode === 'local';
 
   ['blue', 'red', 'green', 'yellow'].forEach(visCol => {
     const cap = visCol.charAt(0).toUpperCase() + visCol.slice(1);
@@ -5306,6 +5306,9 @@ function updateLudoDiceUI(val, rolling){
     if(!pod || !diceEl) return;
 
     pod.hidden = !visActiveColors.has(visCol);
+    if(visCol === 'red' || visCol === 'green'){
+      pod.classList.toggle('top-flipped', shouldFlipTop);
+    }
     const isTurnPod = visCol === visTurn;
     pod.classList.toggle('active', isTurnPod);
     pod.classList.toggle('can-roll', isTurnPod && ludoPhase === 'roll' && isMyLudoTurn());
@@ -5362,6 +5365,9 @@ function updateLudoStatusUI(customMsg){
       return;
     }
     tagEl.hidden = false;
+    if(visCol === 'green'){
+      tagEl.classList.toggle('flipped', ludoMode === 'local');
+    }
     const realCol = fromVisualLudoColor(visCol);
     tagEl.textContent = ludoPlayerNames[realCol] || visCol.toUpperCase();
   });
@@ -6446,7 +6452,6 @@ function onLudoRoomUpdate(room){
     ludoMovable = [];
   }
 
-  // 1) If dice rolled, spin dice first then settle on number
   if(isNewAnim && animEv.type === 'roll'){
     const rollerCol = animEv.color || nextTurn;
     ludoTokens = newTokens;
@@ -6458,9 +6463,7 @@ function onLudoRoomUpdate(room){
       updateLudoStatusUI(room.statusNote || '');
       notifyTurnArrivalIfMine(ludoTurn);
     });
-  }
-  // 2) If a token moved, walk it cell by cell from fromStep to toStep!
-  else if(isNewAnim && animEv.type === 'move' && animEv.color && typeof animEv.idx === 'number'){
+  } else if(isNewAnim && animEv.type === 'move' && animEv.color && typeof animEv.idx === 'number'){
     const mCol = animEv.color;
     const mIdx = animEv.idx;
     const fromStep = typeof animEv.fromStep === 'number' ? animEv.fromStep : ludoTokens[mCol][mIdx];
@@ -6518,7 +6521,6 @@ function rollLudoOnlineDice(){
     let streak = Number(room.sixStreak) || 0;
     if(val === 6){
       streak++;
-      // 3rd consecutive 6 forfeits turn!
       if(streak >= 3){
         room.dice = val;
         room.sixStreak = 0;

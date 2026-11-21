@@ -212,7 +212,7 @@ body{
   top:max(14px, env(safe-area-inset-top, 14px));
   left:16px;right:16px;
   z-index:30;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:flex-start;justify-content:space-between;
   pointer-events:none;
 }
 .menu-top-left,.menu-top-right{
@@ -243,9 +243,19 @@ body{
   overflow:visible;flex-shrink:0;
 }
 .top-pill-profile{
-  padding:0;width:44px;
+  padding:4px 0 3px;
+  width:50px;height:52px;
+  flex-direction:column;gap:2px;
   background:linear-gradient(135deg,rgba(79,209,255,.26),rgba(74,139,255,.26));
   border-color:rgba(79,209,255,.45);
+}
+.top-pill-profile svg{width:19px;height:19px}
+.top-pill-sub-label{
+  font-size:9.5px;
+  font-weight:700;
+  line-height:1;
+  letter-spacing:.02em;
+  color:rgba(255,255,255,.92);
 }
 .top-pill-install{
   padding:0 12px;
@@ -262,7 +272,9 @@ body{
 }
 /* Glassmorphism Animated Friends Button */
 .top-pill-friends{
-  padding:0;width:46px;height:46px;
+  padding:4px 0 3px;
+  width:52px;height:52px;
+  flex-direction:column;gap:2px;
   border-radius:16px;
   background:linear-gradient(135deg,rgba(255,255,255,.24),rgba(79,209,255,.16) 55%,rgba(16,185,129,.22));
   border:1px solid rgba(255,255,255,.42);
@@ -290,7 +302,7 @@ body{
   100%{left:155%}
 }
 .top-pill-friends svg{
-  width:24px;height:24px;
+  width:21px;height:21px;
   filter:drop-shadow(0 2px 5px rgba(0,0,0,.35));
 }
 .top-pill-friends.is-tapped{
@@ -1067,7 +1079,7 @@ body{
 /* premium animated welcome banner */
 .welcome-banner-wrap{
   position:fixed;
-  top:max(68px, calc(env(safe-area-inset-top, 14px) + 56px));
+  top:max(74px, calc(env(safe-area-inset-top, 14px) + 62px));
   left:50%;
   transform:translate(-50%, -26px) scale(.88);
   z-index:240;
@@ -1604,6 +1616,7 @@ body{
           <circle class="user-head" cx="12" cy="8" r="4"/>
           <path d="M4.5 20v-1a6.5 6.5 0 0 1 6.5-6.5h2a6.5 6.5 0 0 1 6.5 6.5v1"/>
         </svg>
+        <span class="top-pill-sub-label">Profile</span>
       </button>
 
       <button class="top-pill-btn top-pill-install anim-install" id="installAppBtn" data-action="triggerPwaInstall" data-top-anim="1" aria-label="Install App">
@@ -1650,6 +1663,7 @@ body{
             <line x1="16.1" y1="18.3" x2="20.5" y2="18.3" stroke="#18224a" stroke-width="2" stroke-linecap="round"/>
           </g>
         </svg>
+        <span class="top-pill-sub-label">Friends</span>
         <span class="top-badge" id="menuFriendBadge" hidden>0</span>
       </button>
     </div>

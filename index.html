@@ -5012,33 +5012,23 @@ function handleToastClick(){
   }
 }
 
-/* ================= FAIR DICE SHUFFLE BAG (BALANCED & ANTI-STREAK RNG) ================= */
-const ludoDiceBags = {};
+/* ================= PURE REAL LUCK-BASED DICE RNG (100% RANDOM 1–6) ================= */
 function cryptoRandInt(max){
   if(window.crypto && window.crypto.getRandomValues){
     const arr = new Uint32Array(1);
-    window.crypto.getRandomValues(arr);
-    return arr[0] % max;
+    const limit = Math.floor(0x100000000 / max) * max;
+    let r;
+    do {
+      window.crypto.getRandomValues(arr);
+      r = arr[0];
+    } while(r >= limit);
+    return r % max;
   }
   return Math.floor(Math.random() * max);
 }
-function getFairLudoDice(playerKey, currentStreak){
-  const key = String(playerKey || 'default');
-  if(!ludoDiceBags[key] || ludoDiceBags[key].length === 0){
-    const deck = [1,2,3,4,5,6, 1,2,3,4,5,6];
-    for(let i = deck.length - 1; i > 0; i--){
-      const j = cryptoRandInt(i + 1);
-      const tmp = deck[i]; deck[i] = deck[j]; deck[j] = tmp;
-    }
-    ludoDiceBags[key] = deck;
-  }
-  if((currentStreak || 0) >= 2){
-    const nonSixIdx = ludoDiceBags[key].findIndex(v => v !== 6);
-    if(nonSixIdx !== -1){
-      return ludoDiceBags[key].splice(nonSixIdx, 1)[0];
-    }
-  }
-  return ludoDiceBags[key].pop();
+function getFairLudoDice(){
+  // Pure unbiased 1-in-6 roll just like a real physical Ludo die (luck-driven across online, offline & CPU)
+  return 1 + cryptoRandInt(6);
 }
 
 /* ================= LUDO GAME ENGINE (2P, 4P, CUSTOM COLORS & ONLINE PERSPECTIVE) ================= */
@@ -5651,7 +5641,6 @@ function resetLudoMatch(){
   ludoPhase = 'roll';
   ludoMovable = [];
   ludoPrevTurnForSound = ludoTurn;
-  ['blue', 'red', 'green', 'yellow'].forEach(c => { delete ludoDiceBags['local_' + c]; });
   ludoTokens = {
     blue: [-1, -1, -1, -1],
     red: [-1, -1, -1, -1],
@@ -5698,7 +5687,7 @@ function performLudoRoll(){
   ludoPhase = 'anim';
   playSound('move');
   triggerHaptic([20, 35, 25]);
-  const val = getFairLudoDice('local_' + ludoTurn, ludoSixStreak);
+  const val = getFairLudoDice();
   ludoDiceVal = val;
 
   playDiceSpinVisual(val, ludoTurn, () => {
@@ -6596,7 +6585,7 @@ function rollLudoOnlineDice(){
   if(!ludoRoomRef || ludoBusy || ludoOnlineEnded || ludoPhase !== 'roll' || ludoTurn !== myLudoColor) return;
   ludoBusy = true;
   triggerHaptic([20, 35, 25]);
-  const val = getFairLudoDice('online_' + ludoRoomCode + '_' + myLudoColor, ludoSixStreak);
+  const val = getFairLudoDice();
   const myCol = myLudoColor;
   const actorName = ludoPlayerNames[myCol] || myCol;
 

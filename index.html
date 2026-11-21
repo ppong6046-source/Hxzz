@@ -612,6 +612,9 @@ body{
 .anim-dice .dice-box{animation:diceWobble 2.6s ease-in-out infinite;transform-origin:12px 12px}
 @keyframes diceWobble{0%,100%{transform:rotate(0deg)}30%{transform:rotate(-10deg)}70%{transform:rotate(10deg)}}
 
+.anim-xo .xo-o{animation:xoPulse 2.6s ease-in-out infinite;transform-origin:17px 17px}
+@keyframes xoPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+
 /* Status Pill Badge */
 .status-badge{
   display:inline-flex;align-items:center;gap:6px;
@@ -1608,6 +1611,43 @@ body{
     <svg class="logo" viewBox="0 0 150 60" aria-hidden="true"><line x1="10" y1="10" x2="50" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><line x1="50" y1="10" x2="10" y2="50" stroke="#ff5d7a" stroke-width="9" stroke-linecap="round"/><circle cx="110" cy="30" r="20" fill="none" stroke="#ff8a5c" stroke-width="9"/></svg>
     <p class="sub" id="menuGreeting"></p>
 
+    <!-- Play Tic Tac Toe (contains Computer, Local & Online modes) -->
+    <button class="btn btn-primary btn-shine" data-action="goTicTacSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-xo">
+        <svg viewBox="0 0 24 24">
+          <line x1="4" y1="4" x2="10" y2="10"/>
+          <line x1="10" y1="4" x2="4" y2="10"/>
+          <circle class="xo-o" cx="17" cy="17" r="3.5"/>
+          <line x1="14" y1="7" x2="20" y2="7" opacity="0.65"/>
+          <line x1="7" y1="14" x2="7" y2="20" opacity="0.65"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="playTicTac">টিক ট্যাক খেলুন (Tic Tac)</span>
+    </button>
+
+    <!-- Play Ludo -->
+    <button class="btn btn-ludo btn-shine" data-action="goLudoSetup" data-tap-anim="1">
+      <span class="btn-icon-box anim-dice">
+        <svg class="dice-box" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="4"/>
+          <circle cx="8.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="15.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="8.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
+          <circle cx="15.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      <span class="btn-label" data-i18n="playLudo">লুডু খেলুন (Ludo)</span>
+    </button>
+  </div>
+</section>
+
+<!-- TIC TAC TOE MODE SETUP (3 MODES INSIDE ONE) -->
+<section id="screen-tictac-setup" class="screen">
+  <div class="card">
+    <h2 class="title" data-i18n="ticTacSetupTitle">টিক ট্যাক গেম</h2>
+    <p class="sub" data-i18n="ticTacSetupSub">খেলার মোড বেছে নিন</p>
+
     <!-- Play with Computer -->
     <button class="btn btn-primary btn-shine" data-action="goDifficulty" data-tap-anim="1">
       <span class="btn-icon-box anim-bot">
@@ -1653,19 +1693,14 @@ body{
       <span class="btn-label" data-i18n="playOnline">অনলাইনে বন্ধুর সাথে খেলুন</span>
     </button>
 
-    <!-- Play Ludo -->
-    <button class="btn btn-ludo btn-shine" data-action="goLudoSetup" data-tap-anim="1">
-      <span class="btn-icon-box anim-dice">
-        <svg class="dice-box" viewBox="0 0 24 24">
-          <rect x="3" y="3" width="18" height="18" rx="4"/>
-          <circle cx="8.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
-          <circle cx="15.5" cy="8.5" r="1.3" fill="#fff" stroke="none"/>
-          <circle cx="12" cy="12" r="1.3" fill="#fff" stroke="none"/>
-          <circle cx="8.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
-          <circle cx="15.5" cy="15.5" r="1.3" fill="#fff" stroke="none"/>
+    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+      <span class="btn-icon-box anim-back">
+        <svg class="back-arrow" viewBox="0 0 24 24">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="11 6 5 12 11 18"/>
         </svg>
       </span>
-      <span class="btn-label" data-i18n="playLudo">লুডু খেলুন (Ludo)</span>
+      <span class="btn-label" data-i18n="backBtn">ফিরে যান</span>
     </button>
   </div>
 </section>
@@ -2093,7 +2128,7 @@ body{
       <span class="btn-label" data-i18n="startMatchBtn">খেলা শুরু করুন</span>
     </button>
 
-    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+    <button class="btn btn-ghost" data-action="goTicTacSetup" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
           <line x1="19" y1="12" x2="5" y2="12"/>
@@ -2195,7 +2230,7 @@ body{
       <span class="btn-label" data-i18n="levelHard">কঠিন (অজয়)</span>
     </button>
 
-    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+    <button class="btn btn-ghost" data-action="goTicTacSetup" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
           <line x1="19" y1="12" x2="5" y2="12"/>
@@ -2240,7 +2275,7 @@ body{
 
     <p class="hint" id="onlineMsg"></p>
 
-    <button class="btn btn-ghost" data-action="goMenu" data-tap-anim="1">
+    <button class="btn btn-ghost" data-action="goTicTacSetup" data-tap-anim="1">
       <span class="btn-icon-box anim-back">
         <svg class="back-arrow" viewBox="0 0 24 24">
           <line x1="19" y1="12" x2="5" y2="12"/>
@@ -2618,6 +2653,9 @@ const I18N = {
     namePlaceholder: 'যেমন: রাহুল',
     startBtn: 'শুরু করুন',
     welcome: n => n ? `স্বাগতম, ${n}!` : 'স্বাগতম!',
+    playTicTac: 'টিক ট্যাক খেলুন (Tic Tac)',
+    ticTacSetupTitle: 'টিক ট্যাক গেম',
+    ticTacSetupSub: 'খেলার মোড বেছে নিন',
     playCpu: 'কম্পিউটারের সাথে খেলুন',
     playLocal: 'বন্ধুর সাথে (একই ডিভাইসে)',
     playOnline: 'অনলাইনে বন্ধুর সাথে খেলুন',
@@ -2726,6 +2764,9 @@ const I18N = {
     namePlaceholder: 'e.g. Alex',
     startBtn: 'Start',
     welcome: n => n ? `Welcome, ${n}!` : 'Welcome!',
+    playTicTac: 'Play Tic Tac',
+    ticTacSetupTitle: 'Tic Tac Game',
+    ticTacSetupSub: 'Choose Tic Tac Mode',
     playCpu: 'Play vs Computer',
     playLocal: 'Pass & Play (Same Device)',
     playOnline: 'Play Online with Friend',
@@ -4173,6 +4214,7 @@ function goMenu(){
   renderMenu();
   showScreen('screen-menu');
 }
+function goTicTacSetup(){ showScreen('screen-tictac-setup'); }
 function goDifficulty(){ showScreen('screen-difficulty'); }
 function goOnline(){ setOnlineMsg(''); showScreen('screen-online'); }
 function goProfile(){
@@ -6710,7 +6752,7 @@ function onDocDblClick(e){
   }
 }
 const ACTIONS = {
-  saveName, goMenu, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
+  saveName, goMenu, goTicTacSetup, goDifficulty, goOnline, goProfile, goFriends, toggleLang,
   triggerPwaInstall, closeInstallModal,
   goLocalSetup, startLocalWithNames, editLocalNamesInGame,
   goLudoSetup, goLudoLocalSetup, setLudoLocalCount, pickLudoSlotColor, startLudoLocalCustom,

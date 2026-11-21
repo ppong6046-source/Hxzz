@@ -3098,19 +3098,78 @@ function renderStats(){
   if(sumEl) sumEl.innerHTML = t('statsSummary', total, rate);
 }
 
-/* ================= SOUND & HAPTIC FEEDBACK ================= */
+/* ================= SOUND & HAPTIC FEEDBACK (ANDROID + iOS WORKAROUND) ================= */
+let iosHapticLabel = null;
+function initIosHapticSwitch(){
+  try{
+    if(iosHapticLabel || !document.body) return;
+    const lbl = document.createElement('label');
+    lbl.setAttribute('aria-hidden', 'true');
+    lbl.style.cssText = 'position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;';
+    const inp = document.createElement('input');
+    inp.type = 'checkbox';
+    inp.setAttribute('switch', '');
+    lbl.appendChild(inp);
+    document.body.appendChild(lbl);
+    iosHapticLabel = lbl;
+  }catch(e){}
+}
+function pulseIosSwitch(){
+  try{
+    if(!iosHapticLabel) initIosHapticSwitch();
+    if(iosHapticLabel) iosHapticLabel.click();
+  }catch(e){}
+}
+function pulseBassThump(freq, dur){
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
+    const now = audioCtx.currentTime;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq || 68, now);
+    osc.frequency.exponentialRampToValueAtTime(36, now + (dur || 0.045));
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(0.28, now + 0.006);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + (dur || 0.045));
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + (dur || 0.045) + 0.01);
+  }catch(e){}
+}
 function triggerHaptic(pattern){
   if(!soundOn) return;
+  // 1. Standard Android / Chromium Vibration API
   try{
     if(navigator && typeof navigator.vibrate === 'function'){
       navigator.vibrate(pattern || 30);
     }
   }catch(e){}
+
+  // 2. iOS Safari / WebKit Haptic Switch + Low-Frequency Tactile Thump
+  if(Array.isArray(pattern)){
+    let delay = 0;
+    pattern.forEach((ms, i) => {
+      if(i % 2 === 0){
+        setTimeout(() => {
+          pulseIosSwitch();
+          pulseBassThump(65, Math.min(0.06, Math.max(0.025, ms / 1000)));
+        }, delay);
+      }
+      delay += ms;
+    });
+  } else {
+    pulseIosSwitch();
+    pulseBassThump(68, 0.042);
+  }
 }
 function beep(freq, dur, type){
   if(!soundOn) return;
   try{
     audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume().catch(() => {});
     const t = audioCtx.currentTime;
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
@@ -4878,7 +4937,6 @@ function cryptoRandInt(max){
 function getFairLudoDice(playerKey, currentStreak){
   const key = String(playerKey || 'default');
   if(!ludoDiceBags[key] || ludoDiceBags[key].length === 0){
-    // Balanced 12-dice deck: two of each face [1..6] so no player gets flooded with 6s or starved of 6s
     const deck = [1,2,3,4,5,6, 1,2,3,4,5,6];
     for(let i = deck.length - 1; i > 0; i--){
       const j = cryptoRandInt(i + 1);
@@ -4886,7 +4944,6 @@ function getFairLudoDice(playerKey, currentStreak){
     }
     ludoDiceBags[key] = deck;
   }
-  // Never allow a 3rd consecutive 6; pick a non-6 face from the bag if streak is already 2
   if((currentStreak || 0) >= 2){
     const nonSixIdx = ludoDiceBags[key].findIndex(v => v !== 6);
     if(nonSixIdx !== -1){
@@ -5635,21 +5692,17 @@ function pickAiLudoToken(valid, dice){
       const curSq = ludoGlobalSquare('green', cur);
       const targetSq = ludoGlobalSquare('green', next);
 
-      // 1. Reaching final home triangle
       if(next === 56) score += 160;
 
-      // 2. Capturing opponent pin on non-safe square
       if(targetSq >= 0 && !LUDO_SAFE_INDICES.has(targetSq)){
         const hitsBlue = ludoTokens.blue.some(bStep => ludoGlobalSquare('blue', bStep) === targetSq);
         if(hitsBlue) score += 210;
       }
 
-      // 3. Escaping immediate danger if opponent is 1..6 steps behind current square
       if(isSquareThreatenedByBlue(curSq)){
         score += 110;
       }
 
-      // 4. Penalty for moving into danger, bonus for landing on star safe zone or private home stretch
       if(next > 50 && cur <= 50){
         score += 95;
       } else if(LUDO_SAFE_INDICES.has(targetSq)){
@@ -5658,12 +5711,10 @@ function pickAiLudoToken(valid, dice){
         score -= 85;
       }
 
-      // 5. Avoid leaving a safe star square unless capturing or entering home stretch
       if(LUDO_SAFE_INDICES.has(curSq) && !LUDO_SAFE_INDICES.has(targetSq) && next <= 50){
         score -= 30;
       }
 
-      // 6. Prefer advancing the leading token closer to home
       score += next * 1.4;
     }
 
@@ -6770,6 +6821,7 @@ function runSplashScreen(){
 /* ================= INIT ================= */
 function init(){
   runSplashScreen();
+  initIosHapticSwitch();
   const savedLastActive = Number(store.get('xo_last_active'));
   if(savedLastActive && !isNaN(savedLastActive)) prevLastActiveTs = savedLastActive;
   recordLastActive();
